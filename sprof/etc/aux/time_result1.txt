@@ -1,0 +1,600 @@
+
+Teste bodytrack 1
+
+real	0m8.305s
+user	2m34.384s
+sys	0m1.860s
+
+Teste bodytrack 2
+
+real	0m8.310s
+user	2m34.764s
+sys	0m1.765s
+
+Teste bodytrack 3
+
+real	0m8.299s
+user	2m35.447s
+sys	0m1.701s
+
+Teste bodytrack 4
+
+real	0m8.668s
+user	2m34.392s
+sys	0m2.195s
+
+Teste bodytrack 5
+
+real	0m8.230s
+user	2m33.579s
+sys	0m1.718s
+
+Teste bodytrack 6
+
+real	0m8.261s
+user	2m33.921s
+sys	0m2.088s
+
+Teste bodytrack 7
+
+real	0m8.256s
+user	2m34.648s
+sys	0m1.573s
+
+Teste bodytrack 8
+
+real	0m8.258s
+user	2m33.516s
+sys	0m2.379s
+
+Teste bodytrack 9
+
+real	0m8.282s
+user	2m33.522s
+sys	0m2.517s
+
+Teste bodytrack 10
+
+real	0m8.365s
+user	2m34.276s
+sys	0m2.490s
+
+Teste bodytrack 11
+
+real	0m8.272s
+user	2m35.013s
+sys	0m1.808s
+
+Teste bodytrack 12
+
+real	0m8.631s
+user	2m34.968s
+sys	0m2.375s
+
+Teste bodytrack 13
+
+real	0m8.362s
+user	2m36.136s
+sys	0m1.929s
+
+Teste bodytrack 14
+
+real	0m8.337s
+user	2m35.286s
+sys	0m2.464s
+
+Teste bodytrack 15
+
+real	0m8.347s
+user	2m34.111s
+sys	0m2.085s
+
+Teste bodytrack 16
+
+real	0m8.351s
+user	2m34.236s
+sys	0m1.274s
+
+Teste bodytrack 17
+
+real	0m8.361s
+user	2m34.565s
+sys	0m2.469s
+
+Teste bodytrack 18
+
+real	0m8.312s
+user	2m34.435s
+sys	0m2.233s
+
+Teste bodytrack 19
+
+real	0m8.285s
+user	2m34.288s
+sys	0m2.149s
+
+Teste bodytrack 20
+
+real	0m8.376s
+user	2m35.138s
+sys	0m2.289s
+
+Teste bodytrack 21
+
+real	0m8.256s
+user	2m34.291s
+sys	0m2.306s
+
+Teste bodytrack 22
+
+real	0m8.343s
+user	2m37.289s
+sys	0m1.949s
+
+Teste bodytrack 23
+
+real	0m8.355s
+user	2m35.895s
+sys	0m2.296s
+
+Teste bodytrack 24
+
+real	0m8.259s
+user	2m36.569s
+sys	0m1.359s
+
+Teste bodytrack 25
+
+real	0m8.274s
+user	2m33.475s
+sys	0m2.453s
+
+Teste bodytrack 26
+
+real	0m8.281s
+user	2m35.557s
+sys	0m1.759s
+
+Teste bodytrack 27
+
+real	0m8.239s
+user	2m34.408s
+sys	0m1.849s
+
+Teste bodytrack 28
+
+real	0m8.427s
+user	2m35.635s
+sys	0m2.179s
+
+Teste bodytrack 29
+
+real	0m8.450s
+user	2m37.626s
+sys	0m2.616s
+
+Teste bodytrack 30
+
+real	0m8.238s
+user	2m34.286s
+sys	0m2.415s
+
+Teste bodytrack 31
+
+real	0m8.312s
+user	2m34.627s
+sys	0m1.254s
+
+Teste bodytrack 32
+
+real	0m8.317s
+user	2m35.269s
+sys	0m2.418s
+
+Teste bodytrack 33
+
+real	0m8.228s
+user	2m34.179s
+sys	0m0.973s
+
+Teste bodytrack 34
+
+real	0m8.248s
+user	2m33.238s
+sys	0m1.023s
+
+Teste bodytrack 35
+
+real	0m8.298s
+user	2m35.646s
+sys	0m1.825s
+
+Teste bodytrack 36
+
+real	0m8.493s
+user	2m38.023s
+sys	0m2.207s
+
+Teste bodytrack 37
+
+real	0m8.246s
+user	2m31.792s
+sys	0m2.160s
+
+Teste bodytrack 38
+
+real	0m8.244s
+user	2m33.655s
+sys	0m1.415s
+
+Teste bodytrack 39
+
+real	0m8.319s
+user	2m35.405s
+sys	0m1.600s
+
+Teste bodytrack 40
+
+real	0m8.295s
+user	2m33.589s
+sys	0m2.416s
+
+Teste bodytrack 41
+
+real	0m8.275s
+user	2m34.138s
+sys	0m2.217s
+
+Teste bodytrack 42
+
+real	0m8.263s
+user	2m34.707s
+sys	0m2.403s
+
+Teste bodytrack 43
+
+real	0m8.346s
+user	2m35.961s
+sys	0m2.191s
+
+Teste bodytrack 44
+
+real	0m8.288s
+user	2m35.557s
+sys	0m2.423s
+
+Teste bodytrack 45
+
+real	0m8.288s
+user	2m34.439s
+sys	0m2.703s
+
+Teste bodytrack 46
+
+real	0m8.268s
+user	2m33.453s
+sys	0m1.932s
+
+Teste bodytrack 47
+
+real	0m8.222s
+user	2m33.591s
+sys	0m1.390s
+
+Teste bodytrack 48
+
+real	0m8.289s
+user	2m35.708s
+sys	0m2.100s
+
+Teste bodytrack 49
+
+real	0m8.322s
+user	2m34.864s
+sys	0m2.089s
+
+Teste bodytrack 50
+
+real	0m8.351s
+user	2m34.619s
+sys	0m1.753s
+
+Teste bodytrack 51
+
+real	0m8.322s
+user	2m34.016s
+sys	0m0.892s
+
+Teste bodytrack 52
+
+real	0m8.352s
+user	2m36.755s
+sys	0m2.356s
+
+Teste bodytrack 53
+
+real	0m8.365s
+user	2m36.165s
+sys	0m1.855s
+
+Teste bodytrack 54
+
+real	0m8.312s
+user	2m34.398s
+sys	0m1.702s
+
+Teste bodytrack 55
+
+real	0m8.273s
+user	2m35.081s
+sys	0m1.389s
+
+Teste bodytrack 56
+
+real	0m8.336s
+user	2m33.831s
+sys	0m1.851s
+
+Teste bodytrack 57
+
+real	0m8.235s
+user	2m34.005s
+sys	0m0.818s
+
+Teste bodytrack 58
+
+real	0m8.338s
+user	2m34.949s
+sys	0m1.913s
+
+Teste bodytrack 59
+
+real	0m8.277s
+user	2m34.888s
+sys	0m1.250s
+
+Teste bodytrack 60
+
+real	0m8.303s
+user	2m35.230s
+sys	0m1.501s
+
+Teste bodytrack 61
+
+real	0m8.313s
+user	2m34.902s
+sys	0m1.086s
+
+Teste bodytrack 62
+
+real	0m8.272s
+user	2m37.084s
+sys	0m1.981s
+
+Teste bodytrack 63
+
+real	0m8.321s
+user	2m37.074s
+sys	0m1.856s
+
+Teste bodytrack 64
+
+real	0m8.222s
+user	2m34.092s
+sys	0m2.062s
+
+Teste bodytrack 65
+
+real	0m8.265s
+user	2m32.525s
+sys	0m2.138s
+
+Teste bodytrack 66
+
+real	0m8.233s
+user	2m33.004s
+sys	0m2.176s
+
+Teste bodytrack 67
+
+real	0m8.277s
+user	2m35.037s
+sys	0m1.524s
+
+Teste bodytrack 68
+
+real	0m8.285s
+user	2m33.933s
+sys	0m2.192s
+
+Teste bodytrack 69
+
+real	0m8.248s
+user	2m33.915s
+sys	0m2.091s
+
+Teste bodytrack 70
+
+real	0m8.286s
+user	2m35.154s
+sys	0m1.822s
+
+Teste bodytrack 71
+
+real	0m8.243s
+user	2m33.690s
+sys	0m1.248s
+
+Teste bodytrack 72
+
+real	0m8.282s
+user	2m34.645s
+sys	0m1.989s
+
+Teste bodytrack 73
+
+real	0m8.262s
+user	2m35.890s
+sys	0m1.898s
+
+Teste bodytrack 74
+
+real	0m8.246s
+user	2m33.021s
+sys	0m2.012s
+
+Teste bodytrack 75
+
+real	0m8.265s
+user	2m33.627s
+sys	0m1.582s
+
+Teste bodytrack 76
+
+real	0m8.296s
+user	2m36.161s
+sys	0m1.753s
+
+Teste bodytrack 77
+
+real	0m8.331s
+user	2m35.444s
+sys	0m2.710s
+
+Teste bodytrack 78
+
+real	0m8.334s
+user	2m34.922s
+sys	0m2.551s
+
+Teste bodytrack 79
+
+real	0m8.249s
+user	2m34.742s
+sys	0m2.711s
+
+Teste bodytrack 80
+
+real	0m8.251s
+user	2m33.124s
+sys	0m1.535s
+
+Teste bodytrack 81
+
+real	0m8.265s
+user	2m35.298s
+sys	0m1.609s
+
+Teste bodytrack 82
+
+real	0m8.363s
+user	2m34.380s
+sys	0m2.439s
+
+Teste bodytrack 83
+
+real	0m8.285s
+user	2m35.346s
+sys	0m3.350s
+
+Teste bodytrack 84
+
+real	0m8.266s
+user	2m35.371s
+sys	0m1.567s
+
+Teste bodytrack 85
+
+real	0m8.333s
+user	2m36.049s
+sys	0m2.199s
+
+Teste bodytrack 86
+
+real	0m8.306s
+user	2m35.749s
+sys	0m1.701s
+
+Teste bodytrack 87
+
+real	0m8.397s
+user	2m38.611s
+sys	0m1.895s
+
+Teste bodytrack 88
+
+real	0m8.383s
+user	2m35.730s
+sys	0m2.302s
+
+Teste bodytrack 89
+
+real	0m8.246s
+user	2m34.346s
+sys	0m1.019s
+
+Teste bodytrack 90
+
+real	0m8.333s
+user	2m36.107s
+sys	0m1.903s
+
+Teste bodytrack 91
+
+real	0m8.232s
+user	2m33.562s
+sys	0m1.863s
+
+Teste bodytrack 92
+
+real	0m8.262s
+user	2m32.524s
+sys	0m1.801s
+
+Teste bodytrack 93
+
+real	0m8.243s
+user	2m33.598s
+sys	0m1.203s
+
+Teste bodytrack 94
+
+real	0m8.309s
+user	2m33.135s
+sys	0m2.996s
+
+Teste bodytrack 95
+
+real	0m8.263s
+user	2m34.464s
+sys	0m1.752s
+
+Teste bodytrack 96
+
+real	0m8.212s
+user	2m34.423s
+sys	0m1.822s
+
+Teste bodytrack 97
+
+real	0m8.385s
+user	2m37.057s
+sys	0m1.442s
+
+Teste bodytrack 98
+
+real	0m8.263s
+user	2m34.778s
+sys	0m1.338s
+
+Teste bodytrack 99
+
+real	0m8.272s
+user	2m33.940s
+sys	0m1.682s
+
+Teste bodytrack 100
+
+real	0m8.267s
+user	2m33.889s
+sys	0m2.253s

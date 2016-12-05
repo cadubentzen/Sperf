@@ -1,0 +1,1908 @@
+
+-----> Execution number 1 for ./targets/bodytrack:
+
+	--> Result for 1 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 1.142716 seconds
+		 Speedup for the parallel region 1: 1.000000
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 1.325745 seconds
+		 Speedup for the parallel region 2: 1.000000
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 1.301855 seconds
+		 Speedup for the parallel region 3: 1.000000
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 149.249435 seconds
+		 Speedup for the parallel region 4: 1.000000
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 13.059854 seconds
+		 Speedup for the parallel region 5: 1.000000
+
+		 Total time of execution: 171.571307 seconds
+		 Speedup for the entire application: 1.000000
+
+	--> Result for 2 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.583642 seconds
+		 Speedup for the parallel region 1: 1.957906
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.671057 seconds
+		 Speedup for the parallel region 2: 1.975607
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.654423 seconds
+		 Speedup for the parallel region 3: 1.989317
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 78.619675 seconds
+		 Speedup for the parallel region 4: 1.898373
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 6.616660 seconds
+		 Speedup for the parallel region 5: 1.973783
+
+		 Total time of execution: 92.779623 seconds
+		 Speedup for the entire application: 1.849235
+
+	--> Result for 4 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.299534 seconds
+		 Speedup for the parallel region 1: 3.814980
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.335808 seconds
+		 Speedup for the parallel region 2: 3.947926
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.328965 seconds
+		 Speedup for the parallel region 3: 3.957427
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 38.402103 seconds
+		 Speedup for the parallel region 4: 3.886491
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 3.360220 seconds
+		 Speedup for the parallel region 5: 3.886607
+
+		 Total time of execution: 48.371134 seconds
+		 Speedup for the entire application: 3.546977
+
+	--> Result for 8 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.164838 seconds
+		 Speedup for the parallel region 1: 6.932358
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.170628 seconds
+		 Speedup for the parallel region 2: 7.769797
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.180598 seconds
+		 Speedup for the parallel region 3: 7.208579
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 19.264404 seconds
+		 Speedup for the parallel region 4: 7.747420
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 1.738580 seconds
+		 Speedup for the parallel region 5: 7.511793
+
+		 Total time of execution: 27.189678 seconds
+		 Speedup for the entire application: 6.310163
+
+	--> Result for 16 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.105266 seconds
+		 Speedup for the parallel region 1: 10.855510
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.087488 seconds
+		 Speedup for the parallel region 2: 15.153449
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.086079 seconds
+		 Speedup for the parallel region 3: 15.123956
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 9.844843 seconds
+		 Speedup for the parallel region 4: 15.160164
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 0.955548 seconds
+		 Speedup for the parallel region 5: 13.667397
+
+		 Total time of execution: 16.750090 seconds
+		 Speedup for the entire application: 10.243008
+
+	--> Result for 32 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.099259 seconds
+		 Speedup for the parallel region 1: 11.512468
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.050027 seconds
+		 Speedup for the parallel region 2: 26.500589
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.050051 seconds
+		 Speedup for the parallel region 3: 26.010569
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 5.691123 seconds
+		 Speedup for the parallel region 4: 26.224953
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 0.617927 seconds
+		 Speedup for the parallel region 5: 21.134945
+
+		 Total time of execution: 12.242058 seconds
+		 Speedup for the entire application: 14.014907
+
+	--> Result for 64 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.128269 seconds
+		 Speedup for the parallel region 1: 8.908747
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.064652 seconds
+		 Speedup for the parallel region 2: 20.505861
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.065151 seconds
+		 Speedup for the parallel region 3: 19.982119
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 2.983632 seconds
+		 Speedup for the parallel region 4: 50.022736
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 0.485910 seconds
+		 Speedup for the parallel region 5: 26.877104
+
+		 Total time of execution: 10.573130 seconds
+		 Speedup for the entire application: 16.227106
+
+-----> Execution number 2 for ./targets/bodytrack:
+
+	--> Result for 1 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 1.142435 seconds
+		 Speedup for the parallel region 1: 1.000000
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 1.325644 seconds
+		 Speedup for the parallel region 2: 1.000000
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 1.302244 seconds
+		 Speedup for the parallel region 3: 1.000000
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 149.259140 seconds
+		 Speedup for the parallel region 4: 1.000000
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 13.045495 seconds
+		 Speedup for the parallel region 5: 1.000000
+
+		 Total time of execution: 171.633141 seconds
+		 Speedup for the entire application: 1.000000
+
+	--> Result for 2 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.581470 seconds
+		 Speedup for the parallel region 1: 1.964736
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.668962 seconds
+		 Speedup for the parallel region 2: 1.981643
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.654588 seconds
+		 Speedup for the parallel region 3: 1.989410
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 76.238441 seconds
+		 Speedup for the parallel region 4: 1.957794
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 6.623674 seconds
+		 Speedup for the parallel region 5: 1.969526
+
+		 Total time of execution: 90.384311 seconds
+		 Speedup for the entire application: 1.898926
+
+	--> Result for 4 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.301120 seconds
+		 Speedup for the parallel region 1: 3.793952
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.335839 seconds
+		 Speedup for the parallel region 2: 3.947260
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.328834 seconds
+		 Speedup for the parallel region 3: 3.960186
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 38.305031 seconds
+		 Speedup for the parallel region 4: 3.896594
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 3.362153 seconds
+		 Speedup for the parallel region 5: 3.880101
+
+		 Total time of execution: 48.268796 seconds
+		 Speedup for the entire application: 3.555779
+
+	--> Result for 8 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.163871 seconds
+		 Speedup for the parallel region 1: 6.971550
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.168849 seconds
+		 Speedup for the parallel region 2: 7.851062
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.167620 seconds
+		 Speedup for the parallel region 3: 7.769025
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 19.149708 seconds
+		 Speedup for the parallel region 4: 7.794330
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 1.744175 seconds
+		 Speedup for the parallel region 5: 7.479465
+
+		 Total time of execution: 27.029794 seconds
+		 Speedup for the entire application: 6.349776
+
+	--> Result for 16 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.112831 seconds
+		 Speedup for the parallel region 1: 10.125187
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.110995 seconds
+		 Speedup for the parallel region 2: 11.943276
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.089393 seconds
+		 Speedup for the parallel region 3: 14.567628
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 9.890151 seconds
+		 Speedup for the parallel region 4: 15.091695
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 0.951875 seconds
+		 Speedup for the parallel region 5: 13.705051
+
+		 Total time of execution: 16.815783 seconds
+		 Speedup for the entire application: 10.206671
+
+	--> Result for 32 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.098358 seconds
+		 Speedup for the parallel region 1: 11.615069
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.051370 seconds
+		 Speedup for the parallel region 2: 25.805801
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.049659 seconds
+		 Speedup for the parallel region 3: 26.223726
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 5.699999 seconds
+		 Speedup for the parallel region 4: 26.185820
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 0.624000 seconds
+		 Speedup for the parallel region 5: 20.906242
+
+		 Total time of execution: 12.247593 seconds
+		 Speedup for the entire application: 14.013623
+
+	--> Result for 64 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.127255 seconds
+		 Speedup for the parallel region 1: 8.977526
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.049571 seconds
+		 Speedup for the parallel region 2: 26.742329
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.049395 seconds
+		 Speedup for the parallel region 3: 26.363882
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 2.916971 seconds
+		 Speedup for the parallel region 4: 51.169224
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 0.478803 seconds
+		 Speedup for the parallel region 5: 27.246059
+
+		 Total time of execution: 9.462069 seconds
+		 Speedup for the entire application: 18.139072
+
+-----> Execution number 3 for ./targets/bodytrack:
+
+	--> Result for 1 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 1.141929 seconds
+		 Speedup for the parallel region 1: 1.000000
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 1.325002 seconds
+		 Speedup for the parallel region 2: 1.000000
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 1.307843 seconds
+		 Speedup for the parallel region 3: 1.000000
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 149.409515 seconds
+		 Speedup for the parallel region 4: 1.000000
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 13.042956 seconds
+		 Speedup for the parallel region 5: 1.000000
+
+		 Total time of execution: 171.717004 seconds
+		 Speedup for the entire application: 1.000000
+
+	--> Result for 2 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.585946 seconds
+		 Speedup for the parallel region 1: 1.948864
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.668228 seconds
+		 Speedup for the parallel region 2: 1.982859
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.654392 seconds
+		 Speedup for the parallel region 3: 1.998562
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 76.137566 seconds
+		 Speedup for the parallel region 4: 1.962363
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 6.615235 seconds
+		 Speedup for the parallel region 5: 1.971654
+
+		 Total time of execution: 91.345987 seconds
+		 Speedup for the entire application: 1.879853
+
+	--> Result for 4 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.299401 seconds
+		 Speedup for the parallel region 1: 3.814046
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.337105 seconds
+		 Speedup for the parallel region 2: 3.930532
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.329272 seconds
+		 Speedup for the parallel region 3: 3.971923
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 38.392658 seconds
+		 Speedup for the parallel region 4: 3.891617
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 3.360180 seconds
+		 Speedup for the parallel region 5: 3.881624
+
+		 Total time of execution: 48.372945 seconds
+		 Speedup for the entire application: 3.549856
+
+	--> Result for 8 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.162444 seconds
+		 Speedup for the parallel region 1: 7.029678
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.170785 seconds
+		 Speedup for the parallel region 2: 7.758304
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.167255 seconds
+		 Speedup for the parallel region 3: 7.819455
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 19.587227 seconds
+		 Speedup for the parallel region 4: 7.627905
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 1.744224 seconds
+		 Speedup for the parallel region 5: 7.477799
+
+		 Total time of execution: 28.238781 seconds
+		 Speedup for the entire application: 6.080893
+
+	--> Result for 16 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.107694 seconds
+		 Speedup for the parallel region 1: 10.603460
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.085991 seconds
+		 Speedup for the parallel region 2: 15.408611
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.085207 seconds
+		 Speedup for the parallel region 3: 15.349009
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 9.804296 seconds
+		 Speedup for the parallel region 4: 15.239189
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 0.959588 seconds
+		 Speedup for the parallel region 5: 13.592246
+
+		 Total time of execution: 16.735876 seconds
+		 Speedup for the entire application: 10.260413
+
+	--> Result for 32 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.103512 seconds
+		 Speedup for the parallel region 1: 11.031852
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.049862 seconds
+		 Speedup for the parallel region 2: 26.573381
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.049735 seconds
+		 Speedup for the parallel region 3: 26.296230
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 5.687269 seconds
+		 Speedup for the parallel region 4: 26.270870
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 0.601799 seconds
+		 Speedup for the parallel region 5: 21.673277
+
+		 Total time of execution: 12.232365 seconds
+		 Speedup for the entire application: 14.037925
+
+	--> Result for 64 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.121780 seconds
+		 Speedup for the parallel region 1: 9.376984
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.043686 seconds
+		 Speedup for the parallel region 2: 30.330128
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.041818 seconds
+		 Speedup for the parallel region 3: 31.274641
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 2.963030 seconds
+		 Speedup for the parallel region 4: 50.424568
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 0.489379 seconds
+		 Speedup for the parallel region 5: 26.652056
+
+		 Total time of execution: 9.474568 seconds
+		 Speedup for the entire application: 18.123995
+
+-----> Execution number 4 for ./targets/bodytrack:
+
+	--> Result for 1 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 1.140880 seconds
+		 Speedup for the parallel region 1: 1.000000
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 1.357890 seconds
+		 Speedup for the parallel region 2: 1.000000
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 1.343102 seconds
+		 Speedup for the parallel region 3: 1.000000
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 149.429230 seconds
+		 Speedup for the parallel region 4: 1.000000
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 13.058294 seconds
+		 Speedup for the parallel region 5: 1.000000
+
+		 Total time of execution: 171.824222 seconds
+		 Speedup for the entire application: 1.000000
+
+	--> Result for 2 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.587171 seconds
+		 Speedup for the parallel region 1: 1.943011
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.667652 seconds
+		 Speedup for the parallel region 2: 2.033829
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.657967 seconds
+		 Speedup for the parallel region 3: 2.041291
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 76.222084 seconds
+		 Speedup for the parallel region 4: 1.960445
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 6.614999 seconds
+		 Speedup for the parallel region 5: 1.974043
+
+		 Total time of execution: 90.395877 seconds
+		 Speedup for the entire application: 1.900797
+
+	--> Result for 4 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.299019 seconds
+		 Speedup for the parallel region 1: 3.815410
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.336425 seconds
+		 Speedup for the parallel region 2: 4.036234
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.329553 seconds
+		 Speedup for the parallel region 3: 4.075526
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 38.389835 seconds
+		 Speedup for the parallel region 4: 3.892416
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 3.362907 seconds
+		 Speedup for the parallel region 5: 3.883038
+
+		 Total time of execution: 48.340963 seconds
+		 Speedup for the entire application: 3.554423
+
+	--> Result for 8 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.164374 seconds
+		 Speedup for the parallel region 1: 6.940757
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.169329 seconds
+		 Speedup for the parallel region 2: 8.019240
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.168063 seconds
+		 Speedup for the parallel region 3: 7.991658
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 19.365149 seconds
+		 Speedup for the parallel region 4: 7.716400
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 1.739210 seconds
+		 Speedup for the parallel region 5: 7.508176
+
+		 Total time of execution: 27.260714 seconds
+		 Speedup for the entire application: 6.302998
+
+	--> Result for 16 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.104025 seconds
+		 Speedup for the parallel region 1: 10.967363
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.086015 seconds
+		 Speedup for the parallel region 2: 15.786665
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.084560 seconds
+		 Speedup for the parallel region 3: 15.883420
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 9.792282 seconds
+		 Speedup for the parallel region 4: 15.259898
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 0.954195 seconds
+		 Speedup for the parallel region 5: 13.685142
+
+		 Total time of execution: 16.703966 seconds
+		 Speedup for the entire application: 10.286432
+
+	--> Result for 32 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.101649 seconds
+		 Speedup for the parallel region 1: 11.223721
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.057130 seconds
+		 Speedup for the parallel region 2: 23.768423
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.050189 seconds
+		 Speedup for the parallel region 3: 26.760883
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 5.665290 seconds
+		 Speedup for the parallel region 4: 26.376272
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 0.614577 seconds
+		 Speedup for the parallel region 5: 21.247614
+
+		 Total time of execution: 12.226403 seconds
+		 Speedup for the entire application: 14.053537
+
+	--> Result for 64 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.151726 seconds
+		 Speedup for the parallel region 1: 7.519344
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.116294 seconds
+		 Speedup for the parallel region 2: 11.676355
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.113171 seconds
+		 Speedup for the parallel region 3: 11.867899
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 3.202608 seconds
+		 Speedup for the parallel region 4: 46.658607
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 0.507787 seconds
+		 Speedup for the parallel region 5: 25.716087
+
+		 Total time of execution: 9.924380 seconds
+		 Speedup for the entire application: 17.313345
+
+-----> Execution number 5 for ./targets/bodytrack:
+
+	--> Result for 1 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 1.141714 seconds
+		 Speedup for the parallel region 1: 1.000000
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 1.326166 seconds
+		 Speedup for the parallel region 2: 1.000000
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 1.301594 seconds
+		 Speedup for the parallel region 3: 1.000000
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 149.302246 seconds
+		 Speedup for the parallel region 4: 1.000000
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 13.067405 seconds
+		 Speedup for the parallel region 5: 1.000000
+
+		 Total time of execution: 171.641094 seconds
+		 Speedup for the entire application: 1.000000
+
+	--> Result for 2 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.583843 seconds
+		 Speedup for the parallel region 1: 1.955515
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.669450 seconds
+		 Speedup for the parallel region 2: 1.980978
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.654902 seconds
+		 Speedup for the parallel region 3: 1.987464
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 75.931160 seconds
+		 Speedup for the parallel region 4: 1.966284
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 6.622463 seconds
+		 Speedup for the parallel region 5: 1.973194
+
+		 Total time of execution: 90.089297 seconds
+		 Speedup for the entire application: 1.905233
+
+	--> Result for 4 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.299385 seconds
+		 Speedup for the parallel region 1: 3.813531
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.335399 seconds
+		 Speedup for the parallel region 2: 3.953995
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.328893 seconds
+		 Speedup for the parallel region 3: 3.957500
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 38.420303 seconds
+		 Speedup for the parallel region 4: 3.886025
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 3.358741 seconds
+		 Speedup for the parallel region 5: 3.890566
+
+		 Total time of execution: 48.388122 seconds
+		 Speedup for the entire application: 3.547174
+
+	--> Result for 8 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.161043 seconds
+		 Speedup for the parallel region 1: 7.089498
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.169543 seconds
+		 Speedup for the parallel region 2: 7.822004
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.167187 seconds
+		 Speedup for the parallel region 3: 7.785258
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 19.317919 seconds
+		 Speedup for the parallel region 4: 7.728692
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 1.735772 seconds
+		 Speedup for the parallel region 5: 7.528296
+
+		 Total time of execution: 27.226345 seconds
+		 Speedup for the entire application: 6.304228
+
+	--> Result for 16 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.106429 seconds
+		 Speedup for the parallel region 1: 10.727470
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.085847 seconds
+		 Speedup for the parallel region 2: 15.448019
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.084287 seconds
+		 Speedup for the parallel region 3: 15.442405
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 9.795772 seconds
+		 Speedup for the parallel region 4: 15.241499
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 0.950617 seconds
+		 Speedup for the parallel region 5: 13.746235
+
+		 Total time of execution: 16.684286 seconds
+		 Speedup for the entire application: 10.287590
+
+	--> Result for 32 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.100991 seconds
+		 Speedup for the parallel region 1: 11.305106
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.050121 seconds
+		 Speedup for the parallel region 2: 26.459290
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.049964 seconds
+		 Speedup for the parallel region 3: 26.050636
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 5.698560 seconds
+		 Speedup for the parallel region 4: 26.199995
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 0.614990 seconds
+		 Speedup for the parallel region 5: 21.248158
+
+		 Total time of execution: 12.262046 seconds
+		 Speedup for the entire application: 13.997754
+
+	--> Result for 64 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.126250 seconds
+		 Speedup for the parallel region 1: 9.043279
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.061034 seconds
+		 Speedup for the parallel region 2: 21.728315
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.057053 seconds
+		 Speedup for the parallel region 3: 22.813770
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 3.008697 seconds
+		 Speedup for the parallel region 4: 49.623554
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 0.506375 seconds
+		 Speedup for the parallel region 5: 25.805784
+
+		 Total time of execution: 9.597018 seconds
+		 Speedup for the entire application: 17.884836
+
+-----> Execution number 6 for ./targets/bodytrack:
+
+	--> Result for 1 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 1.145039 seconds
+		 Speedup for the parallel region 1: 1.000000
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 1.325778 seconds
+		 Speedup for the parallel region 2: 1.000000
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 1.301681 seconds
+		 Speedup for the parallel region 3: 1.000000
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 149.173737 seconds
+		 Speedup for the parallel region 4: 1.000000
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 13.061419 seconds
+		 Speedup for the parallel region 5: 1.000000
+
+		 Total time of execution: 171.513635 seconds
+		 Speedup for the entire application: 1.000000
+
+	--> Result for 2 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.586460 seconds
+		 Speedup for the parallel region 1: 1.952459
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.667648 seconds
+		 Speedup for the parallel region 2: 1.985744
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.654213 seconds
+		 Speedup for the parallel region 3: 1.989690
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 75.305107 seconds
+		 Speedup for the parallel region 4: 1.980925
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 6.610255 seconds
+		 Speedup for the parallel region 5: 1.975933
+
+		 Total time of execution: 89.442356 seconds
+		 Speedup for the entire application: 1.917589
+
+	--> Result for 4 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.300113 seconds
+		 Speedup for the parallel region 1: 3.815360
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.335322 seconds
+		 Speedup for the parallel region 2: 3.953746
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.328955 seconds
+		 Speedup for the parallel region 3: 3.957019
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 38.471100 seconds
+		 Speedup for the parallel region 4: 3.877553
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 3.352781 seconds
+		 Speedup for the parallel region 5: 3.895697
+
+		 Total time of execution: 48.422812 seconds
+		 Speedup for the entire application: 3.542001
+
+	--> Result for 8 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.163440 seconds
+		 Speedup for the parallel region 1: 7.005867
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.169674 seconds
+		 Speedup for the parallel region 2: 7.813678
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.167955 seconds
+		 Speedup for the parallel region 3: 7.750177
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 19.353127 seconds
+		 Speedup for the parallel region 4: 7.707992
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 1.738570 seconds
+		 Speedup for the parallel region 5: 7.512737
+
+		 Total time of execution: 27.247075 seconds
+		 Speedup for the entire application: 6.294755
+
+	--> Result for 16 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.105344 seconds
+		 Speedup for the parallel region 1: 10.869523
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.085615 seconds
+		 Speedup for the parallel region 2: 15.485347
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.085771 seconds
+		 Speedup for the parallel region 3: 15.176237
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 9.809029 seconds
+		 Speedup for the parallel region 4: 15.207799
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 0.954819 seconds
+		 Speedup for the parallel region 5: 13.679470
+
+		 Total time of execution: 16.714238 seconds
+		 Speedup for the entire application: 10.261530
+
+	--> Result for 32 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.106668 seconds
+		 Speedup for the parallel region 1: 10.734606
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.066626 seconds
+		 Speedup for the parallel region 2: 19.898809
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.067013 seconds
+		 Speedup for the parallel region 3: 19.424305
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 5.736847 seconds
+		 Speedup for the parallel region 4: 26.002739
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 0.627478 seconds
+		 Speedup for the parallel region 5: 20.815739
+
+		 Total time of execution: 12.357079 seconds
+		 Speedup for the entire application: 13.879788
+
+	--> Result for 64 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.133669 seconds
+		 Speedup for the parallel region 1: 8.566227
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.079720 seconds
+		 Speedup for the parallel region 2: 16.630432
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.079974 seconds
+		 Speedup for the parallel region 3: 16.276302
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 3.162159 seconds
+		 Speedup for the parallel region 4: 47.174648
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 0.498038 seconds
+		 Speedup for the parallel region 5: 26.225748
+
+		 Total time of execution: 9.791411 seconds
+		 Speedup for the entire application: 17.516745
+
+-----> Execution number 7 for ./targets/bodytrack:
+
+	--> Result for 1 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 1.144741 seconds
+		 Speedup for the parallel region 1: 1.000000
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 1.325655 seconds
+		 Speedup for the parallel region 2: 1.000000
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 1.301625 seconds
+		 Speedup for the parallel region 3: 1.000000
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 149.468262 seconds
+		 Speedup for the parallel region 4: 1.000000
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 13.053108 seconds
+		 Speedup for the parallel region 5: 1.000000
+
+		 Total time of execution: 171.785911 seconds
+		 Speedup for the entire application: 1.000000
+
+	--> Result for 2 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.585851 seconds
+		 Speedup for the parallel region 1: 1.953980
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.671055 seconds
+		 Speedup for the parallel region 2: 1.975479
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.655005 seconds
+		 Speedup for the parallel region 3: 1.987199
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 76.284698 seconds
+		 Speedup for the parallel region 4: 1.959348
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 6.619499 seconds
+		 Speedup for the parallel region 5: 1.971918
+
+		 Total time of execution: 90.453623 seconds
+		 Speedup for the entire application: 1.899160
+
+	--> Result for 4 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.301028 seconds
+		 Speedup for the parallel region 1: 3.802773
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.336765 seconds
+		 Speedup for the parallel region 2: 3.936440
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.330155 seconds
+		 Speedup for the parallel region 3: 3.942467
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 38.112217 seconds
+		 Speedup for the parallel region 4: 3.921794
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 3.369998 seconds
+		 Speedup for the parallel region 5: 3.873328
+
+		 Total time of execution: 48.068905 seconds
+		 Speedup for the entire application: 3.573743
+
+	--> Result for 8 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.165709 seconds
+		 Speedup for the parallel region 1: 6.908140
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.171615 seconds
+		 Speedup for the parallel region 2: 7.724586
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.168235 seconds
+		 Speedup for the parallel region 3: 7.736945
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 19.521667 seconds
+		 Speedup for the parallel region 4: 7.656531
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 1.743985 seconds
+		 Speedup for the parallel region 5: 7.484644
+
+		 Total time of execution: 27.430510 seconds
+		 Speedup for the entire application: 6.262585
+
+	--> Result for 16 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.105785 seconds
+		 Speedup for the parallel region 1: 10.821393
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.085394 seconds
+		 Speedup for the parallel region 2: 15.523982
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.084714 seconds
+		 Speedup for the parallel region 3: 15.364933
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 9.795270 seconds
+		 Speedup for the parallel region 4: 15.259229
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 0.953962 seconds
+		 Speedup for the parallel region 5: 13.683048
+
+		 Total time of execution: 16.690393 seconds
+		 Speedup for the entire application: 10.292501
+
+	--> Result for 32 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.107007 seconds
+		 Speedup for the parallel region 1: 10.697815
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.057730 seconds
+		 Speedup for the parallel region 2: 22.963017
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.058557 seconds
+		 Speedup for the parallel region 3: 22.228342
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 5.699575 seconds
+		 Speedup for the parallel region 4: 26.224457
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 0.629934 seconds
+		 Speedup for the parallel region 5: 20.721390
+
+		 Total time of execution: 12.302815 seconds
+		 Speedup for the entire application: 13.963139
+
+	--> Result for 64 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.125800 seconds
+		 Speedup for the parallel region 1: 9.099690
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.063817 seconds
+		 Speedup for the parallel region 2: 20.772755
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.055357 seconds
+		 Speedup for the parallel region 3: 23.513287
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 3.045824 seconds
+		 Speedup for the parallel region 4: 49.073177
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 0.507225 seconds
+		 Speedup for the parallel region 5: 25.734356
+
+		 Total time of execution: 9.616336 seconds
+		 Speedup for the entire application: 17.863966
+
+-----> Execution number 8 for ./targets/bodytrack:
+
+	--> Result for 1 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 1.142192 seconds
+		 Speedup for the parallel region 1: 1.000000
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 1.325823 seconds
+		 Speedup for the parallel region 2: 1.000000
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 1.301692 seconds
+		 Speedup for the parallel region 3: 1.000000
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 149.864777 seconds
+		 Speedup for the parallel region 4: 1.000000
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 13.055119 seconds
+		 Speedup for the parallel region 5: 1.000000
+
+		 Total time of execution: 172.200494 seconds
+		 Speedup for the entire application: 1.000000
+
+	--> Result for 2 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.583105 seconds
+		 Speedup for the parallel region 1: 1.958810
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.672216 seconds
+		 Speedup for the parallel region 2: 1.972317
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.656646 seconds
+		 Speedup for the parallel region 3: 1.982334
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 76.403809 seconds
+		 Speedup for the parallel region 4: 1.961483
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 6.627656 seconds
+		 Speedup for the parallel region 5: 1.969794
+
+		 Total time of execution: 90.565444 seconds
+		 Speedup for the entire application: 1.901393
+
+	--> Result for 4 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.300801 seconds
+		 Speedup for the parallel region 1: 3.797168
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.338656 seconds
+		 Speedup for the parallel region 2: 3.914955
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.331141 seconds
+		 Speedup for the parallel region 3: 3.930930
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 38.350750 seconds
+		 Speedup for the parallel region 4: 3.907740
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 3.362420 seconds
+		 Speedup for the parallel region 5: 3.882655
+
+		 Total time of execution: 48.322726 seconds
+		 Speedup for the entire application: 3.563551
+
+	--> Result for 8 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.162431 seconds
+		 Speedup for the parallel region 1: 7.031860
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.170328 seconds
+		 Speedup for the parallel region 2: 7.783940
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.167975 seconds
+		 Speedup for the parallel region 3: 7.749320
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 19.360565 seconds
+		 Speedup for the parallel region 4: 7.740723
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 1.736175 seconds
+		 Speedup for the parallel region 5: 7.519472
+
+		 Total time of execution: 27.252172 seconds
+		 Speedup for the entire application: 6.318781
+
+	--> Result for 16 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.105113 seconds
+		 Speedup for the parallel region 1: 10.866325
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.085405 seconds
+		 Speedup for the parallel region 2: 15.523950
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.084787 seconds
+		 Speedup for the parallel region 3: 15.352494
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 9.811140 seconds
+		 Speedup for the parallel region 4: 15.274961
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 0.949444 seconds
+		 Speedup for the parallel region 5: 13.750278
+
+		 Total time of execution: 16.710683 seconds
+		 Speedup for the entire application: 10.304816
+
+	--> Result for 32 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.105231 seconds
+		 Speedup for the parallel region 1: 10.854139
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.049934 seconds
+		 Speedup for the parallel region 2: 26.551508
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.050030 seconds
+		 Speedup for the parallel region 3: 26.018229
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 5.711788 seconds
+		 Speedup for the parallel region 4: 26.237804
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 0.619005 seconds
+		 Speedup for the parallel region 5: 21.090488
+
+		 Total time of execution: 12.287614 seconds
+		 Speedup for the entire application: 14.014153
+
+	--> Result for 64 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.118570 seconds
+		 Speedup for the parallel region 1: 9.633060
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.055567 seconds
+		 Speedup for the parallel region 2: 23.859898
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.049204 seconds
+		 Speedup for the parallel region 3: 26.455004
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 3.026792 seconds
+		 Speedup for the parallel region 4: 49.512741
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 0.503324 seconds
+		 Speedup for the parallel region 5: 25.937803
+
+		 Total time of execution: 9.586493 seconds
+		 Speedup for the entire application: 17.962826
+
+-----> Execution number 9 for ./targets/bodytrack:
+
+	--> Result for 1 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 1.142002 seconds
+		 Speedup for the parallel region 1: 1.000000
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 1.326884 seconds
+		 Speedup for the parallel region 2: 1.000000
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 1.303712 seconds
+		 Speedup for the parallel region 3: 1.000000
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 149.829376 seconds
+		 Speedup for the parallel region 4: 1.000000
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 13.085774 seconds
+		 Speedup for the parallel region 5: 1.000000
+
+		 Total time of execution: 172.191178 seconds
+		 Speedup for the entire application: 1.000000
+
+	--> Result for 2 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.586152 seconds
+		 Speedup for the parallel region 1: 1.948303
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.667984 seconds
+		 Speedup for the parallel region 2: 1.986401
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.654663 seconds
+		 Speedup for the parallel region 3: 1.991425
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 76.291672 seconds
+		 Speedup for the parallel region 4: 1.963902
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 6.621217 seconds
+		 Speedup for the parallel region 5: 1.976340
+
+		 Total time of execution: 90.440019 seconds
+		 Speedup for the entire application: 1.903927
+
+	--> Result for 4 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.299494 seconds
+		 Speedup for the parallel region 1: 3.813105
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.335531 seconds
+		 Speedup for the parallel region 2: 3.954580
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.328833 seconds
+		 Speedup for the parallel region 3: 3.964663
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 38.410198 seconds
+		 Speedup for the parallel region 4: 3.900771
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 3.360287 seconds
+		 Speedup for the parallel region 5: 3.894243
+
+		 Total time of execution: 48.381032 seconds
+		 Speedup for the entire application: 3.559064
+
+	--> Result for 8 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.164237 seconds
+		 Speedup for the parallel region 1: 6.953379
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.169340 seconds
+		 Speedup for the parallel region 2: 7.835621
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.167521 seconds
+		 Speedup for the parallel region 3: 7.782380
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 19.585796 seconds
+		 Speedup for the parallel region 4: 7.649899
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 1.745847 seconds
+		 Speedup for the parallel region 5: 7.495373
+
+		 Total time of execution: 27.488932 seconds
+		 Speedup for the entire application: 6.264019
+
+	--> Result for 16 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.105655 seconds
+		 Speedup for the parallel region 1: 10.808784
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.085555 seconds
+		 Speedup for the parallel region 2: 15.509134
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.084510 seconds
+		 Speedup for the parallel region 3: 15.426719
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 9.797483 seconds
+		 Speedup for the parallel region 4: 15.292639
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 0.953725 seconds
+		 Speedup for the parallel region 5: 13.720700
+
+		 Total time of execution: 16.712499 seconds
+		 Speedup for the entire application: 10.303137
+
+	--> Result for 32 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.102414 seconds
+		 Speedup for the parallel region 1: 11.150839
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.050160 seconds
+		 Speedup for the parallel region 2: 26.453032
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.049654 seconds
+		 Speedup for the parallel region 3: 26.255932
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 5.693999 seconds
+		 Speedup for the parallel region 4: 26.313559
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 0.649414 seconds
+		 Speedup for the parallel region 5: 20.150127
+
+		 Total time of execution: 12.304859 seconds
+		 Speedup for the entire application: 13.993754
+
+	--> Result for 64 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.129859 seconds
+		 Speedup for the parallel region 1: 8.794168
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.073614 seconds
+		 Speedup for the parallel region 2: 18.024887
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.073099 seconds
+		 Speedup for the parallel region 3: 17.834881
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 3.144158 seconds
+		 Speedup for the parallel region 4: 47.653259
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 0.491463 seconds
+		 Speedup for the parallel region 5: 26.626163
+
+		 Total time of execution: 9.744282 seconds
+		 Speedup for the entire application: 17.670998
+
+-----> Execution number 10 for ./targets/bodytrack:
+
+	--> Result for 1 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 1.143283 seconds
+		 Speedup for the parallel region 1: 1.000000
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 1.326540 seconds
+		 Speedup for the parallel region 2: 1.000000
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 1.301479 seconds
+		 Speedup for the parallel region 3: 1.000000
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 149.291611 seconds
+		 Speedup for the parallel region 4: 1.000000
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 13.049736 seconds
+		 Speedup for the parallel region 5: 1.000000
+
+		 Total time of execution: 171.619533 seconds
+		 Speedup for the entire application: 1.000000
+
+	--> Result for 2 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.595519 seconds
+		 Speedup for the parallel region 1: 1.919809
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.669296 seconds
+		 Speedup for the parallel region 2: 1.981993
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.656101 seconds
+		 Speedup for the parallel region 3: 1.983657
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 76.446075 seconds
+		 Speedup for the parallel region 4: 1.952901
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 6.632899 seconds
+		 Speedup for the parallel region 5: 1.967426
+
+		 Total time of execution: 90.585110 seconds
+		 Speedup for the entire application: 1.894567
+
+	--> Result for 4 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.301547 seconds
+		 Speedup for the parallel region 1: 3.791393
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.336344 seconds
+		 Speedup for the parallel region 2: 3.943998
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.329487 seconds
+		 Speedup for the parallel region 3: 3.950016
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 38.399391 seconds
+		 Speedup for the parallel region 4: 3.887864
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 3.360976 seconds
+		 Speedup for the parallel region 5: 3.882722
+
+		 Total time of execution: 48.377354 seconds
+		 Speedup for the entire application: 3.547518
+
+	--> Result for 8 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.163336 seconds
+		 Speedup for the parallel region 1: 6.999578
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.169320 seconds
+		 Speedup for the parallel region 2: 7.834515
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.167422 seconds
+		 Speedup for the parallel region 3: 7.773644
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 19.354437 seconds
+		 Speedup for the parallel region 4: 7.713560
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 1.737347 seconds
+		 Speedup for the parallel region 5: 7.511301
+
+		 Total time of execution: 27.251038 seconds
+		 Speedup for the entire application: 6.297725
+
+	--> Result for 16 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.109741 seconds
+		 Speedup for the parallel region 1: 10.418012
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.096650 seconds
+		 Speedup for the parallel region 2: 13.725194
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.095284 seconds
+		 Speedup for the parallel region 3: 13.658946
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 10.985879 seconds
+		 Speedup for the parallel region 4: 13.589410
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 0.966494 seconds
+		 Speedup for the parallel region 5: 13.502138
+
+		 Total time of execution: 17.957549 seconds
+		 Speedup for the entire application: 9.556958
+
+	--> Result for 32 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.097137 seconds
+		 Speedup for the parallel region 1: 11.769800
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.049839 seconds
+		 Speedup for the parallel region 2: 26.616505
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.049672 seconds
+		 Speedup for the parallel region 3: 26.201462
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 5.707266 seconds
+		 Speedup for the parallel region 4: 26.158167
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 0.621524 seconds
+		 Speedup for the parallel region 5: 20.996351
+
+		 Total time of execution: 12.256772 seconds
+		 Speedup for the entire application: 14.002018
+
+	--> Result for 64 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.124827 seconds
+		 Speedup for the parallel region 1: 9.158940
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.056859 seconds
+		 Speedup for the parallel region 2: 23.330343
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.057451 seconds
+		 Speedup for the parallel region 3: 22.653723
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 2.945073 seconds
+		 Speedup for the parallel region 4: 50.691990
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 0.469501 seconds
+		 Speedup for the parallel region 5: 27.794907
+
+		 Total time of execution: 9.476481 seconds
+		 Speedup for the entire application: 18.110050
+
+-----> Execution number 11 for ./targets/bodytrack:
+
+	--> Result for 1 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 1.142314 seconds
+		 Speedup for the parallel region 1: 1.000000
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 1.326004 seconds
+		 Speedup for the parallel region 2: 1.000000
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 1.301610 seconds
+		 Speedup for the parallel region 3: 1.000000
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 149.477936 seconds
+		 Speedup for the parallel region 4: 1.000000
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 13.050795 seconds
+		 Speedup for the parallel region 5: 1.000000
+
+		 Total time of execution: 172.351258 seconds
+		 Speedup for the entire application: 1.000000
+
+	--> Result for 2 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.585475 seconds
+		 Speedup for the parallel region 1: 1.951089
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.668671 seconds
+		 Speedup for the parallel region 2: 1.983044
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.654503 seconds
+		 Speedup for the parallel region 3: 1.988700
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 76.856758 seconds
+		 Speedup for the parallel region 4: 1.944890
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 6.613773 seconds
+		 Speedup for the parallel region 5: 1.973275
+
+		 Total time of execution: 90.989534 seconds
+		 Speedup for the entire application: 1.894188
+
+	--> Result for 4 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.299441 seconds
+		 Speedup for the parallel region 1: 3.814821
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.335861 seconds
+		 Speedup for the parallel region 2: 3.948074
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.328864 seconds
+		 Speedup for the parallel region 3: 3.957897
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 38.434639 seconds
+		 Speedup for the parallel region 4: 3.889146
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 3.358084 seconds
+		 Speedup for the parallel region 5: 3.886381
+
+		 Total time of execution: 48.393052 seconds
+		 Speedup for the entire application: 3.561488
+
+	--> Result for 8 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.163393 seconds
+		 Speedup for the parallel region 1: 6.991205
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.169743 seconds
+		 Speedup for the parallel region 2: 7.811833
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.167168 seconds
+		 Speedup for the parallel region 3: 7.786239
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 19.378229 seconds
+		 Speedup for the parallel region 4: 7.713705
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 1.737382 seconds
+		 Speedup for the parallel region 5: 7.511759
+
+		 Total time of execution: 27.265173 seconds
+		 Speedup for the entire application: 6.321297
+
+	--> Result for 16 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.108781 seconds
+		 Speedup for the parallel region 1: 10.501042
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.085896 seconds
+		 Speedup for the parallel region 2: 15.437320
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.084751 seconds
+		 Speedup for the parallel region 3: 15.358048
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 9.802950 seconds
+		 Speedup for the parallel region 4: 15.248260
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 0.952561 seconds
+		 Speedup for the parallel region 5: 13.700744
+
+		 Total time of execution: 16.707805 seconds
+		 Speedup for the entire application: 10.315613
+
+	--> Result for 32 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.106183 seconds
+		 Speedup for the parallel region 1: 10.757974
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.057780 seconds
+		 Speedup for the parallel region 2: 22.949186
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.050231 seconds
+		 Speedup for the parallel region 3: 25.912485
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 5.723975 seconds
+		 Speedup for the parallel region 4: 26.114357
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 0.608265 seconds
+		 Speedup for the parallel region 5: 21.455772
+
+		 Total time of execution: 12.304445 seconds
+		 Speedup for the entire application: 14.007236
+
+	--> Result for 64 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.128805 seconds
+		 Speedup for the parallel region 1: 8.868553
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.064191 seconds
+		 Speedup for the parallel region 2: 20.657166
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.060643 seconds
+		 Speedup for the parallel region 3: 21.463484
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 3.067791 seconds
+		 Speedup for the parallel region 4: 48.724941
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 0.507057 seconds
+		 Speedup for the parallel region 5: 25.738317
+
+		 Total time of execution: 9.685657 seconds
+		 Speedup for the entire application: 17.794481
+
+-----> Execution number 12 for ./targets/bodytrack:
+
+	--> Result for 1 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 1.141766 seconds
+		 Speedup for the parallel region 1: 1.000000
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 1.331755 seconds
+		 Speedup for the parallel region 2: 1.000000
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 1.301111 seconds
+		 Speedup for the parallel region 3: 1.000000
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 150.306137 seconds
+		 Speedup for the parallel region 4: 1.000000
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 13.042409 seconds
+		 Speedup for the parallel region 5: 1.000000
+
+		 Total time of execution: 173.063587 seconds
+		 Speedup for the entire application: 1.000000
+
+	--> Result for 2 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.584020 seconds
+		 Speedup for the parallel region 1: 1.955012
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.669217 seconds
+		 Speedup for the parallel region 2: 1.990020
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.655533 seconds
+		 Speedup for the parallel region 3: 1.984814
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 76.062988 seconds
+		 Speedup for the parallel region 4: 1.976075
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 6.628142 seconds
+		 Speedup for the parallel region 5: 1.967732
+
+		 Total time of execution: 90.223520 seconds
+		 Speedup for the entire application: 1.918165
+
+	--> Result for 4 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.301003 seconds
+		 Speedup for the parallel region 1: 3.793205
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.335653 seconds
+		 Speedup for the parallel region 2: 3.967654
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.328823 seconds
+		 Speedup for the parallel region 3: 3.956873
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 38.392597 seconds
+		 Speedup for the parallel region 4: 3.914977
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 3.360313 seconds
+		 Speedup for the parallel region 5: 3.881308
+
+		 Total time of execution: 48.366054 seconds
+		 Speedup for the entire application: 3.578203
+
+	--> Result for 8 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.163649 seconds
+		 Speedup for the parallel region 1: 6.976920
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.169756 seconds
+		 Speedup for the parallel region 2: 7.845113
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.167270 seconds
+		 Speedup for the parallel region 3: 7.778508
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 19.364897 seconds
+		 Speedup for the parallel region 4: 7.761784
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 1.736588 seconds
+		 Speedup for the parallel region 5: 7.510365
+
+		 Total time of execution: 27.250171 seconds
+		 Speedup for the entire application: 6.350917
+
+	--> Result for 16 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.108740 seconds
+		 Speedup for the parallel region 1: 10.499963
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.086784 seconds
+		 Speedup for the parallel region 2: 15.345629
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.107019 seconds
+		 Speedup for the parallel region 3: 12.157757
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 9.815405 seconds
+		 Speedup for the parallel region 4: 15.313290
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 0.951219 seconds
+		 Speedup for the parallel region 5: 13.711258
+
+		 Total time of execution: 16.737216 seconds
+		 Speedup for the entire application: 10.340045
+
+	--> Result for 32 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.107254 seconds
+		 Speedup for the parallel region 1: 10.645439
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.058748 seconds
+		 Speedup for the parallel region 2: 22.668943
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.050030 seconds
+		 Speedup for the parallel region 3: 26.006615
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 5.679047 seconds
+		 Speedup for the parallel region 4: 26.466787
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 0.624465 seconds
+		 Speedup for the parallel region 5: 20.885733
+
+		 Total time of execution: 12.274735 seconds
+		 Speedup for the entire application: 14.099172
+
+	--> Result for 64 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.123415 seconds
+		 Speedup for the parallel region 1: 9.251436
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.058203 seconds
+		 Speedup for the parallel region 2: 22.881208
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.054912 seconds
+		 Speedup for the parallel region 3: 23.694473
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 3.122000 seconds
+		 Speedup for the parallel region 4: 48.144184
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 0.522456 seconds
+		 Speedup for the parallel region 5: 24.963652
+
+		 Total time of execution: 9.721872 seconds
+		 Speedup for the entire application: 17.801466
+
+-----> Execution number 13 for ./targets/bodytrack:
+
+	--> Result for 1 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 1.141851 seconds
+		 Speedup for the parallel region 1: 1.000000
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 1.326602 seconds
+		 Speedup for the parallel region 2: 1.000000
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 1.301572 seconds
+		 Speedup for the parallel region 3: 1.000000
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 150.429764 seconds
+		 Speedup for the parallel region 4: 1.000000
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 13.055070 seconds
+		 Speedup for the parallel region 5: 1.000000
+
+		 Total time of execution: 172.769615 seconds
+		 Speedup for the entire application: 1.000000
+
+	--> Result for 2 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.580730 seconds
+		 Speedup for the parallel region 1: 1.966234
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.669333 seconds
+		 Speedup for the parallel region 2: 1.981976
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.656096 seconds
+		 Speedup for the parallel region 3: 1.983813
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 75.507515 seconds
+		 Speedup for the parallel region 4: 1.992249
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 6.633027 seconds
+		 Speedup for the parallel region 5: 1.968192
+
+		 Total time of execution: 89.615002 seconds
+		 Speedup for the entire application: 1.927909
+
+	--> Result for 4 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.299810 seconds
+		 Speedup for the parallel region 1: 3.808582
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.336310 seconds
+		 Speedup for the parallel region 2: 3.944581
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.328794 seconds
+		 Speedup for the parallel region 3: 3.958624
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 38.426208 seconds
+		 Speedup for the parallel region 4: 3.914770
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 3.358347 seconds
+		 Speedup for the parallel region 5: 3.887350
+
+		 Total time of execution: 48.402466 seconds
+		 Speedup for the entire application: 3.569438
+
+	--> Result for 8 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.161189 seconds
+		 Speedup for the parallel region 1: 7.083926
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.169480 seconds
+		 Speedup for the parallel region 2: 7.827484
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.166637 seconds
+		 Speedup for the parallel region 3: 7.810822
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 19.320654 seconds
+		 Speedup for the parallel region 4: 7.785956
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 1.735309 seconds
+		 Speedup for the parallel region 5: 7.523196
+
+		 Total time of execution: 27.208004 seconds
+		 Speedup for the entire application: 6.349956
+
+	--> Result for 16 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.105550 seconds
+		 Speedup for the parallel region 1: 10.818105
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.085694 seconds
+		 Speedup for the parallel region 2: 15.480687
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.084924 seconds
+		 Speedup for the parallel region 3: 15.326315
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 9.799828 seconds
+		 Speedup for the parallel region 4: 15.350246
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 0.954371 seconds
+		 Speedup for the parallel region 5: 13.679240
+
+		 Total time of execution: 16.709669 seconds
+		 Speedup for the entire application: 10.339499
+
+	--> Result for 32 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.102072 seconds
+		 Speedup for the parallel region 1: 11.186721
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.054821 seconds
+		 Speedup for the parallel region 2: 24.198792
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.051048 seconds
+		 Speedup for the parallel region 3: 25.497023
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 5.716402 seconds
+		 Speedup for the parallel region 4: 26.315462
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 0.624911 seconds
+		 Speedup for the parallel region 5: 20.891087
+
+		 Total time of execution: 12.297509 seconds
+		 Speedup for the entire application: 14.049156
+
+	--> Result for 64 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.122279 seconds
+		 Speedup for the parallel region 1: 9.338078
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.055488 seconds
+		 Speedup for the parallel region 2: 23.907907
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.051981 seconds
+		 Speedup for the parallel region 3: 25.039379
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 3.028812 seconds
+		 Speedup for the parallel region 4: 49.666260
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 0.505549 seconds
+		 Speedup for the parallel region 5: 25.823549
+
+		 Total time of execution: 9.598049 seconds
+		 Speedup for the entire application: 18.000494
+
+-----> Execution number 14 for ./targets/bodytrack:
+
+	--> Result for 1 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 1.142069 seconds
+		 Speedup for the parallel region 1: 1.000000
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 1.397938 seconds
+		 Speedup for the parallel region 2: 1.000000
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 1.379640 seconds
+		 Speedup for the parallel region 3: 1.000000
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 149.783005 seconds
+		 Speedup for the parallel region 4: 1.000000
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 13.061344 seconds
+		 Speedup for the parallel region 5: 1.000000
+
+		 Total time of execution: 172.269334 seconds
+		 Speedup for the entire application: 1.000000
+
+	--> Result for 2 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.581348 seconds
+		 Speedup for the parallel region 1: 1.964519
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.671836 seconds
+		 Speedup for the parallel region 2: 2.080773
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.654967 seconds
+		 Speedup for the parallel region 3: 2.106427
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 76.382553 seconds
+		 Speedup for the parallel region 4: 1.960958
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 6.612932 seconds
+		 Speedup for the parallel region 5: 1.975121
+
+		 Total time of execution: 90.525811 seconds
+		 Speedup for the entire application: 1.902986
+
+	--> Result for 4 threads, application ./targets/bodytrack, arguments: /home/marcio/sequenceB_261, 4, 30, 6000, 12, 3, 1, 
+
+		 Parallel execution time of the region 1, lines 108 to 120 on file ParticleFilterOMP.h: 0.299352 seconds
+		 Speedup for the parallel region 1: 3.815137
+
+		 Parallel execution time of the region 2, lines 44 to 58 on file ParticleFilterOMP.h: 0.335731 seconds
+		 Speedup for the parallel region 2: 4.163863
+
+		 Parallel execution time of the region 3, lines 73 to 87 on file ParticleFilterOMP.h: 0.328711 seconds
+		 Speedup for the parallel region 3: 4.197122
+
+		 Parallel execution time of the region 4, lines 68 to 76 on file ParticleFilterOMP.h: 38.362553 seconds
+		 Speedup for the parallel region 4: 3.904407
+
+		 Parallel execution time of the region 5, lines 114 to 120 on file ParticleFilterOMP.h: 3.353900 seconds
+		 Speedup for the parallel region 5: 3.894375
+
+		 Total time of execution: 48.306746 seconds
+		 Speedup for the entire application: 3.566155

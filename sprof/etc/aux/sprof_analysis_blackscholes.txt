@@ -1,0 +1,8 @@
+Blackscholes
+
+
+Mean
+60.624631
+
+Standard deviation
+0.472534

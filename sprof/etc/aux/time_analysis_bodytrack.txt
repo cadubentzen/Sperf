@@ -1,0 +1,8 @@
+Bodytrack
+
+
+Mean
+8.303810
+
+Standard deviation
+0.071225

@@ -1,0 +1,184 @@
+
+-----> Execution number 1 for ./targets/freqmine:
+
+	--> Result for 1 threads, application ./targets/freqmine, arguments: /home/marcio/webdocs_250k.dat, 14000, 
+
+		 Parallel execution time of the region 1, lines 888 to 946 on file fp_tree.cpp: 0.001608 seconds
+		 Speedup for the parallel region 1: 1.000000
+
+		 Parallel execution time of the region 2, lines 541 to 636 on file fp_tree.cpp: 1.468662 seconds
+		 Speedup for the parallel region 2: 1.000000
+
+		 Parallel execution time of the region 3, lines 730 to 756 on file fp_tree.cpp: 0.053072 seconds
+		 Speedup for the parallel region 3: 1.000000
+
+		 Parallel execution time of the region 4, lines 1078 to 1186 on file fp_tree.cpp: 0.363033 seconds
+		 Speedup for the parallel region 4: 1.000000
+
+		 Parallel execution time of the region 5, lines 1197 to 1205 on file fp_tree.cpp: 0.000016 seconds
+		 Speedup for the parallel region 5: 1.000000
+
+		 Parallel execution time of the region 6, lines 213 to 289 on file fp_tree.cpp: 0.495403 seconds
+		 Speedup for the parallel region 6: 1.000000
+
+		 Parallel execution time of the region 7, lines 1377 to 1461 on file fp_tree.cpp: 177.450531 seconds
+		 Speedup for the parallel region 7: 1.000000
+
+		 Total time of execution: 188.701647 seconds
+		 Speedup for the entire application: 1.000000
+
+	--> Result for 2 threads, application ./targets/freqmine, arguments: /home/marcio/webdocs_250k.dat, 14000, 
+
+		 Parallel execution time of the region 1, lines 888 to 946 on file fp_tree.cpp: 0.002214 seconds
+		 Speedup for the parallel region 1: 0.726255
+
+		 Parallel execution time of the region 2, lines 541 to 636 on file fp_tree.cpp: 0.694804 seconds
+		 Speedup for the parallel region 2: 2.113779
+
+		 Parallel execution time of the region 3, lines 730 to 756 on file fp_tree.cpp: 0.026017 seconds
+		 Speedup for the parallel region 3: 2.039900
+
+		 Parallel execution time of the region 4, lines 1078 to 1186 on file fp_tree.cpp: 0.152198 seconds
+		 Speedup for the parallel region 4: 2.385266
+
+		 Parallel execution time of the region 5, lines 1197 to 1205 on file fp_tree.cpp: 0.000017 seconds
+		 Speedup for the parallel region 5: 0.943662
+
+		 Parallel execution time of the region 6, lines 213 to 289 on file fp_tree.cpp: 0.360814 seconds
+		 Speedup for the parallel region 6: 1.373014
+
+		 Parallel execution time of the region 7, lines 1377 to 1461 on file fp_tree.cpp: 89.486572 seconds
+		 Speedup for the parallel region 7: 1.982985
+
+		 Total time of execution: 99.656068 seconds
+		 Speedup for the entire application: 1.893529
+
+	--> Result for 4 threads, application ./targets/freqmine, arguments: /home/marcio/webdocs_250k.dat, 14000, 
+
+		 Parallel execution time of the region 1, lines 888 to 946 on file fp_tree.cpp: 0.002033 seconds
+		 Speedup for the parallel region 1: 0.790807
+
+		 Parallel execution time of the region 2, lines 541 to 636 on file fp_tree.cpp: 0.440934 seconds
+		 Speedup for the parallel region 2: 3.330798
+
+		 Parallel execution time of the region 3, lines 730 to 756 on file fp_tree.cpp: 0.015812 seconds
+		 Speedup for the parallel region 3: 3.356454
+
+		 Parallel execution time of the region 4, lines 1078 to 1186 on file fp_tree.cpp: 0.079488 seconds
+		 Speedup for the parallel region 4: 4.567138
+
+		 Parallel execution time of the region 5, lines 1197 to 1205 on file fp_tree.cpp: 0.000020 seconds
+		 Speedup for the parallel region 5: 0.797619
+
+		 Parallel execution time of the region 6, lines 213 to 289 on file fp_tree.cpp: 0.184107 seconds
+		 Speedup for the parallel region 6: 2.690841
+
+		 Parallel execution time of the region 7, lines 1377 to 1461 on file fp_tree.cpp: 45.257027 seconds
+		 Speedup for the parallel region 7: 3.920950
+
+		 Total time of execution: 54.939236 seconds
+		 Speedup for the entire application: 3.434734
+
+	--> Result for 8 threads, application ./targets/freqmine, arguments: /home/marcio/webdocs_250k.dat, 14000, 
+
+		 Parallel execution time of the region 1, lines 888 to 946 on file fp_tree.cpp: 0.002399 seconds
+		 Speedup for the parallel region 1: 0.670244
+
+		 Parallel execution time of the region 2, lines 541 to 636 on file fp_tree.cpp: 0.286867 seconds
+		 Speedup for the parallel region 2: 5.119658
+
+		 Parallel execution time of the region 3, lines 730 to 756 on file fp_tree.cpp: 0.008737 seconds
+		 Speedup for the parallel region 3: 6.074499
+
+		 Parallel execution time of the region 4, lines 1078 to 1186 on file fp_tree.cpp: 0.051705 seconds
+		 Speedup for the parallel region 4: 7.021248
+
+		 Parallel execution time of the region 5, lines 1197 to 1205 on file fp_tree.cpp: 0.000020 seconds
+		 Speedup for the parallel region 5: 0.797619
+
+		 Parallel execution time of the region 6, lines 213 to 289 on file fp_tree.cpp: 0.106561 seconds
+		 Speedup for the parallel region 6: 4.649009
+
+		 Parallel execution time of the region 7, lines 1377 to 1461 on file fp_tree.cpp: 23.055157 seconds
+		 Speedup for the parallel region 7: 7.696783
+
+		 Total time of execution: 32.450738 seconds
+		 Speedup for the entire application: 5.815019
+
+	--> Result for 16 threads, application ./targets/freqmine, arguments: /home/marcio/webdocs_250k.dat, 14000, 
+
+		 Parallel execution time of the region 1, lines 888 to 946 on file fp_tree.cpp: 0.004961 seconds
+		 Speedup for the parallel region 1: 0.324106
+
+		 Parallel execution time of the region 2, lines 541 to 636 on file fp_tree.cpp: 0.234471 seconds
+		 Speedup for the parallel region 2: 6.263722
+
+		 Parallel execution time of the region 3, lines 730 to 756 on file fp_tree.cpp: 0.009374 seconds
+		 Speedup for the parallel region 3: 5.661529
+
+		 Parallel execution time of the region 4, lines 1078 to 1186 on file fp_tree.cpp: 0.058292 seconds
+		 Speedup for the parallel region 4: 6.227842
+
+		 Parallel execution time of the region 5, lines 1197 to 1205 on file fp_tree.cpp: 0.000021 seconds
+		 Speedup for the parallel region 5: 0.761364
+
+		 Parallel execution time of the region 6, lines 213 to 289 on file fp_tree.cpp: 0.074232 seconds
+		 Speedup for the parallel region 6: 6.673700
+
+		 Parallel execution time of the region 7, lines 1377 to 1461 on file fp_tree.cpp: 12.937818 seconds
+		 Speedup for the parallel region 7: 13.715647
+
+		 Total time of execution: 22.450675 seconds
+		 Speedup for the entire application: 8.405166
+
+	--> Result for 32 threads, application ./targets/freqmine, arguments: /home/marcio/webdocs_250k.dat, 14000, 
+
+		 Parallel execution time of the region 1, lines 888 to 946 on file fp_tree.cpp: 0.009125 seconds
+		 Speedup for the parallel region 1: 0.176208
+
+		 Parallel execution time of the region 2, lines 541 to 636 on file fp_tree.cpp: 0.187272 seconds
+		 Speedup for the parallel region 2: 7.842396
+
+		 Parallel execution time of the region 3, lines 730 to 756 on file fp_tree.cpp: 0.012289 seconds
+		 Speedup for the parallel region 3: 4.318640
+
+		 Parallel execution time of the region 4, lines 1078 to 1186 on file fp_tree.cpp: 0.039853 seconds
+		 Speedup for the parallel region 4: 9.109329
+
+		 Parallel execution time of the region 5, lines 1197 to 1205 on file fp_tree.cpp: 0.000035 seconds
+		 Speedup for the parallel region 5: 0.455782
+
+		 Parallel execution time of the region 6, lines 213 to 289 on file fp_tree.cpp: 0.055756 seconds
+		 Speedup for the parallel region 6: 8.885179
+
+		 Parallel execution time of the region 7, lines 1377 to 1461 on file fp_tree.cpp: 8.724712 seconds
+		 Speedup for the parallel region 7: 20.338840
+
+		 Total time of execution: 18.289412 seconds
+		 Speedup for the entire application: 10.317535
+
+	--> Result for 64 threads, application ./targets/freqmine, arguments: /home/marcio/webdocs_250k.dat, 14000, 
+
+		 Parallel execution time of the region 1, lines 888 to 946 on file fp_tree.cpp: 0.020877 seconds
+		 Speedup for the parallel region 1: 0.077018
+
+		 Parallel execution time of the region 2, lines 541 to 636 on file fp_tree.cpp: 0.204356 seconds
+		 Speedup for the parallel region 2: 7.186774
+
+		 Parallel execution time of the region 3, lines 730 to 756 on file fp_tree.cpp: 0.021856 seconds
+		 Speedup for the parallel region 3: 2.428249
+
+		 Parallel execution time of the region 4, lines 1078 to 1186 on file fp_tree.cpp: 0.069001 seconds
+		 Speedup for the parallel region 4: 5.261272
+
+		 Parallel execution time of the region 5, lines 1197 to 1205 on file fp_tree.cpp: 0.000916 seconds
+		 Speedup for the parallel region 5: 0.017439
+
+		 Parallel execution time of the region 6, lines 213 to 289 on file fp_tree.cpp: 0.035541 seconds
+		 Speedup for the parallel region 6: 13.938888
+
+		 Parallel execution time of the region 7, lines 1377 to 1461 on file fp_tree.cpp: 7.445266 seconds
+		 Speedup for the parallel region 7: 23.834007
+
+		 Total time of execution: 17.274626 seconds
+		 Speedup for the entire application: 10.923632
