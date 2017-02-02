@@ -23,7 +23,7 @@ The entire suite is licensed under the GPL v3.0.
 
 SECTION 1 - WHAT IS SPROF
 
-The main tool (the "sprof" binary executable, writter in C) executes an user application (called "target") repeatedly, for the same size of problem, but different number of threads, so that it is able to calculate the speedup of the target. The user must, first of all, instrument its application using specific functions provided by the Sprof library "libsprof.so". If he/she wants it to be made automatically, there is an executable shell script called "sprof_instr.sh" that may perform such task in certain conditions.  
+The main tool (the "sprof" binary executable, written in C) executes an user application (called "target") repeatedly, for the same size of problem, but different number of threads, so that it is able to calculate the speedup of the target. The user must, first of all, instrument its application using specific functions provided by the Sprof library "libsprof.so". If he/she wants it to be made automatically, there is an executable shell script called "sprof_instr.sh" that may perform such task in certain conditions.  
 
 That said, the tool suite aims two things, basically:
 
