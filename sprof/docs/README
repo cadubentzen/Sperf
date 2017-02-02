@@ -23,12 +23,12 @@ The entire suite is licensed under the GPL v3.0.
 
 SECTION 1 - WHAT IS SPROF
 
-The toolsuite aims two things, basically:
+Sprof executes an user application (called "target") repeatedly, for the same size of problem, but different number of threads, so that it is able to calculate the speedup of the target. The user must, first of all, instrument its application using specific functions provided by the Sprof library "libsprof.so". If he/she wants it to be made automatically, there is an executable script called "sprof_instr.sh" that may perform such task in certain conditions. 
+
+The tool suite aims two things, basically:
 
 First, a test plataform to create a profile about the speedup of multithread applications. This is acomplished by the binary executable called "sprof".
 Second, to instrument the source-code of these applications automatically. This is acomplished by the shell script called "sprof_instr.sh".
-
-In other words, Sprof executes an user application repeatedly, for the same size of problem, but different number of threads, so that it is able to calculate the speedup of that application.
 
 The tool was tested for OpenMP and Pthreads application.
 
