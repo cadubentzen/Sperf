@@ -1,8 +1,0 @@
-Freqmine
-
-
-Mean
-18.472040
-
-Standard deviation
-0.212994
