@@ -68,7 +68,7 @@ SECTION 4 - AUTOMATIC INSTRUMENTATION
 
 Sometimes, looking into a code and placing instrumentation can be tricky. With that in mind, the shell script "sprof_instr.sh" was created as a first trial to automatically instrument code using the sprof library. Currently, it inserts only "sprof_start" and "sprof_stop" functions in OpenMP directives that start with "pragma omp parallel".
 
-To use 
+To use the
 
 
 
