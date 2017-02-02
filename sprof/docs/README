@@ -3,8 +3,8 @@ Sprof was developed by Márcio Jales (marcio.dojcosta@gmail.com), at UFRN (Unive
 Date: 09/12/2016.
 
 This document describes the essentials about the sprof toolsuite. It consists of:
-- "sprof" binary executable;
-- "sprof_instr.sh" shell script ;
+- "sprof" binary executable (writter in C);
+- "sprof_instr.sh" shell script;
 - and the "libsprof.so" shared library.
 
 It is organised as shown below:
