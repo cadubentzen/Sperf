@@ -104,7 +104,7 @@ The only option available to use with sprof is the "-t" option. If passed to, th
 
 	1 - An application named "app" has three arguments, where the second represents the number of threads that "app" will fork to execute. The option "-t" may be used then: "sprof -t 2 app arg1 arg2 arg3";
 	2 - An application named "foo" has four arguments, where the fourth represents the number of threads that "foo" will fork to execute. The option "-t" may be used then: "sprof -t 4 foo arg1 arg2 arg3 arg4";
-	2 - An application named "bar" has six arguments, where none of them represents the number of threads. The option "-t" may NOT be used then: "sprof bar arg1 arg2 arg3 arg4 arg5 arg6".
+	3 - An application named "bar" has six arguments, where none of them represents the number of threads. The option "-t" may NOT be used then: "sprof bar arg1 arg2 arg3 arg4 arg5 arg6".
 	
 	Notice that if the user inserts the function "sprof_thrnum" (refer to section 3) in his/her application, "-t" isn't necessary even if the target passes the number of threads in its arguments.
 
