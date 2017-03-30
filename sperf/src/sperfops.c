@@ -22,9 +22,9 @@
 #include <string.h> 
 #include "../include/sperfops.h"
 #include <sys/time.h>
-#ifndef _OPENMP
+//#ifndef _OPENMP
 #include <pthread.h>
-#endif
+//#endif
 
 #define RED     			"\x1b[31m"
 #define RESET   			"\x1b[0m"
@@ -129,7 +129,7 @@ void _sperf_stop(int stop_line, const char * filename)
 	}
 }
 
-#ifndef _OPENMP
+//#ifndef _OPENMP
 static pthread_t thr_start[MAX_ANNOTATIONS];
 
 void _sperf_pthstart(pthread_t thr, int line, const char * filename)
@@ -194,7 +194,7 @@ void _sperf_pthstop(pthread_t thr_stop, int stop_line, const char * filename)
 
 	write(fd_pipe, &info, sizeof(struct send_info));
 }
-#endif
+//#endif
 
 
 
