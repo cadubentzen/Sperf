@@ -44,6 +44,7 @@
 #define CYAN   			"\x1b[36m"
 #define RESET   			"\x1b[0m"
 
+#define CB 1
 
 int *list_of_threads_value;
 int optset = 0;
@@ -103,7 +104,12 @@ char *get_path(char * argmnt, int location)
     free(argv0); // memory leak
     argv0 = strdup(argmnt);
     token = strtok(argv0, delim);
-    strcpy(path, token);
+    #if CB == 0
+        strcpy(path, token);
+    #else
+        strcpy(path, delim);
+        strcat(path, token);
+    #endif
     while( token != NULL )
     {
         j--;
