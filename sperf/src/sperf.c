@@ -47,7 +47,9 @@
 #define CB 1
 
 int *list_of_threads_value;
+char **list_of_data_names;
 int optset = 0;
+int datatset = 0;
 int num_marks;
 float prl_times[MAX_ANNOTATIONS];
 int start_line[MAX_ANNOTATIONS], stop_line[MAX_ANNOTATIONS];
@@ -131,7 +133,7 @@ char *get_path(char * argmnt, int location)
 }
 
 // read the config file
-void exec_conf(int * l_num_exec, int * l_num_max_threads, char * exec_path)
+void exec_conf(int * l_num_exec, int * l_num_max_threads, int *l_num_data, char * exec_path)
 {
     char * step_type = (char *) malloc(10);
     char * str = (char *) malloc(50);
@@ -288,6 +290,43 @@ void exec_conf(int * l_num_exec, int * l_num_max_threads, char * exec_path)
                     }
                 }
             }
+            else if(strncmp(str, "list_of_data=", 13) == 0)
+            {
+                printf(BLUE "[Sperf]" RESET " Retrieving the list of data values...\n");
+                if (str[strlen(str)-1] != '}')
+                {
+                    fputs(RED "[Sperf]" RESET " Format error on list_data_values\n", stderr);
+                    exit(1);
+                }
+                fseek(conf_file, -2, SEEK_CUR);
+                while(fgetc(conf_file) != '=')
+                    fseek(conf_file, -2, SEEK_CUR);
+                if (fgetc(conf_file) != '{')
+                {
+                    fputs(RED "[Sperf]" RESET " Format error on list_threads_values\n", stderr);
+                    exit(1);
+                }
+                else
+                {
+                    char * token;
+                    int i = 1;
+                    fscanf(conf_file, "%s", str);
+                    token = strtok(str, delim);
+                    while( token != NULL ) // split word whit the token
+                    {
+                        if (i == 1)
+                            list_of_data_names = (char **) malloc(sizeof(char*));
+                        else
+                            list_of_data_names = (char **) realloc(list_of_data_names, i * sizeof(char*));
+                        list_of_data_names[i-1]= (char *) malloc(60*sizeof(char));
+                        sscanf(token, "%s", list_of_data_names[i-1]);
+                        token = strtok(NULL, delim);
+                        i++;
+                    }
+                    *l_num_data= i-1;
+                }
+                list_of_data_names[*l_num_data-1][strlen(list_of_data_names[*l_num_data-1])-1]= '\0';
+            }
             else
             {
                 fputs(RED "[Sperf]" RESET " Invalid configuration variable\n", stderr);
@@ -359,11 +398,17 @@ void exec_conf(int * l_num_exec, int * l_num_max_threads, char * exec_path)
 }
 
 // store time information
-void time_information(float *l_time_singleThrPrl, int cur_thrs, double l_end, double l_start, FILE * out, int cur_exec, char *l_args[], int l_argc)
+int last_exec=0;
+void time_information(float *l_time_singleThrPrl, int cur_thrs, int cur_data, double l_end, double l_start, FILE * out, int cur_exec, char *l_args[], int l_argc)
 {
     static float time_singleThrTotal;
     int count, i;
-
+    if(last_exec!=cur_exec)
+    {
+        last_exec= cur_exec;
+        if(out_csv)
+            fprintf(out, "\n,");
+    }
     if (cur_thrs == 1)
     {
         for (count = 0; count < num_marks; count++)
@@ -371,7 +416,7 @@ void time_information(float *l_time_singleThrPrl, int cur_thrs, double l_end, do
 
         time_singleThrTotal = (float) (l_end - l_start);
         if(out_csv)
-            fprintf(out, "\n%d,", cur_exec);
+            fprintf(out, "\n%d,", cur_data);
         else
             fprintf(out, "\n-----> Execution number %d for %s:\n", cur_exec + 1, l_args[1]);
     }
@@ -437,6 +482,14 @@ char** menu_opt(char* argv[], int argc, int *nargs)
                 strcpy(csv_file, argv[i]);
             }
         }
+        else if(strcmp(argv[i], "-ps") == 0)
+        {
+            i++;
+            if(i<argc) // cheking if the user pass the argument
+            {
+                datatset= atoi(argv[i]);
+            }
+        }
         else // other arguments
         {
             args[*nargs] = (char *)malloc(100*sizeof(char));
@@ -461,7 +514,7 @@ int main(int argc, char *argv[])
 
     double start, end;
     float time_singleThrPrl[MAX_ANNOTATIONS];
-    int i = 0, j, num_exec, current_exec, num_current_threads, num_max_threads;
+    int i = 0, j, num_exec, current_exec, current_data, num_current_threads, num_max_threads, num_data;
     /* pipes[0] = leitura; pipes[1] = escrita */
     int pipes[2], nargs;
     char * filename = (char *) malloc(30);
@@ -490,7 +543,7 @@ int main(int argc, char *argv[])
         exit(1);
     }
     printf(BLUE "[Sperf]" RESET " Reading sperf_exec.conf\n");
-    exec_conf(&num_exec, &num_max_threads, argv[0]);
+    exec_conf(&num_exec, &num_max_threads, &num_data, argv[0]);
 
     sprintf(filename, "%d-%d-%d-%dh%dm%ds.txt", local->tm_mday, local->tm_mon + 1, local->tm_year + 1900, local->tm_hour, local->tm_min, local->tm_sec);
     result_file = get_path(argv[0], RESULT_PATH);
@@ -540,93 +593,99 @@ int main(int argc, char *argv[])
 
     for (current_exec = 0; current_exec < num_exec; current_exec++)
     {
-        num_current_threads = 1;
-        int j = 0;
+
         printf(BLUE "[Sperf]" RESET " Current execution %d of %d\n", current_exec + 1, num_exec);
-
-        while (num_current_threads <= num_max_threads)
+        for(current_data=0; current_data<num_data; current_data++)
         {
-            pid_t pid_child;
+            num_current_threads = 1;
+            int j = 0;
+            printf(BLUE "[Sperf]" RESET " Current data %d of %d\n", current_data + 1, num_data);
+            while (num_current_threads <= num_max_threads)
+            {
+                pid_t pid_child;
 
-            printf(BLUE "[Sperf]" RESET " Executing for %d threads\n", num_current_threads);
-            set_perfcfg(num_current_threads, SET_THREADS);
-            if (pipe(pipes) == -1)
-            {
-                fprintf(stderr, RED "[Sperf]" RESET " IPC initialization error: %s\n", strerror(errno));
-                exit(1);
-            }
-            set_perfcfg(pipes[1], SET_PIPE);
-            if ((pid_child = fork()) < 0)
-            {
-                fprintf(stderr, RED "[Sperf]" RESET " Failed to fork(): %s\n", strerror(errno));
-                exit(1);
-            }
-            GET_TIME(start);
+                printf(BLUE "[Sperf]" RESET " Executing for %d threads\n", num_current_threads);
+                set_perfcfg(num_current_threads, SET_THREADS);
+                if (pipe(pipes) == -1)
+                {
+                    fprintf(stderr, RED "[Sperf]" RESET " IPC initialization error: %s\n", strerror(errno));
+                    exit(1);
+                }
+                set_perfcfg(pipes[1], SET_PIPE);
+                if ((pid_child = fork()) < 0)
+                {
+                    fprintf(stderr, RED "[Sperf]" RESET " Failed to fork(): %s\n", strerror(errno));
+                    exit(1);
+                }
+                GET_TIME(start);
 
-            /* Se for o processo filho, argv[1] (o nome da aplicação passada por linha de comando) é executado, com os argumentos
-             	especificados pelo vetor de strings args + 1 (o primeiro elemento de args é ./Sperf. Portanto, é descartado) */
-            if (pid_child == 0)
-            {
-                if (close(pipes[0]) == -1)
+                /* Se for o processo filho, argv[1] (o nome da aplicação passada por linha de comando) é executado, com os argumentos
+                    especificados pelo vetor de strings args + 1 (o primeiro elemento de args é ./Sperf. Portanto, é descartado) */
+                if (pid_child == 0)
                 {
-                    fprintf(stderr, RED "[Sperf]" RESET " Failed to close() IPC: %s\n", strerror(errno));
-                    exit(1);
-                }
-                if (optset != 0)
-                    sprintf(args[optset], "%d", num_current_threads);
-                if (execv(args[1], (args + 1)) == -1)
-                {
-                    fprintf(stderr, RED "[Sperf]" RESET " Failed to start the target application: %s\n", strerror(errno));
-                    exit(1);
-                }
-            }
-            else
-            {
-                if (close(pipes[1]) == -1)
-                {
-                    fprintf(stderr, RED "[Sperf]" RESET " Failed to close IPC: %s\n", strerror(errno));
-                    exit(1);
-                }
-                while (!waitpid(pid_child, 0, WNOHANG))
-                {
-                    if ((int) read(pipes[0], &info, sizeof(struct recv_info)) == -1)
+                    if (close(pipes[0]) == -1)
                     {
-                        fprintf(stderr, RED "[Sperf]" RESET " Reading from the pipe has failed: %s\n", strerror(errno));
+                        fprintf(stderr, RED "[Sperf]" RESET " Failed to close() IPC: %s\n", strerror(errno));
                         exit(1);
                     }
-
-                    mark = info.s_mark;
-                    prl_times[mark] = info.s_time;
-                    start_line[mark] = info.s_start_line;
-                    stop_line[mark] = info.s_stop_line;
-                    strcpy(fname[mark], info.s_filename);
-
-                    if (num_current_threads == 1)
+                    if (optset != 0)
+                        sprintf(args[optset], "%d", num_current_threads);
+                    if (datatset != 0)
+                        sprintf(args[datatset+1], "%s", list_of_data_names[current_data]);
+                    if (execv(args[1], (args + 1)) == -1)
                     {
-                        if (mark > mark_ant)
-                        {
-                            mark_ant = mark;
-                            num_marks = mark + 1;
-                        }
+                        fprintf(stderr, RED "[Sperf]" RESET " Failed to start the target application: %s\n", strerror(errno));
+                        exit(1);
                     }
                 }
-                GET_TIME(end);
-
-                time_information(time_singleThrPrl, num_current_threads, end, start, out, current_exec, args, nargs);
-
-                if (close(pipes[0]) == -1)
+                else
                 {
-                    fprintf(stderr, RED "[Sperf]" RESET " Failed to close IPC: %s\n", strerror(errno));
-                    exit(1);
+                    if (close(pipes[1]) == -1)
+                    {
+                        fprintf(stderr, RED "[Sperf]" RESET " Failed to close IPC: %s\n", strerror(errno));
+                        exit(1);
+                    }
+                    while (!waitpid(pid_child, 0, WNOHANG))
+                    {
+                        if ((int) read(pipes[0], &info, sizeof(struct recv_info)) == -1)
+                        {
+                            fprintf(stderr, RED "[Sperf]" RESET " Reading from the pipe has failed: %s\n", strerror(errno));
+                            exit(1);
+                        }
+
+                        mark = info.s_mark;
+                        prl_times[mark] = info.s_time;
+                        start_line[mark] = info.s_start_line;
+                        stop_line[mark] = info.s_stop_line;
+                        strcpy(fname[mark], info.s_filename);
+
+                        if (num_current_threads == 1)
+                        {
+                            if (mark > mark_ant)
+                            {
+                                mark_ant = mark;
+                                num_marks = mark + 1;
+                            }
+                        }
+                    }
+                    GET_TIME(end);
+
+                    time_information(time_singleThrPrl, num_current_threads, current_data, end, start, out, current_exec, args, nargs);
+
+                    if (close(pipes[0]) == -1)
+                    {
+                        fprintf(stderr, RED "[Sperf]" RESET " Failed to close IPC: %s\n", strerror(errno));
+                        exit(1);
+                    }
                 }
+                if (num_current_threads == num_max_threads)
+                    break;
+                num_current_threads = list_of_threads_value[j];
+                j++;
             }
-            if (num_current_threads == num_max_threads)
-                break;
-            num_current_threads = list_of_threads_value[j];
-            j++;
         }
     }
-
+    fprintf(out, "\n");
     if(fclose(out) != 0)
     {
         fprintf(stderr, RED "[Sperf]" RESET " Failed to close the result file\n");
