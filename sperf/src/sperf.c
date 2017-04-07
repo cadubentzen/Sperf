@@ -44,15 +44,14 @@
 #define CYAN   			"\x1b[36m"
 #define RESET   			"\x1b[0m"
 
-#define CB 1
+#define CB 0
 
-int *list_of_threads_value;
-char **list_of_data_names;
-int optset = 0;
-int datatset = 0;
+int optset = 0, datatset= 0;
 int num_marks;
 float prl_times[MAX_ANNOTATIONS];
 int start_line[MAX_ANNOTATIONS], stop_line[MAX_ANNOTATIONS];
+int *list_of_threads_value;
+char **list_of_data_names;
 char **fname;
 char *config_file, *csv_file= NULL;
 bool out_csv= 0;
@@ -136,7 +135,7 @@ char *get_path(char * argmnt, int location)
 void exec_conf(int * l_num_exec, int * l_num_max_threads, int *l_num_data, char * exec_path)
 {
     char * step_type = (char *) malloc(10);
-    char * str = (char *) malloc(50);
+    char * str = (char *) malloc(200);
     char * str_ant = (char *) malloc(50);
     char * config_path; // = (char *) malloc(200); memory leak
     int step, max_threads;
@@ -312,12 +311,10 @@ void exec_conf(int * l_num_exec, int * l_num_max_threads, int *l_num_data, char 
                     int i = 1;
                     fscanf(conf_file, "%s", str);
                     token = strtok(str, delim);
+                    list_of_data_names = (char **) malloc(sizeof(char*));
                     while( token != NULL ) // split word whit the token
                     {
-                        if (i == 1)
-                            list_of_data_names = (char **) malloc(sizeof(char*));
-                        else
-                            list_of_data_names = (char **) realloc(list_of_data_names, i * sizeof(char*));
+                        list_of_data_names = (char **) realloc(list_of_data_names, i * sizeof(char*));
                         list_of_data_names[i-1]= (char *) malloc(60*sizeof(char));
                         sscanf(token, "%s", list_of_data_names[i-1]);
                         token = strtok(NULL, delim);
@@ -334,7 +331,7 @@ void exec_conf(int * l_num_exec, int * l_num_max_threads, int *l_num_data, char 
             }
         }
         strcpy(str_ant, str);
-        fscanf(conf_file, "%s", str);
+        fscanf(conf_file, "%199s", str);
     }
     // verify correctly config file
     if (flag_num_tests == 0)
@@ -422,7 +419,7 @@ void time_information(float *l_time_singleThrPrl, int cur_thrs, int cur_data, do
     }
     if(out_csv)
     {
-        fprintf(out, "%f,", time_singleThrTotal/(float)(l_end - l_start));
+        fprintf(out, "%f,", time_singleThrTotal/(float)(l_end - l_start)/cur_thrs);
     }
     else
     {
@@ -593,9 +590,8 @@ int main(int argc, char *argv[])
 
     for (current_exec = 0; current_exec < num_exec; current_exec++)
     {
-
         printf(BLUE "[Sperf]" RESET " Current execution %d of %d\n", current_exec + 1, num_exec);
-        for(current_data=0; current_data<num_data; current_data++)
+        for(current_data=0; current_data==0 || current_data<num_data; current_data++)
         {
             num_current_threads = 1;
             int j = 0;
