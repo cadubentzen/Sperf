@@ -1,90 +1,90 @@
 
-Sprof was developed by Márcio Jales (marcio.dojcosta@gmail.com), at UFRN (Universidade Federal do Rio Grande do Norte), as part of the undegraduate thesis in computer engineering.
+sperf was developed by Márcio Jales (marcio.dojcosta@gmail.com), at UFRN (Universidade Federal do Rio Grande do Norte), as part of the undegraduate thesis in computer engineering.
 Date: 09/12/2016.
 
-This document describes the essentials about the sprof toolsuite. It consists of:
-- "sprof" binary executable (writter in C);
-- "sprof_instr.sh" shell script;
-- and the "libsprof.so" shared library.
+This document describes the essentials about the sperf toolsuite. It consists of:
+- "sperf" binary executable (writter in C);
+- "sperf_instr.sh" shell script;
+- and the "libsperf.so" shared library.
 
 It is organized as shown below:
 
-SECTION 1 - WHAT IS SPROF
-SECTION 2 - HOW SPROF WORKS
+SECTION 1 - WHAT IS sperf
+SECTION 2 - HOW sperf WORKS
 SECTION 3 - INSTRUMENTING THE CODE
 SECTION 4 - AUTOMATIC INSTRUMENTATION
-SECTION 5 - CONFIGURING THE SPROF EXECUTION
-SECTION 6 - EXECUTING SPROF
+SECTION 5 - CONFIGURING THE sperf EXECUTION
+SECTION 6 - EXECUTING sperf
 SECTION 7 - GENERAL INFORMATIONS
 
 The entire suite is licensed under the GPL v3.0.
 
 ------------------------------------------------------------------------------------
 
-SECTION 1 - WHAT IS SPROF
+SECTION 1 - WHAT IS sperf
 
-The main tool (the "sprof" binary executable, written in C) executes an user application (called "target") repeatedly, for the same size of problem, but different number of threads, so that it is able to calculate the speedup of the target. The user must, first of all, instrument its application using specific functions provided by the Sprof library "libsprof.so". If he/she wants it to be made automatically, there is an executable shell script called "sprof_instr.sh" that may perform such task in certain conditions.  
+The main tool (the "sperf" binary executable, written in C) executes an user application (called "target") repeatedly, for the same size of problem, but different number of threads, so that it is able to calculate the speedup of the target. The user must, first of all, instrument its application using specific functions provided by the sperf library "libsperf.so". If he/she wants it to be made automatically, there is an executable shell script called "sperf_instr.sh" that may perform such task in certain conditions.  
 
 That said, the tool suite aims two things, basically:
 
-First, a test plataform to create a profile about the speedup of multithread applications. This is acomplished by the binary executable called "sprof".
-Second, to instrument the source-code of these applications automatically. This is acomplished by the shell script called "sprof_instr.sh".
+First, a test plataform to create a profile about the speedup of multithread applications. This is acomplished by the binary executable called "sperf".
+Second, to instrument the source-code of these applications automatically. This is acomplished by the shell script called "sperf_instr.sh".
 
 The tool was tested for OpenMP and Pthreads application.
 
 ------------------------------------------------------------------------------------
 
-SECTION 2 - HOW SPROF WORKS
+SECTION 2 - HOW sperf WORKS
 
-The user must instrument its target application that he/she wishes to be measured. In order to do so, he/she must use the library provided, named "libsprof.so".
+The user must instrument its target application that he/she wishes to be measured. In order to do so, he/she must use the library provided, named "libsperf.so".
 
-Next, the user executes "sprof", passing, as arguments, the binary executable of the target application and all its necessary arguments. To configure how "sprof" will perform the tests, he/she must configure the file "sprof_exec.conf". There, it will be informed how many tests will be made and the number of threads that will be used.
+Next, the user executes "sperf", passing, as arguments, the binary executable of the target application and all its necessary arguments. To configure how "sperf" will perform the tests, he/she must configure the file "sperf_exec.conf". There, it will be informed how many tests will be made and the number of threads that will be used.
 
 ------------------------------------------------------------------------------------
 
 SECTION 3 - INSTRUMENTING THE CODE
 
-In order to execute correctly, the functions provides by sprof library must be placed accordingly by the user (or using "sprof_instr.sh". This will be explained on the next section). 
+In order to execute correctly, the functions provides by sperf library must be placed accordingly by the user (or using "sperf_instr.sh". This will be explained on the next section). 
 
 There are 5 functions available for this purpose:
 
-	1 - sprof_start: does not return and does not receive any arguments. It marks the beginning of the parallel area to be measured.
+	1 - sperf_start: does not return and does not receive any arguments. It marks the beginning of the parallel area to be measured.
 
-	2 - sprof_stop: does not return and does not receive any arguments. It marks the end of the parallel area to be measured.
+	2 - sperf_stop: does not return and does not receive any arguments. It marks the end of the parallel area to be measured.
 
-	When using Pthreads, it is possibly to determine the behavior of the threads very especificaly. Threads can be created and terminated whenever the programmer wants, in contrast to OpenMP, on that threads are created and terminated in blocks. Beacuse of that, sprof library provides also both functions below.
+	When using Pthreads, it is possibly to determine the behavior of the threads very especificaly. Threads can be created and terminated whenever the programmer wants, in contrast to OpenMP, on that threads are created and terminated in blocks. Beacuse of that, sperf library provides also both functions below.
 
-	3 - sprof_pthstart: does not return, but receives one argument of "pthread_t" type, whose value consists of the thread ID that the information gathering is going to start. This function should be used instead of "sprof_start" when there is a more fine-grained measurement involving pthreads, as explained previously.
+	3 - sperf_pthstart: does not return, but receives one argument of "pthread_t" type, whose value consists of the thread ID that the information gathering is going to start. This function should be used instead of "sperf_start" when there is a more fine-grained measurement involving pthreads, as explained previously.
 
-	4 - sprof_pthstop: does not return, but receives one argument of "pthread_t" type, whose value consists of the thread ID that that the information gathering is going to finish. This function should be used instead of "sprof_stop" when there is a more fine-grained measurement involving pthreads, as explained previously as well.
+	4 - sperf_pthstop: does not return, but receives one argument of "pthread_t" type, whose value consists of the thread ID that that the information gathering is going to finish. This function should be used instead of "sperf_stop" when there is a more fine-grained measurement involving pthreads, as explained previously as well.
 
-	5 - sprof_thrnum: sprof may use the target application's arguments to configure how many threads it will be executed. If this is not possible, the user must place the "sprof_thrnum" function in the code. It does not return and receives one argument, a pointer to integer (*int), that must be the variable in the program that holds the number of threads to use. Thus, the use of "sprof_thrnum" function may be optional.
+	5 - sperf_thrnum: sperf may use the target application's arguments to configure how many threads it will be executed. If this is not possible, the user must place the "sperf_thrnum" function in the code. It does not return and receives one argument, a pointer to integer (*int), that must be the variable in the program that holds the number of threads to use. Thus, the use of "sperf_thrnum" function may be optional.
 
-	It is important to highlight that all the intrumentation works only OUTSIDE the parallel areas. Sprof does not handle race conditions and other problems that arises inside parallel implementations.
+	It is important to highlight that all the intrumentation works only OUTSIDE the parallel areas. sperf does not handle race conditions and other problems that arises inside parallel implementations.
 
 ------------------------------------------------------------------------------------
 
 SECTION 4 - AUTOMATIC INSTRUMENTATION
 
-Sometimes, looking into a code and placing instrumentation can be tricky. With that in mind, the shell script "sprof_instr.sh" was created as a first trial to automatically instrument code using the sprof library. Currently, it inserts only "sprof_start" and "sprof_stop" functions in OpenMP directives that start with "pragma omp parallel".
+Sometimes, looking into a code and placing instrumentation can be tricky. With that in mind, the shell script "sperf_instr.sh" was created as a first trial to automatically instrument code using the sperf library. Currently, it inserts only "sperf_start" and "sperf_stop" functions in OpenMP directives that start with "pragma omp parallel".
 
 To use this functionality, the command line consists of:
 
-	<path_to_script>/sprof_instr.sh <openmp|clean>.
+	<path_to_script>/sperf_instr.sh <openmp|clean>.
 	
 That is, there are two options to invoke the script. 
 
-The "openmp" option is the actual instrumentation of the code, it inserts the "include" directive with the full path to "sprofops.h", the "sprof_start" function right before the "pragma omp parallel" and "sprof_stop" right after the key "}" that represents the end of the parallel region.
+The "openmp" option is the actual instrumentation of the code, it inserts the "include" directive with the full path to "sperfops.h", the "sperf_start" function right before the "pragma omp parallel" and "sperf_stop" right after the key "}" that represents the end of the parallel region.
 
-The "clean" options provides the withdraw of the instrumentation marks, so that the user does not have to do this manually every time he/she whishes compile his/her code without Sprof library.
+The "clean" options provides the withdraw of the instrumentation marks, so that the user does not have to do this manually every time he/she whishes compile his/her code without sperf library.
 
-The script has one configuration file called "sprof_instr.conf". There, two variables controls the script execution. "DPATH" holds the full path to the directory where the source code to be instrumented is. The "EXTENSIONS" variable establishes which file extensions (.cpp, .c, .h and so on) should be instrumented. 
+The script has one configuration file called "sperf_instr.conf". There, two variables controls the script execution. "DPATH" holds the full path to the directory where the source code to be instrumented is. The "EXTENSIONS" variable establishes which file extensions (.cpp, .c, .h and so on) should be instrumented. 
 
 ------------------------------------------------------------------------------------
 
-SECTION 5 - CONFIGURING THE SPROF EXECUTION
+SECTION 5 - CONFIGURING THE sperf EXECUTION
 
-The configuration of the profiler's execution is controlled by the "sprof_exec.conf" configuration file. There are five variables that may be used in two distinct ways to configure Sprof. For both, the use of "number_of_tests" is mandatory. It determines how many times the tests will run on the target application.	
+The configuration of the profiler's execution is controlled by the "sperf_exec.conf" configuration file. There are six variables that may be used in two distinct ways to configure sperf. For both, the use of "number_of_tests" is mandatory. It determines how many times the tests will run on the target application.	
 
 Thus, the first possibility of configuration uses the "list_threads_values" variable. It consists of a list with the number of threads that should be uses on each test. The values must be comma-separated, between keys and without spaces. For example, the declaration "list_threads_values={2,5,8,17}" will execute tests for 2, 5, 8 and 17 threads, respectively. Note that the test with 1 thread will always be executed, so it does not have to be assigned in the list os values.
 
@@ -95,24 +95,38 @@ The second possibility uses a set of three variables: "max_number_threads", "typ
 	2 - The set "max_number_threads=32", "type_of_step=power" and "value_of_step=3" will configure the target application to execute with 1, 3, 9 and 27 threads;
 	
 	3 - The set "max_number_threads=33", "type_of_step=constant" and "value_of_step=4" will configure the target application to execute with 1, 5, 9, 13, 17, 21, 25, 29 and 33 threads.
-	
+
+The list_of_data parameter is usend to run with multiple data, the values must be comma-separated, between keys and without spaces. For example, the declaration "list_of_data={data1.txt,data2.txt}" will execute the program with data1.txt and data2.txt for wich execution for all threads, to use this is necessery to use -ps option on the sperf execution telling the program with argument is the name of the data.
 ------------------------------------------------------------------------------------
 
-SECTION 6 - EXECUTING SPROF
+SECTION 6 - EXECUTING sperf
 
 The profiler is invoked by command line, as shown below:
 
-	<path_to_profiler>/sprof [OPTIONS] <target> <target's arguments>
+	<path_to_profiler>/sperf [OPTIONS] <target> <target's arguments>
 	
-The only option available to use with sprof is the "-t" option. If passed to, this option means that the target application has one of its arguments consisting of the number of threds that it will run. Thus, consider the next examples:
+The options available to use with sperf is:
 
-	1 - An application named "app" has three arguments, where the second represents the number of threads that "app" will fork to execute. The option "-t" may be used then: "sprof -t 2 app arg1 arg2 arg3";
+	-t this option means that the target application has one of its arguments consisting of the number of threds that it will run. Thus, consider the next examples:
+	1 - An application named "app" has three arguments, where the second represents the number of threads that "app" will fork to execute. The option "-t" may be used then: "sperf -t 2 app arg1 arg2 arg3";
 	
-	2 - An application named "foo" has four arguments, where the fourth represents the number of threads that "foo" will fork to execute. The option "-t" may be used then: "sprof -t 4 foo arg1 arg2 arg3 arg4";
+	2 - An application named "foo" has four arguments, where the fourth represents the number of threads that "foo" will fork to execute. The option "-t" may be used then: "sperf -t 4 foo arg1 arg2 arg3 arg4";
 	
-	3 - An application named "bar" has six arguments, where none of them represents the number of threads. The option "-t" may NOT be used then: "sprof bar arg1 arg2 arg3 arg4 arg5 arg6".
+	3 - An application named "bar" has six arguments, where none of them represents the number of threads. The option "-t" may NOT be used then: "sperf bar arg1 arg2 arg3 arg4 arg5 arg6".
 	
-	Notice that if the user inserts the function "sprof_thrnum" (refer to section 3) in his/her application, "-t" isn't necessary even if the target passes the number of threads in its arguments.
+	-o this option set the output to csv file the argument passed is the name of the file, example:
+	1 - sperf -o speedup app arg1 arg2
+	
+	-c this option is for choosing a different configuration file, by default if the option was not passed the configuration file is sperf_exec, example:
+	1 - sperf -c my_config app arg1
+	2 - sperf app arg1
+	
+	-ps this option is used to run the program with multiple dates, is needed to set the list_of_data in the configuration file with the name of file with the data, the number passed to this option is the number of the argument to pass the data on the app, example:
+	list_of_data={data1.txt,data2.txt,data3.txt}
+	1 - sperf -ps 0 app data arg2
+	2 - sperf -ps 1 app arg1 data arg3
+
+	Notice that if the user inserts the function "sperf_thrnum" (refer to section 3) in his/her application, "-t" isn't necessary even if the target passes the number of threads in its arguments.
 
 
 
