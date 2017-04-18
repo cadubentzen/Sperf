@@ -29,6 +29,13 @@
 #include <sys/stat.h>
 #include <dirent.h>
 
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <vector>
+
+using namespace std;
+
 #include "../include/sperfops.h"
 
 #define SET_THREADS    	1
@@ -44,523 +51,75 @@
 #define CYAN   			"\x1b[36m"
 #define RESET   			"\x1b[0m"
 
-#define CB 0
+struct recv_info
+{
+    int s_mark;
+    float s_time;
+    int s_start_line;
+    int s_stop_line;
+    char s_filename[64];
+} info;
 
-int optset = 0, datatset= 0;
-int num_marks;
-float prl_times[MAX_ANNOTATIONS];
+float prl_times[MAX_ANNOTATIONS], time_singleThrPrl[MAX_ANNOTATIONS];
 int start_line[MAX_ANNOTATIONS], stop_line[MAX_ANNOTATIONS];
-int *list_of_threads_value;
-char **list_of_data_names;
-char **fname;
-char *config_file, *csv_file= NULL;
+int num_marks, optset = 0, datatset= 0;
+int num_exec, num_data, num_args;
+string config_file= "sperf_exec", csv_file;
+vector<int> list_of_threads_value;
+vector<string> list_of_data_names;
+vector<string> fname;
 bool out_csv= 0;
 
-// set environment variables to control number of threads
-// or set pipe
-void set_perfcfg(int val, int op)
-{
-    char *str = (char *) malloc(7*sizeof(char));
+string intToString(int x);
+int stringToInt(string x);
 
-    if (str == NULL)
-    {
-        fputs(RED "[Sperf]" RESET " Alocation error", stderr);
-        exit(1);
-    }
-    snprintf(str, 7, "%d", val);
-    if (op == SET_THREADS)
-    {
-        setenv("NUM_THRS_ATUAL", str, 1);
-        setenv("OMP_NUM_THREADS", str, 1);
-    }
-    else if (op == SET_PIPE)
-        setenv("FD_PIPE", str, 1);
-    else
-    {
-        fputs(RED "[Sperf]" RESET " Invalid option in set_perfcfg", stderr);
-        exit(1);
-    }
-    free(str);
-}
-
-// get program path
-char *get_path(char * argmnt, int location)
-{
-    const char * delim = "/";
-    char * token, *argv0;
-    char * path = (char *) malloc(200);
-    int i = 0,  j;
-
-    // count how many / are in the path
-    argv0 = strdup(argmnt);
-    token = strtok(argv0, delim);
-    while( token != NULL )
-    {
-        i++;
-        token = strtok(NULL, delim);
-    }
-
-    // get the path without the last word it was the name of the program
-    j = i;
-    free(argv0); // memory leak
-    argv0 = strdup(argmnt);
-    token = strtok(argv0, delim);
-    #if CB == 0
-        strcpy(path, token);
-    #else
-        strcpy(path, delim);
-        strcat(path, token);
-    #endif
-    while( token != NULL )
-    {
-        j--;
-        if ( j == 1)
-            break;
-        strcat(path, "/");
-        token = strtok(NULL, delim);
-        strcat(path, token);
-    }
-
-    // add the path to config_file
-    if (location == ETC_PATH)
-        sprintf(path, "%s%s%s%s", path,"/../etc/", config_file, ".conf");
-    // add the result path
-    if (location == RESULT_PATH)
-        strcat(path, "/../results/");
-
-    return path;
-}
-
-// read the config file
-void exec_conf(int * l_num_exec, int * l_num_max_threads, int *l_num_data, char * exec_path)
-{
-    char * step_type = (char *) malloc(10);
-    char * str = (char *) malloc(200);
-    char * str_ant = (char *) malloc(50);
-    char * config_path; // = (char *) malloc(200); memory leak
-    int step, max_threads;
-    int flag_list, flag_max_threads = 0, flag_step_type = 0, flag_step_value = 0, flag_num_tests = 0;
-    const char * delim = ",";
-    FILE * conf_file;
-
-    // get the confige file path
-    config_path = get_path(exec_path, ETC_PATH);
-
-    if ((conf_file = fopen(config_path, "r")) == NULL)
-    {
-        fprintf(stderr, RED "[Sperf]" RESET " Failed to open %s.conf: %s\n", config_file, strerror(errno));
-        exit(1);
-    }
-
-    strcpy(str, "str_ant");
-    strcpy(str_ant, str);
-    fscanf(conf_file, "%s", str);
-
-    while (strcmp(str, str_ant) != 0 || (strcmp(str, "#") == 0 && strcmp(str_ant, "#") == 0))
-    {
-        if (str[0] == '#') // ignore comments
-        {
-            while (fgetc(conf_file) == ' ') // while theres space between words, stop on line break
-            {
-                strcpy(str_ant, str);
-                fscanf(conf_file, "%s", str);
-            }
-        }
-        else
-        {
-            if (strncmp(str, "number_of_tests=", 16) == 0)
-            {
-                printf(BLUE "[Sperf]" RESET " Retrieving number of testes...\n");
-                if (strlen(str) == 16)
-                {
-                    fputs(RED "[Sperf]" RESET " You must specify a number of tests\n", stderr);
-                    exit(1);
-                }
-                else
-                {
-                    fseek(conf_file, -2, SEEK_CUR);
-                    while(fgetc(conf_file) != '=') // seek for the begin of the number
-                        fseek(conf_file, -2, SEEK_CUR);
-                    fscanf(conf_file, "%d", l_num_exec);
-                    flag_num_tests = 1;
-                }
-            }
-            else if (strncmp(str, "list_threads_values=", 20) == 0)
-            {
-                if (strlen(str) == 20 || strcmp(str, "list_threads_values={}") == 0)
-                    flag_list = 0;
-                else
-                {
-                    // look for syntax errors
-                    printf(BLUE "[Sperf]" RESET " Retrieving the list of threads values...\n");
-                    if (str[strlen(str)-1] != '}')
-                    {
-                        fputs(RED "[Sperf]" RESET " Format error on list_threads_values\n", stderr);
-                        exit(1);
-                    }
-                    fseek(conf_file, -2, SEEK_CUR);
-                    while(fgetc(conf_file) != '=')
-                        fseek(conf_file, -2, SEEK_CUR);
-                    if (fgetc(conf_file) != '{')
-                    {
-                        fputs(RED "[Sperf]" RESET " Format error on list_threads_values\n", stderr);
-                        exit(1);
-                    }
-                    else
-                    {
-                        char * token;
-                        int i = 1;
-                        fscanf(conf_file, "%s", str);
-                        token = strtok(str, delim);
-                        while( token != NULL ) // split word whit the token
-                        {
-                            if (i == 1)
-                                list_of_threads_value = (int *) malloc(sizeof(int));
-                            else
-                                list_of_threads_value = (int *) realloc(list_of_threads_value, i * sizeof(int));
-                            sscanf(token, "%d", &list_of_threads_value[i-1]);
-                            token = strtok(NULL, delim);
-                            i++;
-                        }
-                        *l_num_max_threads = list_of_threads_value[i-2];
-                    }
-                    flag_list = 1;
-                }
-            }
-            else if (strncmp(str, "max_number_threads=", 19) == 0)
-            {
-                if (flag_list != 1)
-                {
-                    if (strlen(str) == 19)
-                    {
-                        fputs(RED "[Sperf]" RESET " You must specify a maximum number of threads\n", stderr);
-                        exit(1);
-                    }
-                    else
-                    {
-                        fseek(conf_file, -2, SEEK_CUR);
-                        while(fgetc(conf_file) != '=') // seek for the begin of the number
-                            fseek(conf_file, -2, SEEK_CUR);
-                        fscanf(conf_file, "%d", &max_threads);
-                        flag_max_threads = 1;
-                    }
-                }
-            }
-            else if (strncmp(str, "type_of_step=", 13) == 0)
-            {
-                if (flag_list != 1)
-                {
-                    if (strlen(str) == 13)
-                    {
-                        fputs(RED "[Sperf]" RESET " You must specify a step method to increment the number of threads\n", stderr);
-                        exit(1);
-                    }
-                    else
-                    {
-                        fseek(conf_file, -2, SEEK_CUR);
-                        while(fgetc(conf_file) != '=') // seek for the begin of the number
-                            fseek(conf_file, -2, SEEK_CUR);
-                        fscanf(conf_file, "%s", step_type);
-                        if ((strncmp(step_type, "constant", 8) != 0  && strncmp(step_type, "power", 5) != 0 ) || (strlen(step_type) != 8 && strlen(step_type) != 5))
-                        {
-                            fputs(RED "[Sperf]" RESET " Invalid step method\n", stderr);
-                            exit(1);
-                        }
-                        flag_step_type = 1;
-                    }
-                }
-            }
-            else if (strncmp(str, "value_of_step=", 14) == 0)
-            {
-                if (flag_list != 1)
-                {
-                    if (strlen(str) == 14)
-                    {
-                        fputs(RED "[Sperf]" RESET " You must specify a step value to increment the number of threads\n", stderr);
-                        exit(1);
-                    }
-                    else
-                    {
-                        fseek(conf_file, -2, SEEK_CUR);
-                        while(fgetc(conf_file) != '=') // seek for the begin of the number
-                            fseek(conf_file, -2, SEEK_CUR);
-                        fscanf(conf_file, "%d", &step);
-                        flag_step_value = 1;
-                    }
-                }
-            }
-            else if(strncmp(str, "list_of_data=", 13) == 0)
-            {
-                printf(BLUE "[Sperf]" RESET " Retrieving the list of data values...\n");
-                if (str[strlen(str)-1] != '}')
-                {
-                    fputs(RED "[Sperf]" RESET " Format error on list_data_values\n", stderr);
-                    exit(1);
-                }
-                fseek(conf_file, -2, SEEK_CUR);
-                while(fgetc(conf_file) != '=')
-                    fseek(conf_file, -2, SEEK_CUR);
-                if (fgetc(conf_file) != '{')
-                {
-                    fputs(RED "[Sperf]" RESET " Format error on list_threads_values\n", stderr);
-                    exit(1);
-                }
-                else
-                {
-                    char * token;
-                    int i = 1;
-                    fscanf(conf_file, "%s", str);
-                    token = strtok(str, delim);
-                    list_of_data_names = (char **) malloc(sizeof(char*));
-                    while( token != NULL ) // split word whit the token
-                    {
-                        list_of_data_names = (char **) realloc(list_of_data_names, i * sizeof(char*));
-                        list_of_data_names[i-1]= (char *) malloc(60*sizeof(char));
-                        sscanf(token, "%s", list_of_data_names[i-1]);
-                        token = strtok(NULL, delim);
-                        i++;
-                    }
-                    *l_num_data= i-1;
-                }
-                list_of_data_names[*l_num_data-1][strlen(list_of_data_names[*l_num_data-1])-1]= '\0';
-            }
-            else
-            {
-                fputs(RED "[Sperf]" RESET " Invalid configuration variable\n", stderr);
-                exit(1);
-            }
-        }
-        strcpy(str_ant, str);
-        fscanf(conf_file, "%199s", str);
-    }
-    // verify correctly config file
-    if (flag_num_tests == 0)
-    {
-        fputs(RED "[Sperf]" RESET " 'number_of_tests' variable missing\n", stderr);
-        exit(1);
-    }
-    if (flag_list == 0 && (flag_max_threads == 0 || flag_step_value == 0 || flag_step_type== 0))
-    {
-        fputs(RED "[Sperf]" RESET " The number of threads to be executed must be set properly.\n", stderr);
-        fputs(RED "[Sperf]" RESET " Define 'list_values_threads' variable or the set of three variables 'max_number_threads', 'type_of_step' and 'value_of_step'\n", stderr);
-        exit(1);
-    }
-    if (flag_list == 0)
-    {
-        printf(BLUE "[Sperf]" RESET " Retrieving the list of threads values...\n");
-
-        int k = 0;
-        list_of_threads_value = (int *) malloc(sizeof(int));
-        // calculate the steps
-        if (strncmp(step_type, "constant", 8) == 0)
-        {
-            if (k == 0)
-            {
-                list_of_threads_value[k] = 1 + step;
-                k++;
-            }
-            while (list_of_threads_value[k-1] < max_threads)
-            {
-                list_of_threads_value = (int *) realloc(list_of_threads_value, (k+1) * sizeof(int));
-                list_of_threads_value[k] = list_of_threads_value[k-1] + step;
-                k++;
-            }
-        }
-        if (strncmp(step_type, "power", 5) == 0)
-        {
-            if (k == 0)
-            {
-                list_of_threads_value[k] = 1 * step;
-                k++;
-            }
-            while (list_of_threads_value[k-1] < max_threads)
-            {
-                list_of_threads_value = (int *) realloc(list_of_threads_value, (k+1) * sizeof(int));
-                list_of_threads_value[k] = list_of_threads_value[k-1] * step;
-                k++;
-            }
-        }
-        *l_num_max_threads = max_threads;
-    }
-    if (fclose(conf_file) != 0)
-    {
-        fprintf(stderr, RED "[Sperf]" RESET " Failed to close sperf_exec.conf\n");
-        exit(1);
-    }
-
-    free(step_type);
-    free(str);
-    free(str_ant);
-    free(config_path);
-}
-
-// store time information
-int last_exec=0;
-void time_information(float *l_time_singleThrPrl, int cur_thrs, int cur_data, double l_end, double l_start, FILE * out, int cur_exec, char *l_args[], int l_argc)
-{
-    static float time_singleThrTotal;
-    int count, i;
-    if(last_exec!=cur_exec)
-    {
-        last_exec= cur_exec;
-        if(out_csv)
-            fprintf(out, "\n,");
-    }
-    if (cur_thrs == 1)
-    {
-        for (count = 0; count < num_marks; count++)
-            l_time_singleThrPrl[count] = prl_times[count];
-
-        time_singleThrTotal = (float) (l_end - l_start);
-        if(out_csv)
-            fprintf(out, "\n%d,", cur_data);
-        else
-            fprintf(out, "\n-----> Execution number %d for %s:\n", cur_exec + 1, l_args[1]);
-    }
-    if(out_csv)
-    {
-        fprintf(out, "%f,", time_singleThrTotal/(float)(l_end - l_start)/cur_thrs);
-    }
-    else
-    {
-        fprintf(out, "\n\t--> Result for %d threads, application %s, arguments: ", cur_thrs, l_args[1]);
-        for (i = 2; i < l_argc; i++)
-        {
-            if (i != optset)
-                fprintf(out, "%s, ", l_args[i]);
-            if (i == l_argc - 1)
-                fprintf(out, "\n");
-        }
-        for (count = 0; count < num_marks; count++)
-        {
-            fprintf(out, "\n\t\t Parallel execution time of the region %d, lines %d to %d on file %s: %f seconds\n", count+1, start_line[count], stop_line[count], fname[count], prl_times[count]);
-            fprintf(out, "\t\t Speedup for the parallel region %d: %f\n", count+1, l_time_singleThrPrl[count]/prl_times[count]);
-        }
-        fprintf(out, "\n\t\t Total time of execution: %f seconds\n", l_end - l_start);
-        fprintf(out, "\t\t Speedup for the entire application: %f\n", time_singleThrTotal/(float)(l_end - l_start));
-    }
-}
-
-// program configurations
-char** menu_opt(char* argv[], int argc, int *nargs)
-{
-    char** args;
-    int i=0;
-    *nargs= 0;
-    bool thrnum_req= false;
-    args = (char **) malloc((argc + 1)*sizeof(char*));
-    do
-    {
-        if (strcmp(argv[i], "-t") == 0) // set number of the argument that will pass the number of thread to the program
-        {
-            thrnum_req= true;
-            i++;
-            if(i<argc) // cheking if the user pass the argument
-            {
-                optset = atoi(argv[i]);
-            }
-        }
-        else if (strcmp(argv[i], "-c") == 0) // passing the config file path
-        {
-            i++;
-            if(i<argc) // cheking if the user pass the argument
-            {
-                strcpy(config_file, argv[i]);
-            }
-        }
-        else if(strcmp(argv[i], "-o") == 0)
-        {
-            out_csv= true;
-            i++;
-            if(i<argc) // cheking if the user pass the argument
-            {
-                if(csv_file == NULL)
-                    csv_file= (char*) malloc(200*sizeof(char));
-                strcpy(csv_file, argv[i]);
-            }
-        }
-        else if(strcmp(argv[i], "-ps") == 0)
-        {
-            i++;
-            if(i<argc) // cheking if the user pass the argument
-            {
-                datatset= atoi(argv[i]);
-            }
-        }
-        else // other arguments
-        {
-            args[*nargs] = (char *)malloc(100*sizeof(char));
-            strcpy(args[*nargs], argv[i]);
-            (*nargs)++;
-        }
-        i++;
-    }while (i < argc);
-    args[*nargs] = (char *) NULL;
-    if(thrnum_req)
-        printf(BLUE "[Sperf]" RESET " sperf_thrnum function required\n");
-    else
-        printf(BLUE "[Sperf]" RESET " Thread value passed by command line argument to the target application. sperf_thrnum function not required\n");
-    return args;
-}
+void set_perfcfg(int val, int op);
+string get_path(string argmnt, int location);
+void exec_conf(string exec_path);
+void time_information(int cur_thrs, int cur_data, double l_end, double l_start,
+                        ofstream& out, int cur_exec, char** l_args, int l_argc);
+void time_information_csv(int cur_thrs, int cur_data, double l_end, double l_start,
+                        ofstream& out, int cur_exec, char** l_args, int l_argc);
+char** menu_opt(char* argv[], int argc);
 
 int main(int argc, char *argv[])
 {
-    fname = (char **) malloc(MAX_ANNOTATIONS*sizeof(char*)); // memory leak
-    config_file= (char*)malloc(100*sizeof(char));
-    sprintf(config_file, "%s", "sperf_exec");
-
-    double start, end;
-    float time_singleThrPrl[MAX_ANNOTATIONS];
-    int i = 0, j, num_exec, current_exec, current_data, num_current_threads, num_max_threads, num_data;
-    /* pipes[0] = leitura; pipes[1] = escrita */
-    int pipes[2], nargs;
-    char * filename = (char *) malloc(30);
-    char * result_file; //= (char *) malloc(200); memory leak
-    char **args;
-    int mark, mark_ant = 0;
-    time_t rawtime = time(NULL);
-    struct tm *local = localtime(&rawtime);
-    FILE *out;
-
-    struct recv_info
-    {
-        int s_mark;
-        float s_time;
-        int s_start_line;
-        int s_stop_line;
-        char s_filename[64];
-    } info;
-
+    char** args;
+    string result_file;
+    ofstream out;
 
     /* Passando os argumentos da linha de comando para a variável args */
-    args= menu_opt(argv, argc, &nargs);
-    if (nargs == 1)
+    args= menu_opt(argv, argc);
+    if (num_args == 1)
     {
         printf(RED "[Sperf]" RESET " Target application missing\n");
         exit(1);
     }
-    printf(BLUE "[Sperf]" RESET " Reading sperf_exec.conf\n");
-    exec_conf(&num_exec, &num_max_threads, &num_data, argv[0]);
 
-    sprintf(filename, "%d-%d-%d-%dh%dm%ds.txt", local->tm_mday, local->tm_mon + 1, local->tm_year + 1900, local->tm_hour, local->tm_min, local->tm_sec);
+    exec_conf(argv[0]);
+
     result_file = get_path(argv[0], RESULT_PATH);
 
     if(out_csv)
-    {
-        strcat(result_file, csv_file);
-        strcat(result_file, ".csv");
-    }
+        result_file+=csv_file+".csv";
     else
     {
-        strcat(result_file, filename);
+        time_t rawtime = time(NULL);
+        struct tm *local = localtime(&rawtime);
+        stringstream ss;
+        ss << local->tm_mday << "-" << local->tm_mon + 1 << "-" << local->tm_year + 1900
+        << "-" << local->tm_hour << "h-" << local->tm_min << "m-" << local->tm_sec << "s.txt";
+        result_file+=ss.str();
     }
 
-    if(((out = fopen(result_file, "a")) == NULL))
+    out.open(result_file);
+    if(!out)
     {
         if(opendir("/result") == NULL)
         {
             mkdir("../results/", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-            if ((out = fopen(result_file, "a")) == NULL)
+            out.open(result_file);
+            if(!out)
             {
                 fprintf(stderr, RED "[Sperf]" RESET " Failed to open the result file: %s\n", strerror(errno));
                 exit(1);
@@ -568,40 +127,36 @@ int main(int argc, char *argv[])
         }
         else
         {
-            fprintf(stderr, RED "[Sperf]" RESET " Failed to open the result file: %s\n", strerror(errno));
+            fprintf(stderr, RED "[Sperf]" RESET " Failed to create the result folder: %s\n", strerror(errno));
             exit(1);
         }
     }
+
     if(out_csv)
     {
-        fprintf(out, "\n,1,");
-        for(i=0,j=1; j<=num_max_threads; i++)
-        {
-            fprintf(out, "%i,", list_of_threads_value[i]);
-            j=list_of_threads_value[i];
-            if(j == num_max_threads)
-                break;
-        }
+        out.precision(5);
+        out << "\n,";
+        for(uint i=0; i<list_of_threads_value.size(); i++)
+            out << list_of_threads_value[i] << ",";
     }
 
-
-    for (j = 0; j < MAX_ANNOTATIONS; j++)
-        fname[j] = (char *) malloc(64*sizeof(char));
-
-    for (current_exec = 0; current_exec < num_exec; current_exec++)
+    fname.resize(MAX_ANNOTATIONS);
+    /* pipes[0] = leitura; pipes[1] = escrita */
+    int pipes[2];
+    double start, end;
+    int mark, mark_ant = 0;
+    for(int current_exec = 0; current_exec < num_exec; current_exec++)
     {
         printf(BLUE "[Sperf]" RESET " Current execution %d of %d\n", current_exec + 1, num_exec);
-        for(current_data=0; current_data==0 || current_data<num_data; current_data++)
+        for(int current_data=0; current_data<num_data || current_data==0; current_data++)
         {
-            num_current_threads = 1;
-            int j = 0;
-            printf(BLUE "[Sperf]" RESET " Current data %d of %d\n", current_data + 1, num_data);
-            while (num_current_threads <= num_max_threads)
+            if(num_data!=0)
+                printf(BLUE "[Sperf]" RESET " Current data %d of %d\n", current_data + 1, num_data);
+            for(uint num_threads=0;  num_threads<list_of_threads_value.size(); num_threads++)
             {
+                printf(BLUE "[Sperf]" RESET " Executing for %d threads\n", list_of_threads_value[num_threads]);
                 pid_t pid_child;
-
-                printf(BLUE "[Sperf]" RESET " Executing for %d threads\n", num_current_threads);
-                set_perfcfg(num_current_threads, SET_THREADS);
+                set_perfcfg(list_of_threads_value[num_threads], SET_THREADS);
                 if (pipe(pipes) == -1)
                 {
                     fprintf(stderr, RED "[Sperf]" RESET " IPC initialization error: %s\n", strerror(errno));
@@ -625,9 +180,9 @@ int main(int argc, char *argv[])
                         exit(1);
                     }
                     if (optset != 0)
-                        sprintf(args[optset], "%d", num_current_threads);
+                        sprintf(args[optset], "%d", list_of_threads_value[num_threads]);
                     if (datatset != 0)
-                        sprintf(args[datatset+1], "%s", list_of_data_names[current_data]);
+                        sprintf(args[datatset+1], "%s", list_of_data_names[current_data].c_str());
                     if (execv(args[1], (args + 1)) == -1)
                     {
                         fprintf(stderr, RED "[Sperf]" RESET " Failed to start the target application: %s\n", strerror(errno));
@@ -653,9 +208,9 @@ int main(int argc, char *argv[])
                         prl_times[mark] = info.s_time;
                         start_line[mark] = info.s_start_line;
                         stop_line[mark] = info.s_stop_line;
-                        strcpy(fname[mark], info.s_filename);
+                        fname[mark]= info.s_filename;
 
-                        if (num_current_threads == 1)
+                        if (list_of_threads_value[num_threads] == 1)
                         {
                             if (mark > mark_ant)
                             {
@@ -666,7 +221,12 @@ int main(int argc, char *argv[])
                     }
                     GET_TIME(end);
 
-                    time_information(time_singleThrPrl, num_current_threads, current_data, end, start, out, current_exec, args, nargs);
+                    if(out_csv)
+                        time_information_csv(list_of_threads_value[num_threads], current_data,
+                                                                end, start, out, current_exec, args, num_args);
+                    else
+                        time_information(list_of_threads_value[num_threads], current_data,
+                                                                end, start, out, current_exec, args, num_args);
 
                     if (close(pipes[0]) == -1)
                     {
@@ -674,35 +234,354 @@ int main(int argc, char *argv[])
                         exit(1);
                     }
                 }
-                if (num_current_threads == num_max_threads)
-                    break;
-                num_current_threads = list_of_threads_value[j];
-                j++;
             }
         }
     }
-    fprintf(out, "\n");
-    if(fclose(out) != 0)
+    out << "\n";
+    out.close();
+    return 0;
+}
+
+string intToString(int x)
+{
+    stringstream ss;
+    ss << x;
+    return ss.str();
+}
+int stringToInt(string x)
+{
+    int n;
+    stringstream ss;
+    ss << x;
+    ss >> n;
+    return n;
+}
+
+// set environment variables to control number of threads
+// or set pipe
+void set_perfcfg(int val, int op)
+{
+    string str= intToString(val);
+    if (op == SET_THREADS)
     {
-        fprintf(stderr, RED "[Sperf]" RESET " Failed to close the result file\n");
+        setenv("NUM_THRS_ATUAL", str.c_str(), 1);
+        setenv("OMP_NUM_THREADS", str.c_str(), 1);
+    }
+    else if (op == SET_PIPE)
+        setenv("FD_PIPE", str.c_str(), 1);
+    else
+    {
+        fputs(RED "[Sperf]" RESET " Invalid option in set_perfcfg", stderr);
+        exit(1);
+    }
+}
+
+// get program path
+string get_path(string argmnt, int location)
+{
+    string path;
+    path=argmnt.substr(0,argmnt.find_last_of("/"));
+
+    if (location == ETC_PATH)
+        path+="/../etc/"+string(config_file)+".conf";
+    // add the result path
+    if (location == RESULT_PATH)
+        path+="/../results/";
+
+    return path;
+}
+
+// read the config file
+void exec_conf(string exec_path)
+{
+    printf(BLUE "[Sperf]" RESET " Reading sperf_exec.conf\n");
+
+    ifstream conf_file;
+    string step_type;
+    string str;
+    string config_path;
+
+    int step, max_threads;
+    bool flag_list, flag_max_threads = 0, flag_step_type = 0, flag_step_value = 0, flag_num_tests = 0;
+
+    // get the confige file path
+    config_path = get_path(exec_path, ETC_PATH);
+
+    conf_file.open(config_path);
+    if(!conf_file)
+    {
+        fprintf(stderr, RED "[Sperf]" RESET " Failed to open %s.conf: %s\n", config_path.c_str(), strerror(errno));
         exit(1);
     }
 
-    i = 0;
-    while(i<nargs)
+    while(!conf_file.eof())
     {
-        free(args[i]);
-        i++;
+        conf_file >> str;
+        if(conf_file.eof())
+            break;
+        if(str[0] == '#')
+        {
+            getline(conf_file, str);
+            continue;
+        }
+        else
+        {
+            if(str.substr(0,16) == "number_of_tests=")
+            {
+                printf(BLUE "[Sperf]" RESET " Retrieving number of testes...\n");
+                if (str.size() == 16)
+                {
+                    fputs(RED "[Sperf]" RESET " You must specify a number of tests\n", stderr);
+                    exit(1);
+                }
+                else
+                {
+                    str= str.substr(16,str.size());
+                    num_exec= stringToInt(str);
+                    flag_num_tests = 1;
+                }
+            }
+            else if(str.substr(0,20) == "list_threads_values=")
+            {
+                if(str.size() == 20 || str == "list_threads_values={}")
+                    flag_list = 0;
+                else
+                {
+                    printf(BLUE "[Sperf]" RESET " Retrieving the list of threads values...\n");
+                    str= str.substr(20,str.size());
+                    if(str[str.size()-1] != '}' || str[0] != '{')
+                    {
+                        fputs(RED "[Sperf]" RESET " Format error on list_threads_values\n", stderr);
+                        exit(1);
+                    }
+                    stringstream ss(str.substr(1,str.size()-2));
+                    while(getline(ss, str, ','))
+                        list_of_threads_value.push_back(stringToInt(str));
+                    flag_list = 1;
+                }
+            }
+            else if(str.substr(0,19) == "max_number_threads=")
+            {
+                if (flag_list != 1)
+                {
+                    if (str.size() == 19)
+                    {
+                        fputs(RED "[Sperf]" RESET " You must specify a maximum number of threads\n", stderr);
+                        exit(1);
+                    }
+                    else
+                    {
+                        str= str.substr(19,str.size());
+                        max_threads= stringToInt(str);
+                        flag_max_threads = 1;
+                    }
+                }
+            }
+            else if(str.substr(0,13) == "type_of_step=")
+            {
+                if (flag_list != 1)
+                {
+                    if(str.size() == 13)
+                    {
+                        fputs(RED "[Sperf]" RESET " You must specify a step method to increment the number of threads\n", stderr);
+                        exit(1);
+                    }
+                    else
+                    {
+                        str= str.substr(13,str.size());
+                        step_type= str;
+                        if((step_type != "constant" && step_type != "power") || (step_type.size()!=8 && step_type.size()!=5))
+                        {
+                            fputs(RED "[Sperf]" RESET " Invalid step method\n", stderr);
+                            exit(1);
+                        }
+                        flag_step_type = 1;
+                    }
+                }
+            }
+            else if(str.substr(0,14) == "value_of_step=")
+            {
+                if (flag_list != 1)
+                {
+                    if (str.size() == 14)
+                    {
+                        fputs(RED "[Sperf]" RESET " You must specify a step value to increment the number of threads\n", stderr);
+                        exit(1);
+                    }
+                    else
+                    {
+                        str= str.substr(14,str.size());
+                        step= stringToInt(str);
+                        flag_step_value = 1;
+                    }
+                }
+            }
+            else if(str.substr(0,13) == "list_of_data=")
+            {
+                printf(BLUE "[Sperf]" RESET " Retrieving the list of data values...\n");
+                str= str.substr(13,str.size());
+                if(str[str.size()-1] != '}' || str[0] != '{')
+                {
+                    fputs(RED "[Sperf]" RESET " Format error on list_data_values\n", stderr);
+                    exit(1);
+                }
+                else
+                {
+                    stringstream ss(str.substr(1,str.size()-2));
+                    while(getline(ss, str, ','))
+                        list_of_data_names.push_back(str);
+                    num_data= list_of_data_names.size();
+                }
+            }
+            else
+            {
+                fputs(RED "[Sperf]" RESET " Invalid configuration variable\n", stderr);
+//                exit(1);
+            }
+        }
+    }
+    // verify correctly config file
+    if (flag_num_tests == 0)
+    {
+        fputs(RED "[Sperf]" RESET " 'number_of_tests' variable missing\n", stderr);
+        exit(1);
+    }
+    if (flag_list == 0 && (flag_max_threads == 0 || flag_step_value == 0 || flag_step_type== 0))
+    {
+        fputs(RED "[Sperf]" RESET " The number of threads to be executed must be set properly.\n", stderr);
+        fputs(RED "[Sperf]" RESET " Define 'list_values_threads' variable or the set of three variables 'max_number_threads', 'type_of_step' and 'value_of_step'\n", stderr);
+        exit(1);
+    }
+    if (flag_list == 0)
+    {
+        printf(BLUE "[Sperf]" RESET " Retrieving the list of threads values...\n");
+        // calculate the steps
+        if(step_type == "constant")
+        {
+            list_of_threads_value.push_back(1);
+            for(int k=1+step; k<=max_threads; k+=step)
+                list_of_threads_value.push_back(k);
+        }
+        else if(step_type == "power")
+        {
+            list_of_threads_value.push_back(1);
+            for(int k=step; k<=max_threads; k*=step)
+                list_of_threads_value.push_back(k);
+        }
+    }
+    conf_file.close();
+}
+
+// store time information
+int last_exec=0;
+void time_information_csv(int cur_thrs, int cur_data, double l_end, double l_start,
+                        ofstream& out, int cur_exec, char** l_args, int l_argc)
+{
+    static float time_singleThrTotal;
+    int count;
+    if(last_exec!=cur_exec)
+    {
+        last_exec= cur_exec;
+        out << "\n,";
+    }
+    if (cur_thrs == 1)
+    {
+        for (count = 0; count < num_marks; count++)
+            time_singleThrPrl[count] = prl_times[count];
+
+        time_singleThrTotal = (float) (l_end - l_start);
+        out << "\n" << cur_data+1 << ",";
+    }
+    out << fixed << time_singleThrTotal/(float)(l_end - l_start)/cur_thrs << ",";
+
+}
+void time_information(int cur_thrs, int cur_data, double l_end, double l_start,
+                        ofstream& out, int cur_exec, char** l_args, int l_argc)
+{
+    static float time_singleThrTotal;
+    int count;
+    if (cur_thrs == 1)
+    {
+        for (count = 0; count < num_marks; count++)
+            time_singleThrPrl[count] = prl_times[count];
+
+        time_singleThrTotal = (float) (l_end - l_start);
+        out << "\n-----> Execution number " << cur_exec + 1 << " for " << l_args[1] << " and " << cur_data << " data" << ":\n";
     }
 
-    for (j = 0; j < MAX_ANNOTATIONS; j++)
-        free(fname[j]);
+    out << "\n\t--> Result for "<< cur_thrs << " threads, application " << l_args[1] << ", arguments: ";
+    for(int i = 2; i < l_argc; i++)
+    {
+        if (i != optset)
+            out <<  l_args[i] << ", ";
+        if (i == l_argc - 1)
+            out << "\n";
+    }
+    for (count = 0; count < num_marks; count++)
+    {
+        out << "\n\t\t Parallel execution time of the region " << count+1
+        << ", lines " << start_line[count] << " to " << stop_line[count] << " on file " << fname[count] << " : " << prl_times[count] << "seconds\n";
+        out << "\t\t Speedup for the parallel region " << count+1 << " : " << time_singleThrPrl[count]/prl_times[count] << "\n";
+    }
+    out << "\n\t\t Total time of execution: " << l_end - l_start << " seconds\n";
+    out << "\t\t Speedup for the entire application: " << time_singleThrTotal/(float)(l_end - l_start) << "\n";
+}
 
-    free(config_file);
-    free(args);
-    free(fname);
-    free(list_of_threads_value);
-    free(filename);
-    free(result_file);
-    return 0;
+// program configurations
+char** menu_opt(char* argv[], int argc)
+{
+    char** args;
+    int i=0;
+    bool thrnum_req= false;
+    args = (char **) malloc((argc + 1)*sizeof(char*));
+    do
+    {
+        if(string(argv[i]) == "-t") // set number of the argument that will pass the number of thread to the program
+        {
+            thrnum_req= true;
+            i++;
+            if(i<argc) // cheking if the user pass the argument
+            {
+                optset = stringToInt(argv[i]);
+            }
+        }
+        else if (string(argv[i]) == "-c") // passing the config file path
+        {
+            i++;
+            if(i<argc) // cheking if the user pass the argument
+            {
+                config_file= argv[i];
+            }
+        }
+        else if(string(argv[i]) == "-o")
+        {
+            out_csv= true;
+            i++;
+            if(i<argc) // cheking if the user pass the argument
+            {
+                csv_file= argv[i];
+            }
+        }
+        else if(string(argv[i]) == "-ps")
+        {
+            i++;
+            if(i<argc) // cheking if the user pass the argument
+            {
+                datatset= stringToInt(argv[i]);
+            }
+        }
+        else // other arguments
+        {
+            args[num_args] = (char *)malloc(250*sizeof(char));
+            strcpy(args[num_args], argv[i]);
+            num_args++;
+        }
+        i++;
+    }while (i < argc);
+    args[num_args] = (char *) NULL;
+    if(thrnum_req)
+        printf(BLUE "[Sperf]" RESET " sperf_thrnum function required\n");
+    else
+        printf(BLUE "[Sperf]" RESET " Thread value passed by command line argument to the target application. sperf_thrnum function not required\n");
+    return args;
 }
