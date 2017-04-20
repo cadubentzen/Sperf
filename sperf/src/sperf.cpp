@@ -64,7 +64,7 @@ float prl_times[MAX_ANNOTATIONS], time_singleThrPrl[MAX_ANNOTATIONS];
 int start_line[MAX_ANNOTATIONS], stop_line[MAX_ANNOTATIONS];
 int num_marks, optset = 0;
 int num_exec, num_args;
-string config_file= "sperf_exec", csv_file, program_name;
+string config_file, csv_file, program_name;
 vector<int> list_of_threads_value;
 vector<char**> list_of_args;
 vector<string> fname;
@@ -76,10 +76,10 @@ int stringToInt(string x);
 void set_perfcfg(int val, int op);
 string get_path(string argmnt, int location);
 void exec_conf(string exec_path);
-void time_information(int cur_thrs, int cur_data, double l_end, double l_start,
+void time_information(int cur_thrs, int cur_argm, double l_end, double l_start,
                       ofstream& out, int cur_exec, char** l_args, int l_argc);
-void time_information_csv(int cur_thrs, int cur_data, double l_end, double l_start,
-                          ofstream& out, int cur_exec, char** l_args, int l_argc);
+void time_information_csv(int cur_thrs, int cur_argm, double l_end, double l_start,
+                      ofstream& out, int cur_exec, char** l_args, int l_argc);
 void menu_opt(char* argv[], int argc, char*** args);
 
 int main(int argc, char *argv[])
@@ -90,7 +90,7 @@ int main(int argc, char *argv[])
 
     /* Passando os argumentos da linha de comando para a variável args */
     menu_opt(argv, argc, &args);
-    program_name= args[1];
+    config_file=program_name= args[1];
 
     if (num_args == 1)
     {
@@ -502,7 +502,7 @@ void exec_conf(string exec_path)
 
 // store time information
 int last_exec=0;
-void time_information_csv(int cur_thrs, int cur_data, double l_end, double l_start,
+void time_information_csv(int cur_thrs, int cur_argm, double l_end, double l_start,
                           ofstream& out, int cur_exec, char** l_args, int l_argc)
 {
     static float time_singleThrTotal;
@@ -518,12 +518,12 @@ void time_information_csv(int cur_thrs, int cur_data, double l_end, double l_sta
             time_singleThrPrl[count] = prl_times[count];
 
         time_singleThrTotal = (float) (l_end - l_start);
-        out << "\n" << cur_data+1 << ",";
+        out << "\n" << cur_argm+1 << ",";
     }
-    out << fixed << time_singleThrTotal/(float)(l_end - l_start)/cur_thrs << ",";
+    out << fixed << time_singleThrTotal/(float)(l_end - l_start) << ",";
 
 }
-void time_information(int cur_thrs, int cur_data, double l_end, double l_start,
+void time_information(int cur_thrs, int cur_argm, double l_end, double l_start,
                       ofstream& out, int cur_exec, char** l_args, int l_argc)
 {
     static float time_singleThrTotal;
@@ -534,7 +534,7 @@ void time_information(int cur_thrs, int cur_data, double l_end, double l_start,
             time_singleThrPrl[count] = prl_times[count];
 
         time_singleThrTotal = (float) (l_end - l_start);
-        out << "\n-----> Execution number " << cur_exec + 1 << " for " << l_args[1] << " and " << cur_data << " data" << ":\n";
+        out << "\n-----> Execution number " << cur_exec + 1 << " for " << l_args[1] << " and " << cur_argm << " data" << ":\n";
     }
 
     out << "\n\t--> Result for "<< cur_thrs << " threads, application " << l_args[1] << ", arguments: ";
