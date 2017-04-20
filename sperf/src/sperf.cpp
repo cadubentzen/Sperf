@@ -62,11 +62,11 @@ struct recv_info
 
 float prl_times[MAX_ANNOTATIONS], time_singleThrPrl[MAX_ANNOTATIONS];
 int start_line[MAX_ANNOTATIONS], stop_line[MAX_ANNOTATIONS];
-int num_marks, optset = 0, datatset= 0;
-int num_exec, num_data, num_args;
-string config_file= "sperf_exec", csv_file;
+int num_marks, optset = 0;
+int num_exec, num_args;
+string config_file= "sperf_exec", csv_file, program_name;
 vector<int> list_of_threads_value;
-vector<string> list_of_data_names;
+vector<char**> list_of_args;
 vector<string> fname;
 bool out_csv= 0;
 
@@ -77,10 +77,10 @@ void set_perfcfg(int val, int op);
 string get_path(string argmnt, int location);
 void exec_conf(string exec_path);
 void time_information(int cur_thrs, int cur_data, double l_end, double l_start,
-                        ofstream& out, int cur_exec, char** l_args, int l_argc);
+                      ofstream& out, int cur_exec, char** l_args, int l_argc);
 void time_information_csv(int cur_thrs, int cur_data, double l_end, double l_start,
-                        ofstream& out, int cur_exec, char** l_args, int l_argc);
-char** menu_opt(char* argv[], int argc);
+                          ofstream& out, int cur_exec, char** l_args, int l_argc);
+void menu_opt(char* argv[], int argc, char*** args);
 
 int main(int argc, char *argv[])
 {
@@ -89,7 +89,9 @@ int main(int argc, char *argv[])
     ofstream out;
 
     /* Passando os argumentos da linha de comando para a variável args */
-    args= menu_opt(argv, argc);
+    menu_opt(argv, argc, &args);
+    program_name= args[1];
+
     if (num_args == 1)
     {
         printf(RED "[Sperf]" RESET " Target application missing\n");
@@ -108,7 +110,7 @@ int main(int argc, char *argv[])
         struct tm *local = localtime(&rawtime);
         stringstream ss;
         ss << local->tm_mday << "-" << local->tm_mon + 1 << "-" << local->tm_year + 1900
-        << "-" << local->tm_hour << "h-" << local->tm_min << "m-" << local->tm_sec << "s.txt";
+           << "-" << local->tm_hour << "h-" << local->tm_min << "m-" << local->tm_sec << "s.txt";
         result_file+=ss.str();
     }
 
@@ -148,10 +150,10 @@ int main(int argc, char *argv[])
     for(int current_exec = 0; current_exec < num_exec; current_exec++)
     {
         printf(BLUE "[Sperf]" RESET " Current execution %d of %d\n", current_exec + 1, num_exec);
-        for(int current_data=0; current_data<num_data || current_data==0; current_data++)
+        for(uint current_arg=0; current_arg<list_of_args.size() || current_arg==0; current_arg++)
         {
-            if(num_data!=0)
-                printf(BLUE "[Sperf]" RESET " Current data %d of %d\n", current_data + 1, num_data);
+            if(list_of_args.size()!=0)
+                printf(BLUE "[Sperf]" RESET " Current argument %d of %ld\n", current_arg + 1, list_of_args.size());
             for(uint num_threads=0;  num_threads<list_of_threads_value.size(); num_threads++)
             {
                 printf(BLUE "[Sperf]" RESET " Executing for %d threads\n", list_of_threads_value[num_threads]);
@@ -181,9 +183,7 @@ int main(int argc, char *argv[])
                     }
                     if (optset != 0)
                         sprintf(args[optset], "%d", list_of_threads_value[num_threads]);
-                    if (datatset != 0)
-                        sprintf(args[datatset+1], "%s", list_of_data_names[current_data].c_str());
-                    if (execv(args[1], (args + 1)) == -1)
+                    if (execv(args[1], list_of_args[current_arg]) == -1)
                     {
                         fprintf(stderr, RED "[Sperf]" RESET " Failed to start the target application: %s\n", strerror(errno));
                         exit(1);
@@ -222,11 +222,11 @@ int main(int argc, char *argv[])
                     GET_TIME(end);
 
                     if(out_csv)
-                        time_information_csv(list_of_threads_value[num_threads], current_data,
-                                                                end, start, out, current_exec, args, num_args);
+                        time_information_csv(list_of_threads_value[num_threads], current_arg,
+                                             end, start, out, current_exec, args, num_args);
                     else
-                        time_information(list_of_threads_value[num_threads], current_data,
-                                                                end, start, out, current_exec, args, num_args);
+                        time_information(list_of_threads_value[num_threads], current_arg,
+                                         end, start, out, current_exec, args, num_args);
 
                     if (close(pipes[0]) == -1)
                     {
@@ -239,6 +239,10 @@ int main(int argc, char *argv[])
     }
     out << "\n";
     out.close();
+    for(int i=0; i<num_args; i++)
+        free(args[i]);
+    free(args);
+
     return 0;
 }
 
@@ -251,8 +255,7 @@ string intToString(int x)
 int stringToInt(string x)
 {
     int n;
-    stringstream ss;
-    ss << x;
+    stringstream ss(x);
     ss >> n;
     return n;
 }
@@ -301,8 +304,8 @@ void exec_conf(string exec_path)
     string str;
     string config_path;
 
-    int step, max_threads;
-    bool flag_list, flag_max_threads = 0, flag_step_type = 0, flag_step_value = 0, flag_num_tests = 0;
+    int step=1, max_threads;
+    bool flag_list= 0, flag_max_threads = 0, flag_step_type = 0, flag_step_value = 0, flag_num_tests = 0;
 
     // get the confige file path
     config_path = get_path(exec_path, ETC_PATH);
@@ -416,21 +419,46 @@ void exec_conf(string exec_path)
                     }
                 }
             }
-            else if(str.substr(0,13) == "list_of_data=")
+            else if(str.substr(0,13) == "list_of_args=")
             {
-                printf(BLUE "[Sperf]" RESET " Retrieving the list of data values...\n");
+                printf(BLUE "[Sperf]" RESET " Retrieving the list of arguments...\n");
+                char c;
                 str= str.substr(13,str.size());
-                if(str[str.size()-1] != '}' || str[0] != '{')
+                conf_file.seekg(-str.size(), conf_file.cur);
+                str= "";
+                conf_file >> c;
+                str+=c;
+                while(conf_file >> noskipws >> c)
                 {
-                    fputs(RED "[Sperf]" RESET " Format error on list_data_values\n", stderr);
+                    if(c == '\n')
+                        continue;
+                    str+=c;
+                }
+                if(str.size() == 13 || str == "list_of_args={}"
+                || str[str.size()-1] != '}' || str[0] != '{')
+                {
+                    fputs(RED "[Sperf]" RESET " Format error on list_of_args\n", stderr);
                     exit(1);
                 }
-                else
                 {
-                    stringstream ss(str.substr(1,str.size()-2));
-                    while(getline(ss, str, ','))
-                        list_of_data_names.push_back(str);
-                    num_data= list_of_data_names.size();
+                    stringstream ss1(str.substr(1, str.size()-2));
+                    while(getline(ss1, str, ','))
+                    {
+                        char** narg= (char**)malloc(2*sizeof(char*));
+                        narg[0]= (char*)malloc(250*sizeof(char));
+                        strcpy(narg[0], program_name.c_str());
+                        int cont= 1;
+                        stringstream ss2(str);
+                        while(getline(ss2, str, ' '))
+                        {
+                            narg[cont]= (char*)malloc(250*sizeof(char));
+                            strcpy(narg[cont], str.c_str());
+                            cont++;
+                            narg= (char**)realloc(narg, (cont+1)*sizeof(char*));
+                        }
+                        narg[cont]= (char)0;
+                        list_of_args.push_back(narg);
+                    }
                 }
             }
             else
@@ -475,7 +503,7 @@ void exec_conf(string exec_path)
 // store time information
 int last_exec=0;
 void time_information_csv(int cur_thrs, int cur_data, double l_end, double l_start,
-                        ofstream& out, int cur_exec, char** l_args, int l_argc)
+                          ofstream& out, int cur_exec, char** l_args, int l_argc)
 {
     static float time_singleThrTotal;
     int count;
@@ -496,7 +524,7 @@ void time_information_csv(int cur_thrs, int cur_data, double l_end, double l_sta
 
 }
 void time_information(int cur_thrs, int cur_data, double l_end, double l_start,
-                        ofstream& out, int cur_exec, char** l_args, int l_argc)
+                      ofstream& out, int cur_exec, char** l_args, int l_argc)
 {
     static float time_singleThrTotal;
     int count;
@@ -520,7 +548,7 @@ void time_information(int cur_thrs, int cur_data, double l_end, double l_start,
     for (count = 0; count < num_marks; count++)
     {
         out << "\n\t\t Parallel execution time of the region " << count+1
-        << ", lines " << start_line[count] << " to " << stop_line[count] << " on file " << fname[count] << " : " << prl_times[count] << "seconds\n";
+            << ", lines " << start_line[count] << " to " << stop_line[count] << " on file " << fname[count] << " : " << prl_times[count] << "seconds\n";
         out << "\t\t Speedup for the parallel region " << count+1 << " : " << time_singleThrPrl[count]/prl_times[count] << "\n";
     }
     out << "\n\t\t Total time of execution: " << l_end - l_start << " seconds\n";
@@ -528,12 +556,11 @@ void time_information(int cur_thrs, int cur_data, double l_end, double l_start,
 }
 
 // program configurations
-char** menu_opt(char* argv[], int argc)
+void menu_opt(char* argv[], int argc, char*** args)
 {
-    char** args;
     int i=0;
     bool thrnum_req= false;
-    args = (char **) malloc((argc + 1)*sizeof(char*));
+    (*args) = (char **) malloc((argc + 1)*sizeof(char*));
     do
     {
         if(string(argv[i]) == "-t") // set number of the argument that will pass the number of thread to the program
@@ -562,26 +589,18 @@ char** menu_opt(char* argv[], int argc)
                 csv_file= argv[i];
             }
         }
-        else if(string(argv[i]) == "-ps")
-        {
-            i++;
-            if(i<argc) // cheking if the user pass the argument
-            {
-                datatset= stringToInt(argv[i]);
-            }
-        }
         else // other arguments
         {
-            args[num_args] = (char *)malloc(250*sizeof(char));
-            strcpy(args[num_args], argv[i]);
+            (*args)[num_args] = (char *)malloc(250*sizeof(char));
+            strcpy((*args)[num_args], argv[i]);
             num_args++;
         }
         i++;
-    }while (i < argc);
-    args[num_args] = (char *) NULL;
+    }
+    while (i < argc);
+    (*args)[num_args] = (char *) NULL;
     if(thrnum_req)
         printf(BLUE "[Sperf]" RESET " sperf_thrnum function required\n");
     else
         printf(BLUE "[Sperf]" RESET " Thread value passed by command line argument to the target application. sperf_thrnum function not required\n");
-    return args;
 }
