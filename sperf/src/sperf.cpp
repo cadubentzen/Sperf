@@ -62,11 +62,13 @@ struct recv_info
 
 float prl_times[MAX_ANNOTATIONS], time_singleThrPrl[MAX_ANNOTATIONS];
 int start_line[MAX_ANNOTATIONS], stop_line[MAX_ANNOTATIONS];
+
 int num_marks, optset = 0;
 int num_exec, num_args;
-string config_file, csv_file, program_name;
+string config_file, csv_file, program_name, result_file;
 vector<int> list_of_threads_value;
 vector<char**> list_of_args;
+vector<int> list_of_args_num;
 vector<string> fname;
 bool out_csv= 0;
 
@@ -85,7 +87,6 @@ void menu_opt(char* argv[], int argc, char*** args);
 int main(int argc, char *argv[])
 {
     char** args;
-    string result_file;
     ofstream out;
 
     /* Passando os argumentos da linha de comando para a variável args */
@@ -103,7 +104,7 @@ int main(int argc, char *argv[])
     result_file = get_path(argv[0], RESULT_PATH);
 
     if(out_csv)
-        result_file+=csv_file+".csv";
+        result_file+=csv_file;
     else
     {
         time_t rawtime = time(NULL);
@@ -114,32 +115,15 @@ int main(int argc, char *argv[])
         result_file+=ss.str();
     }
 
-    out.open(result_file);
-    if(!out)
-    {
-        if(opendir("/result") == NULL)
-        {
-            mkdir("../results/", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-            out.open(result_file);
-            if(!out)
-            {
-                fprintf(stderr, RED "[Sperf]" RESET " Failed to open the result file: %s\n", strerror(errno));
-                exit(1);
-            }
-        }
-        else
-        {
-            fprintf(stderr, RED "[Sperf]" RESET " Failed to create the result folder: %s\n", strerror(errno));
-            exit(1);
-        }
-    }
 
-    if(out_csv)
+    if(opendir("/result") == NULL)
     {
-        out.precision(5);
-        out << "\n,";
-        for(uint i=0; i<list_of_threads_value.size(); i++)
-            out << list_of_threads_value[i] << ",";
+        mkdir("../results/", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+    }
+    else
+    {
+        fprintf(stderr, RED "[Sperf]" RESET " Failed to create the result folder: %s\n", strerror(errno));
+        exit(1);
     }
 
     fname.resize(MAX_ANNOTATIONS);
@@ -183,7 +167,7 @@ int main(int argc, char *argv[])
                     }
                     if (optset != 0)
                         sprintf(args[optset], "%d", list_of_threads_value[num_threads]);
-                    if (execv(args[1], list_of_args[current_arg]) == -1)
+                    if (execv(args[1], list_of_args.empty()?args+1:list_of_args[current_arg]) == -1)
                     {
                         fprintf(stderr, RED "[Sperf]" RESET " Failed to start the target application: %s\n", strerror(errno));
                         exit(1);
@@ -237,11 +221,18 @@ int main(int argc, char *argv[])
             }
         }
     }
-    out << "\n";
-    out.close();
     for(int i=0; i<num_args; i++)
         free(args[i]);
     free(args);
+
+    for(uint i=0; i<list_of_args.size(); i++)
+    {
+        for(int j=0; j<list_of_args_num[i]; j++)
+        {
+            free(list_of_args[i][j]);
+        }
+        free(list_of_args[i]);
+    }
 
     return 0;
 }
@@ -313,7 +304,7 @@ void exec_conf(string exec_path)
     conf_file.open(config_path);
     if(!conf_file)
     {
-        fprintf(stderr, RED "[Sperf]" RESET " Failed to open %s.conf: %s\n", config_path.c_str(), strerror(errno));
+        fprintf(stderr, RED "[Sperf]" RESET " Failed to open %s: %s\n", config_path.c_str(), strerror(errno));
         exit(1);
     }
 
@@ -458,6 +449,7 @@ void exec_conf(string exec_path)
                         }
                         narg[cont]= (char)0;
                         list_of_args.push_back(narg);
+                        list_of_args_num.push_back(cont);
                     }
                 }
             }
@@ -501,16 +493,45 @@ void exec_conf(string exec_path)
 }
 
 // store time information
-int last_exec=0;
 void time_information_csv(int cur_thrs, int cur_argm, double l_end, double l_start,
                           ofstream& out, int cur_exec, char** l_args, int l_argc)
 {
+    static int last_exec=0;
+    static bool header= false;
     static float time_singleThrTotal;
     int count;
+    if(!header)
+    {
+        out.open(result_file+".csv", ios::app);
+        out.precision(5);
+        out << "\n,";
+        for(uint i=0; i<list_of_threads_value.size(); i++)
+            out << list_of_threads_value[i] << ",";
+        out.close();
+        for (count = 0; count < num_marks; count++)
+        {
+            out.open(result_file+"_parallel_region_"+intToString(count+1)+".csv", ios::app);
+            out.precision(5);
+            out << "\n,";
+            for(uint i=0; i<list_of_threads_value.size(); i++)
+                out << list_of_threads_value[i] << ",";
+            out.close();
+        }
+        header= true;
+    }
     if(last_exec!=cur_exec)
     {
+        out.open(result_file+".csv", ios::app);
         last_exec= cur_exec;
         out << "\n,";
+        out.close();
+        for (count = 0; count < num_marks; count++)
+        {
+            out.open(result_file+"_parallel_region_"+intToString(count+1)+".csv", ios::app);
+            last_exec= cur_exec;
+            out << "\n,";
+            out.close();
+        }
     }
     if (cur_thrs == 1)
     {
@@ -518,15 +539,33 @@ void time_information_csv(int cur_thrs, int cur_argm, double l_end, double l_sta
             time_singleThrPrl[count] = prl_times[count];
 
         time_singleThrTotal = (float) (l_end - l_start);
-        out << "\n" << cur_argm+1 << ",";
-    }
-    out << fixed << time_singleThrTotal/(float)(l_end - l_start) << ",";
 
+        out.open(result_file+".csv", ios::app);
+        out << "\n" << cur_argm+1 << ",";
+        out.close();
+        for (count = 0; count < num_marks; count++)
+        {
+            out.open(result_file+"_parallel_region_"+intToString(count+1)+".csv", ios::app);
+            out << "\n" << cur_argm+1 << ",";
+            out.close();
+        }
+    }
+    out.open(result_file+".csv", ios::app);
+    out << fixed << time_singleThrTotal/(float)(l_end - l_start) << ",";
+    out.close();
+    ///TODO
+    for (count = 0; count < num_marks; count++)
+    {
+        out.open(result_file+"_parallel_region_"+intToString(count+1)+".csv", ios::app);
+        out << time_singleThrPrl[count]/prl_times[count] << ",";
+        out.close();
+    }
 }
 void time_information(int cur_thrs, int cur_argm, double l_end, double l_start,
                       ofstream& out, int cur_exec, char** l_args, int l_argc)
 {
     static float time_singleThrTotal;
+    out.open(result_file, ios::app);
     int count;
     if (cur_thrs == 1)
     {
@@ -534,7 +573,7 @@ void time_information(int cur_thrs, int cur_argm, double l_end, double l_start,
             time_singleThrPrl[count] = prl_times[count];
 
         time_singleThrTotal = (float) (l_end - l_start);
-        out << "\n-----> Execution number " << cur_exec + 1 << " for " << l_args[1] << " and " << cur_argm << " data" << ":\n";
+        out << "\n-----> Execution number " << cur_exec + 1 << " for " << l_args[1] << " and " << cur_argm << " argument" << ":\n";
     }
 
     out << "\n\t--> Result for "<< cur_thrs << " threads, application " << l_args[1] << ", arguments: ";
@@ -553,6 +592,7 @@ void time_information(int cur_thrs, int cur_argm, double l_end, double l_start,
     }
     out << "\n\t\t Total time of execution: " << l_end - l_start << " seconds\n";
     out << "\t\t Speedup for the entire application: " << time_singleThrTotal/(float)(l_end - l_start) << "\n";
+    out.close();
 }
 
 // program configurations
