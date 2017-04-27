@@ -68,7 +68,7 @@ set_start()
 	case "$1" in
 		openmp)
 
-		LINE=$(grep -n '^\s*#' $FPARSE | grep 'pragma omp parallel' | cut -f 1 -d':' | sed -n "$PRAGMA_COUNT p")
+		LINE=$(grep -n '^\s*#' $FPARSE | grep 'pragma omp parallel\|pragma omp for' | cut -f 1 -d':' | sed -n "$PRAGMA_COUNT p")
 		is_valid
 		
 		if [[ $INVALID_LINE -eq 0 ]]
@@ -180,23 +180,23 @@ EXEC_PATH=$(dirname $0)
 cd $EXEC_PATH
 CONF_PATH=$PWD
 # Retrieving Retriving the application's source code path from sperf_instr.conf
-TARGET_PATH=$(perl -ne 'print if /\b^DPATH\b/' sperf_instr.conf | cut -f 2 -d'=')
+TARGET_PATH=$(perl -ne 'print if /\b^DPATH\b/' $2 | cut -f 2 -d'=')
 # Path to sperfops.h
 INCLUDE_PATH=../include
 cd $INCLUDE_PATH
 INCLUDE_PATH=$PWD
 cd ../etc
 # Get the file extentions that will be instrumented
-EXT=$(perl -ne 'print if /\b^EXTENSIONS\b/' sperf_instr.conf | cut -f 2 -d'=' | cut -f $EXT_COUNT -d',')
+EXT=$(perl -ne 'print if /\b^EXTENSIONS\b/' $2 | cut -f 2 -d'=' | cut -f $EXT_COUNT -d',')
 
-if [[ ! -d $TARGET_PATH  ]]
-then
-	echo -e "${RED}[sperf_instr.sh]${NC} No such folder path"
-	exit
-fi
+#if [[ ! -z "$TARGET_PATH"  ]]
+#then
+#	echo -e "${RED}[sperf_instr.sh]${NC} No such folder path"
+#	exit
+#fi
 
 echo -e "${BLUE}[sperf_instr.sh]${NC} Entering the folder"
-cd $TARGET_PATH
+eval cd $TARGET_PATH
 
 echo -e "${BLUE}[sperf_instr.sh]${NC} Parsing the files..."
 
@@ -218,7 +218,7 @@ do
 		case "$1" in 
 			openmp)
 			# Retrieve how many "# pragmas omp parallel" exist in the file
-			NUM_PRAGMAS=$(grep '^\s*#' $FPARSE | grep 'pragma omp parallel' | wc -l)
+			NUM_PRAGMAS=$(grep '^\s*#' $FPARSE | grep 'pragma omp parallel\|pragma omp for' | wc -l)
 
 			# If there is any "pragma omp parallel"
 			if [[ $NUM_PRAGMAS -gt 0 ]]
@@ -260,7 +260,7 @@ do
 
 			*)
 
-			echo -e "${RED}[sperf_instr.sh]${NC} Invalid argument. Usage: <path/to/sperf_instr.sh> openmp|pthreads|clean"
+			echo -e "${RED}[sperf_instr.sh]${NC} Invalid argument. Usage: <path/to/sperf_instr.sh> openmp|pthreads|clean config_file.conf"
 			exit
 			;;
 		esac
@@ -269,7 +269,7 @@ do
 	done
 	
 	EXT_COUNT=$(( $EXT_COUNT+1 ))
-	EXT=$(perl -ne 'print if /\b^EXTENSIONS\b/' $CONF_PATH/sperf_instr.conf | cut -f 2 -d'=' | cut -f $EXT_COUNT -d',')
+	EXT=$(perl -ne 'print if /\b^EXTENSIONS\b/' $CONF_PATH/$2 | cut -f 2 -d'=' | cut -f $EXT_COUNT -d',')
 done
 
 case "$1" in
