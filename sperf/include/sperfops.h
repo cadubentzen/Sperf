@@ -26,8 +26,16 @@
 
 #define	 MAX_ANNOTATIONS	64
 
+struct s_info {
+    int s_mark;
+    float s_time;
+    int s_start_line;
+    int s_stop_line;
+    char s_filename[64];
+};
+
 #define sperf_start() _sperf_start(__LINE__, __FILE__);
-#define sperf_stop() _sperf_stop(__LINE__, __FILE__);	
+#define sperf_stop() _sperf_stop(__LINE__, __FILE__);
 void _sperf_start(int line, const char * filename);
 void _sperf_stop(int stop_line, const char * filename);
 

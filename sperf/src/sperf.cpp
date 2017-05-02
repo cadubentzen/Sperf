@@ -60,10 +60,12 @@ struct recv_info
     char s_filename[64];
 } info;
 
-float prl_times[MAX_ANNOTATIONS], time_singleThrPrl[MAX_ANNOTATIONS];
-int start_line[MAX_ANNOTATIONS], stop_line[MAX_ANNOTATIONS];
+//float prl_times[MAX_ANNOTATIONS], time_singleThrPrl[MAX_ANNOTATIONS];
+//int start_line[MAX_ANNOTATIONS], stop_line[MAX_ANNOTATIONS];
+vector<float> prl_times, time_singleThrPrl;
+vector<int> start_line, stop_line;
 
-int num_marks, optset = 0;
+int optset = 0;
 int num_exec, num_args;
 string config_file, csv_file, program_name, result_file;
 vector<int> list_of_threads_value;
@@ -130,7 +132,6 @@ int main(int argc, char *argv[])
     /* pipes[0] = leitura; pipes[1] = escrita */
     int pipes[2];
     double start, end;
-    int mark, mark_ant = 0;
     for(int current_exec = 0; current_exec < num_exec; current_exec++)
     {
         printf(BLUE "[Sperf]" RESET " Current execution %d of %d\n", current_exec + 1, num_exec);
@@ -180,29 +181,32 @@ int main(int argc, char *argv[])
                         fprintf(stderr, RED "[Sperf]" RESET " Failed to close IPC: %s\n", strerror(errno));
                         exit(1);
                     }
+                    prl_times.clear();
+                    start_line.clear();
+                    stop_line.clear();
+                    fname.clear();
+                    int last_mark= -1;
                     while (!waitpid(pid_child, 0, WNOHANG))
                     {
-                        if ((int) read(pipes[0], &info, sizeof(struct recv_info)) == -1)
+                        if ((int) read(pipes[0], &info, sizeof(recv_info)) == -1)
                         {
                             fprintf(stderr, RED "[Sperf]" RESET " Reading from the pipe has failed: %s\n", strerror(errno));
                             exit(1);
                         }
 
-                        mark = info.s_mark;
-                        prl_times[mark] = info.s_time;
-                        start_line[mark] = info.s_start_line;
-                        stop_line[mark] = info.s_stop_line;
-                        fname[mark]= info.s_filename;
-
-                        if (list_of_threads_value[num_threads] == 1)
+                        int mark = info.s_mark;
+                        if(last_mark != mark)
                         {
-                            if (mark > mark_ant)
-                            {
-                                mark_ant = mark;
-                                num_marks = mark + 1;
-                            }
+                            prl_times.push_back(info.s_time);
+                            start_line.push_back(info.s_start_line);
+                            stop_line.push_back(info.s_stop_line);
+                            fname.push_back(info.s_filename);
+                            last_mark= mark;
+                            //cout << "Recebi : " << start_line.back() << " " << stop_line.back() << " " << mark << endl;
                         }
+
                     }
+                    time_singleThrPrl.resize(prl_times.size());
                     GET_TIME(end);
 
                     if(out_csv)
@@ -499,7 +503,7 @@ void time_information_csv(int cur_thrs, int cur_argm, double l_end, double l_sta
     static int last_exec=0;
     static bool header= false;
     static float time_singleThrTotal;
-    int count;
+    uint count;
     if(!header)
     {
         out.open(result_file+".csv", ios::app);
@@ -508,7 +512,7 @@ void time_information_csv(int cur_thrs, int cur_argm, double l_end, double l_sta
         for(uint i=0; i<list_of_threads_value.size(); i++)
             out << list_of_threads_value[i] << ",";
         out.close();
-        for (count = 0; count < num_marks; count++)
+        for (count = 0; count < prl_times.size(); count++)
         {
             out.open(result_file+"_parallel_region_"+intToString(count+1)+".csv", ios::app);
             out.precision(5);
@@ -525,7 +529,7 @@ void time_information_csv(int cur_thrs, int cur_argm, double l_end, double l_sta
         last_exec= cur_exec;
         out << "\n,";
         out.close();
-        for (count = 0; count < num_marks; count++)
+        for (count = 0; count < prl_times.size(); count++)
         {
             out.open(result_file+"_parallel_region_"+intToString(count+1)+".csv", ios::app);
             last_exec= cur_exec;
@@ -535,7 +539,7 @@ void time_information_csv(int cur_thrs, int cur_argm, double l_end, double l_sta
     }
     if (cur_thrs == 1)
     {
-        for (count = 0; count < num_marks; count++)
+        for (count = 0; count < prl_times.size(); count++)
             time_singleThrPrl[count] = prl_times[count];
 
         time_singleThrTotal = (float) (l_end - l_start);
@@ -543,7 +547,7 @@ void time_information_csv(int cur_thrs, int cur_argm, double l_end, double l_sta
         out.open(result_file+".csv", ios::app);
         out << "\n" << cur_argm+1 << ",";
         out.close();
-        for (count = 0; count < num_marks; count++)
+        for (count = 0; count < prl_times.size(); count++)
         {
             out.open(result_file+"_parallel_region_"+intToString(count+1)+".csv", ios::app);
             out << "\n" << cur_argm+1 << ",";
@@ -554,7 +558,7 @@ void time_information_csv(int cur_thrs, int cur_argm, double l_end, double l_sta
     out << fixed << time_singleThrTotal/(float)(l_end - l_start) << ",";
     out.close();
     ///TODO
-    for (count = 0; count < num_marks; count++)
+    for (count = 0; count < prl_times.size(); count++)
     {
         out.open(result_file+"_parallel_region_"+intToString(count+1)+".csv", ios::app);
         out << time_singleThrPrl[count]/prl_times[count] << ",";
@@ -566,10 +570,10 @@ void time_information(int cur_thrs, int cur_argm, double l_end, double l_start,
 {
     static float time_singleThrTotal;
     out.open(result_file, ios::app);
-    int count;
+    uint count;
     if (cur_thrs == 1)
     {
-        for (count = 0; count < num_marks; count++)
+        for (count = 0; count < prl_times.size(); count++)
             time_singleThrPrl[count] = prl_times[count];
 
         time_singleThrTotal = (float) (l_end - l_start);
@@ -584,7 +588,7 @@ void time_information(int cur_thrs, int cur_argm, double l_end, double l_start,
         if (i == l_argc - 1)
             out << "\n";
     }
-    for (count = 0; count < num_marks; count++)
+    for (count = 0; count < prl_times.size(); count++)
     {
         out << "\n\t\t Parallel execution time of the region " << count+1
             << ", lines " << start_line[count] << " to " << stop_line[count] << " on file " << fname[count] << " : " << prl_times[count] << "seconds\n";
