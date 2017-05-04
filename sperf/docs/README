@@ -1,6 +1,6 @@
 
 sperf was developed by Márcio Jales (marcio.dojcosta@gmail.com), at UFRN (Universidade Federal do Rio Grande do Norte), as part of the undegraduate thesis in computer engineering.
-Date: 09/12/2016.
+Date: 04/05/2017.
 
 This document describes the essentials about the sperf toolsuite. It consists of:
 - "sperf" binary executable (writter in C);
@@ -38,7 +38,7 @@ SECTION 2 - HOW sperf WORKS
 
 The user must instrument its target application that he/she wishes to be measured. In order to do so, he/she must use the library provided, named "libsperf.so".
 
-Next, the user executes "sperf", passing, as arguments, the binary executable of the target application and all its necessary arguments. To configure how "sperf" will perform the tests, he/she must configure the file "sperf_exec.conf". There, it will be informed how many tests will be made and the number of threads that will be used.
+Next, the user executes "sperf", passing, as arguments, the binary executable of the target application and all its necessary arguments. To configure how "sperf" will perform the tests, he/she must configure the file "name_of_the_program.conf", where the file name_of_the_program is the name of the program that will run. There, it will be informed how many tests will be made and the number of threads that will be used and the arguments to execute.
 
 ------------------------------------------------------------------------------------
 
@@ -96,7 +96,15 @@ The second possibility uses a set of three variables: "max_number_threads", "typ
 	
 	3 - The set "max_number_threads=33", "type_of_step=constant" and "value_of_step=4" will configure the target application to execute with 1, 5, 9, 13, 17, 21, 25, 29 and 33 threads.
 
-The list_of_data parameter is usend to run with multiple data, the values must be comma-separated, between keys and without spaces. For example, the declaration "list_of_data={data1.txt,data2.txt}" will execute the program with data1.txt and data2.txt for wich execution for all threads, to use this is necessery to use -ps option on the sperf execution telling the program with argument is the name of the data.
+The list_of_arguments parameter is usend to run with multiple arguments. For example, the declaration
+"list_of_args={
+kosarak_500k.dat 410,
+kosarak_250k.dat 220,
+kosarak_500k.dat 410,
+kosarak_990k.dat 790
+}"
+Will execute the program with wich argument 
+
 ------------------------------------------------------------------------------------
 
 SECTION 6 - EXECUTING sperf
@@ -121,20 +129,6 @@ The options available to use with sperf is:
 	1 - sperf -c my_config app arg1
 	2 - sperf app arg1
 	
-	-ps this option is used to run the program with multiple dates, is needed to set the list_of_data in the configuration file with the name of file with the data, the number passed to this option is the number of the argument to pass the data on the app, example:
-	list_of_data={data1.txt,data2.txt,data3.txt}
-	1 - sperf -ps 0 app data arg2
-	2 - sperf -ps 1 app arg1 data arg3
 
 	Notice that if the user inserts the function "sperf_thrnum" (refer to section 3) in his/her application, "-t" isn't necessary even if the target passes the number of threads in its arguments.
-
-
-
-
-	
-
-
-
-
-
 	

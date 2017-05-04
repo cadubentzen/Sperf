@@ -201,8 +201,3 @@ void _sperf_stop(int stop_line, const char * filename)
 //	write(fd_pipe, &info, sizeof(struct send_info));
 //}
 //#endif
-
-
-
-
-

@@ -93,16 +93,13 @@ int main(int argc, char *argv[])
 
     /* Passando os argumentos da linha de comando para a variável args */
     menu_opt(argv, argc, &args);
-    config_file=program_name= args[1];
-
     if (num_args == 1)
     {
         printf(RED "[Sperf]" RESET " Target application missing\n");
         exit(1);
     }
-
+    config_file=program_name= args[1];
     exec_conf(argv[0]);
-
     result_file = get_path(argv[0], RESULT_PATH);
 
     if(out_csv)
