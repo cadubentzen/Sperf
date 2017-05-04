@@ -21,6 +21,10 @@
 #include <errno.h>
 #include <string.h>
 #include <stack>
+#include <map>
+#include <mutex>
+#include <thread>
+
 #include "../include/sperfops.h"
 #include <sys/time.h>
 //#ifndef _OPENMP
@@ -34,7 +38,8 @@ using std::stack;
 //static double time_begin[MAX_ANNOTATIONS], time_final[MAX_ANNOTATIONS], time_total[MAX_ANNOTATIONS];
 static stack<double> time_begin;
 //static map<int, double> time_begin; // <start_line, time_begin>
-static int fd_pipe, mark = 0, count = 0;
+static int fd_pipe, mark = 0;
+static bool flag_conf = false;
 static stack<int> start_line, stack_call;
 
 static void setconfig()
@@ -44,7 +49,7 @@ static void setconfig()
 	str_pipe = getenv("FD_PIPE");
 	fd_pipe = atoi(str_pipe);
 
-	count++;
+	flag_conf= true;
 }
 
 static void fname(char * last, const char * f)
@@ -73,17 +78,13 @@ void sperf_thrnum(int *valor)
 	else
 		setenv("OMP_NUM_THREADS", str_thr, 1);
 }
-#include <mutex>
-#include <thread>
 
-using namespace std;
-
-static mutex mtx;
+static std::mutex mtx;
 
 void _sperf_start(int line, const char * filename)
 {
     mtx.lock();
-	if (count == 0)
+	if (!flag_conf)
 		setconfig();
     if(start_line.empty() || start_line.top() != line)
     {
@@ -100,7 +101,7 @@ void _sperf_start(int line, const char * filename)
     mtx.unlock();
 }
 
-static mutex mtx2;
+static std::mutex mtx2;
 
 void _sperf_stop(int stop_line, const char * filename)
 {
@@ -134,70 +135,44 @@ void _sperf_stop(int stop_line, const char * filename)
     }
     mtx2.unlock();
 }
-
 //#ifndef _OPENMP
-//static pthread_t thr_start;
-//
-//void _sperf_pthstart(pthread_t thr, int line, const char * filename)
-//{
-//	int l_mark = 0;
-//	static int max_mark = 0;
-//
-//	if (count == 0)
-//		setconfig();
-//
-//	while (l_mark < max_mark)
-//	{
-//		if (line != start_line[l_mark])
-//			l_mark++;
-//		else
-//		{
-//			GET_TIME(time_begin[l_mark]);
-//			break;
-//		}
-//	}
-//
-//	if (l_mark == max_mark)
-//	{
-//		thr_start[l_mark] = thr;
-//		start_line[l_mark] = line;
-//		max_mark++;
-//		GET_TIME(time_begin[l_mark]);
-//	}
-//}
-//
-//void _sperf_pthstop(pthread_t thr_stop, int stop_line, const char * filename)
-//{
-//	struct send_info {
-//		int s_mark;
-//		float s_time;
-//		int s_start_line;
-//		int s_stop_line;
-//		char s_filename[64];
-//	} info;
-//
-//	int l_mark = 0;
-//
-//	while (true)
-//	{
-//		if (pthread_equal(thr_start[l_mark], thr_stop) != 0)
-//		{
-//			GET_TIME(time_final[l_mark]);
-//			break;
-//		}
-//		l_mark++;
-//	}
-//
-//	time_total[l_mark] += time_final[l_mark] - time_begin[l_mark];
-//	info.s_mark = l_mark;
-//	info.s_time = time_total[l_mark];
-//	info.s_start_line = start_line[l_mark];
-//	info.s_stop_line = stop_line;
-//
-//	char only_filename[64];
-//	fname(only_filename, filename);
-//	strcpy(info.s_filename, only_filename);
-//
-//	write(fd_pipe, &info, sizeof(struct send_info));
-//}
+//static std::vector<pthread_t> thr_start;
+static std::map<pthread_t, int> thr_line;
+static std::map<int, double> line_time;
+
+void _sperf_pthstart(pthread_t thr, int line, const char * filename)
+{
+	if (!flag_conf)
+        setconfig();
+
+    double now;
+    GET_TIME(now);
+    thr_line[thr]= line;
+    line_time[line]= now;
+}
+
+void _sperf_pthstop(pthread_t thr_stop, int stop_line, const char * filename)
+{
+    int line= thr_line[thr_stop];
+    double time= line_time[line];
+
+    static double time_final;
+    GET_TIME(time_final);
+    time_final-= time;
+
+	int l_mark = 0;
+
+	s_info info;
+
+	info.s_mark = l_mark;
+	info.s_time = time_final;
+	info.s_start_line = line;
+	info.s_stop_line = stop_line;
+
+	char only_filename[64];
+	fname(only_filename, filename);
+	strcpy(info.s_filename, only_filename);
+
+	write(fd_pipe, &info, sizeof(s_info));
+}
 //#endif

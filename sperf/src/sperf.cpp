@@ -51,17 +51,8 @@ using namespace std;
 #define CYAN   			"\x1b[36m"
 #define RESET   			"\x1b[0m"
 
-struct recv_info
-{
-    int s_mark;
-    float s_time;
-    int s_start_line;
-    int s_stop_line;
-    char s_filename[64];
-} info;
+s_info info;
 
-//float prl_times[MAX_ANNOTATIONS], time_singleThrPrl[MAX_ANNOTATIONS];
-//int start_line[MAX_ANNOTATIONS], stop_line[MAX_ANNOTATIONS];
 vector<float> prl_times, time_singleThrPrl;
 vector<int> start_line, stop_line;
 
@@ -185,7 +176,7 @@ int main(int argc, char *argv[])
                     int last_mark= -1;
                     while (!waitpid(pid_child, 0, WNOHANG))
                     {
-                        if ((int) read(pipes[0], &info, sizeof(recv_info)) == -1)
+                        if ((int) read(pipes[0], &info, sizeof(s_info)) == -1)
                         {
                             fprintf(stderr, RED "[Sperf]" RESET " Reading from the pipe has failed: %s\n", strerror(errno));
                             exit(1);
