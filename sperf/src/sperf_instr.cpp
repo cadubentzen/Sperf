@@ -1,0 +1,135 @@
+#include "sperf_instr.h"
+
+#define RED     			"\x1b[31m"
+#define GREEN   			"\x1b[32m"
+#define YELLOW  		"\x1b[33m"
+#define BLUE    			"\x1b[34m"
+#define MAGENTA 		"\x1b[35m"
+#define CYAN   			"\x1b[36m"
+#define RESET   			"\x1b[0m"
+
+#include <sys/types.h>
+#include <iostream>
+#include <sstream>
+
+using namespace std;
+
+void Instrumentation::read_config_file(string file_name)
+{
+    abre.open(file_name+".conf");
+    if(!abre)
+        throw "cant open the file "+file_name+".conf";
+    while(!abre.eof())
+    {
+        getline(abre, buffer);
+        if(buffer.find("#")!=string::npos)
+            buffer= buffer.substr(0, buffer.find("#"));
+        if(!buffer.empty())
+        {
+            //if(buffer == "DPATH")
+            if(buffer.substr(0,6) == "DPATH=")
+            {
+                cout << BLUE "[Sperf]" RESET " Retriving the application's source code path" << endl;
+                dpath= buffer.substr(6,buffer.size());
+                if(dpath[dpath.size()-1] != '/')
+                    dpath+="/";
+            }
+            else if(buffer.substr(0,11) == "EXTENSIONS=")
+            {
+                cout << BLUE "[Sperf]" RESET " Retriving the extensions's" << endl;
+                buffer=buffer.substr(11,buffer.size());
+                stringstream ss(buffer);
+                while(getline(ss, buffer, ','))
+                    extensions.push_back(buffer);
+            }
+        }
+    }
+    abre.close();
+}
+void Instrumentation::getFileNames()
+{
+    cout << BLUE "[Sperf]" RESET " Retriving file names" << endl;
+    dp = opendir(dpath.c_str());
+    if(dp == NULL)
+        throw "cant open the directory "+dpath;
+    while((dptr= readdir(dp)) != NULL)
+    {
+        string dir= dptr->d_name;
+        for(auto ext: extensions)
+            if(dir.find(ext)!=string::npos)
+                files.push_back(dir);
+    }
+}
+void Instrumentation::instrument()
+{
+    cout << BLUE "[Sperf]" RESET " Parsing the files..." << endl;
+    for(auto file: files)
+    {
+        abre.open( (dpath+file).c_str() );
+        string txt;
+        while(!abre.eof())
+        {
+            getline(abre, buffer);
+            txt=txt+buffer+"\n";
+        }
+        commentRegion cR;
+        vector<commentRegion> commentRegions;
+        unsigned long long int p= txt.find("//");
+        while(p!=string::npos)
+        {
+            //txt.erase(txt.begin()+p, txt.begin()+txt.find("\n",p+1));
+            cR.li= p;
+            cR.lf= txt.find("\n",p+1);
+            commentRegions.push_back(cR);
+            p= txt.find("//", cR.lf);
+        }
+        p= txt.find("/*");
+        while(p!=string::npos)
+        {
+            //txt.erase(txt.begin()+p, txt.begin()+txt.find("*/",p+1)+2);
+            cR.li= p;
+            cR.lf= txt.find("*/",p+1)+2;
+            commentRegions.push_back(cR);
+            p= txt.find("/*", cR.lf);
+        }
+
+        p= txt.find("#pragma omp parallel");
+        while(p != string::npos)
+        {
+            bool insidComment= false;
+            for(auto crs: commentRegions)
+            {
+                if(p>crs.li && p<crs.lf)
+                {
+                    insidComment= true;
+                    break;
+                }
+            }
+            if(!insidComment)
+            {
+                txt= txt.substr(0, p)+"sperf_start();\n"+txt.substr(p, txt.size());
+                int stp= txt.find("\n", p+16)+1;
+                bool first= false;
+                int cont= 0;
+                while(cont != 0 || !first)
+                {
+                    if(txt[stp] == '{')
+                    {
+                        first= true;
+                        cont++;
+                    }
+                    if(txt[stp] == '}')
+                        cont--;
+                    stp++;
+                }
+                txt= txt.substr(0, stp)+"\nsperf_stop();\n"+txt.substr(stp, txt.size());
+                //cout << BLUE "[Sperf]" RESET "  marks on lines " << p << " " << stp << endl;
+            }
+            p= txt.find("#pragma omp parallel", p+16);
+        }
+        abre.close();
+        ofstream salva((dpath+file+"_").c_str());
+        salva << txt;
+        salva.close();
+    }
+}

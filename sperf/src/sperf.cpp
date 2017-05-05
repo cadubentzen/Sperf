@@ -38,11 +38,7 @@
 using namespace std;
 
 #include "sperfops.h"
-
-#define SET_THREADS    	1
-#define SET_PIPE       		2
-#define ETC_PATH			3
-#define RESULT_PATH		4
+#include "sperf_instr.h"
 
 #define RED     			"\x1b[31m"
 #define GREEN   			"\x1b[32m"
@@ -51,78 +47,6 @@ using namespace std;
 #define MAGENTA 		"\x1b[35m"
 #define CYAN   			"\x1b[36m"
 #define RESET   			"\x1b[0m"
-
-
-string intToString(int x);
-int stringToInt(string x);
-
-class Sperf
-{
-public:
-    Sperf()
-    {
-        if(opendir("/result") == NULL)
-        {
-            mkdir("../results/", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-        }
-        else
-        {
-            fprintf(stderr, RED "[Sperf]" RESET " Failed to create the result folder: %s\n", strerror(errno));
-            exit(1);
-        }
-    }
-    void config_menu(char* argv[], int argc);
-    void run();
-
-private:
-
-    void set_perfcfg(int val, int op);
-    string get_path(string argmnt, int location);
-
-    void read_config_file(string exec_path);
-    void store_time_information();
-    void store_time_information_csv();
-private:
-
-    struct proc_info
-    {
-        double start, end;
-        uint current_arg;
-        uint cur_exec, num_args;
-        char** args;
-        vector<s_info> info;
-    };
-    map<uint, proc_info> info_thr_proc;
-    int pipes[2];/* pipes[0] = leitura; pipes[1] = escrita */
-    uint optset = 0;
-    uint num_exec, num_args= 0;
-    char** args;
-    string config_file, csv_file, program_name, result_file;
-    vector<uint> list_of_threads_value;
-    vector<uint> list_of_args_num;
-    vector<char**> list_of_args;
-    bool out_csv= 0;
-    ofstream out;
-};
-
-int main(int argc, char *argv[])
-{
-    try
-    {
-        Sperf sperf;
-        sperf.config_menu(argv, argc);
-        sperf.run();
-    }
-    catch(const char* e)
-    {
-        cerr << e << endl;
-    }
-    catch(string e)
-    {
-        cerr << e << endl;
-    }
-    return 0;
-}
 
 string intToString(int x)
 {
@@ -138,6 +62,119 @@ int stringToInt(string x)
     return n;
 }
 
+class Sperf
+{
+private:
+    enum PerfConfig { SET_THREADS, SET_PIPE };
+    enum PathConfig { ETC_PATH, RESULT_PATH };
+public:
+    Sperf(char* argv[], int argc);
+    void run();
+private:
+    string get_perfpath(string argmnt, Sperf::PathConfig op);
+    void set_perfcfg(int val, Sperf::PerfConfig op);
+
+    void config_menu(char* argv[], int argc);
+    void config_output(string path);
+    void read_config_file(string exec_path);
+
+    void store_time_information();
+    void store_time_information_csv();
+
+private:
+    struct proc_info
+    {
+        double start, end;
+
+        uint current_arg;
+        uint cur_exec, num_args;
+        char** args;
+
+        vector<s_info> info;
+    };
+    map<uint, proc_info> info_thr_proc;
+    int pipes[2];/* pipes[0] = leitura; pipes[1] = escrita */
+    uint optset = 0;
+    uint num_exec= 0, num_args= 0;
+    char** args;
+    string config_file, csv_file, program_name, result_file;
+    vector<uint> list_of_threads_value;
+    vector<char**> list_of_args;
+    vector<uint> list_of_args_num;
+    bool out_csv= false;
+    ofstream out;
+};
+
+int main(int argc, char *argv[])
+{
+    try
+    {
+        if(string(argv[1]) == "-i")
+        {
+            Instrumentation inst;
+            if(argc == 2)
+                throw  "missing arguments to instrumentation";
+            inst.read_config_file(argv[2]);
+            inst.getFileNames();
+            inst.instrument();
+        }
+        else
+        {
+            Sperf sperf(argv, argc);
+            sperf.run();
+        }
+    }
+    catch(const char* e)
+    {
+        cerr << RED "[Sperf]" RESET << " "  << e << endl;
+    }
+    catch(string e)
+    {
+        cerr << RED "[Sperf]" RESET << " " << e << endl;
+    }
+    return 0;
+}
+
+Sperf::Sperf(char* argv[], int argc)
+{
+    config_menu(argv, argc);
+
+    config_output(argv[0]);
+
+    read_config_file(argv[0]);
+}
+
+// set environment variables to control number of threads
+// or set pipe
+void Sperf::set_perfcfg(int val, Sperf::PerfConfig op)
+{
+    string str= intToString(val);
+    if (op == SET_THREADS)
+    {
+        setenv("NUM_THRS_ATUAL", str.c_str(), 1);
+        setenv("OMP_NUM_THREADS", str.c_str(), 1);
+    }
+    else if (op == SET_PIPE)
+        setenv("FD_PIPE", str.c_str(), 1);
+    else
+        throw  " Invalid option in set_perfcfg";
+}
+
+// get program path
+string Sperf::get_perfpath(string argmnt, Sperf::PathConfig op)
+{
+    string path;
+    path=argmnt.substr(0,argmnt.find_last_of("/"));
+
+    if (op == ETC_PATH)
+        path+="/../etc/"+string(config_file)+".conf";
+    // add the result path
+    if (op == RESULT_PATH)
+        path+="/../results/";
+
+    return path;
+}
+
 // program configurations
 void Sperf::config_menu(char* argv[], int argc)
 {
@@ -151,26 +188,20 @@ void Sperf::config_menu(char* argv[], int argc)
             thrnum_req= true;
             i++;
             if(i<argc) // cheking if the user pass the argument
-            {
                 optset = stringToInt(argv[i]);
-            }
         }
         else if (string(argv[i]) == "-c") // passing the config file path
         {
             i++;
             if(i<argc) // cheking if the user pass the argument
-            {
                 config_file= argv[i];
-            }
         }
         else if(string(argv[i]) == "-o")
         {
             out_csv= true;
             i++;
             if(i<argc) // cheking if the user pass the argument
-            {
                 csv_file= argv[i];
-            }
         }
         else // other arguments
         {
@@ -190,11 +221,21 @@ void Sperf::config_menu(char* argv[], int argc)
         cout << BLUE "[Sperf]" RESET " Thread value passed by command line argument to the target application. sperf_thrnum function not required\n";
 
     if(num_args == 1)
-        throw RED "[Sperf]" RESET " Target application missing\n";
+            throw  " Target application missing\n";
+}
+
+void Sperf::config_output(string path)
+{
     program_name= args[1];
     if(config_file == "")
         config_file= program_name;
-    result_file = get_path(argv[0], RESULT_PATH);
+    result_file = get_perfpath(path, RESULT_PATH);
+
+    if(opendir("/result") == NULL)
+        mkdir("../results/", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+    else
+        throw  " Failed to create the result folder: %s\n";
+
     if(out_csv)
     {
         result_file+=csv_file;
@@ -224,38 +265,6 @@ void Sperf::config_menu(char* argv[], int argc)
            << "-" << local->tm_hour << "h-" << local->tm_min << "m-" << local->tm_sec << "s.txt";
         result_file+=ss.str();
     }
-    read_config_file(argv[0]);
-}
-
-// set environment variables to control number of threads
-// or set pipe
-void Sperf::set_perfcfg(int val, int op)
-{
-    string str= intToString(val);
-    if (op == SET_THREADS)
-    {
-        setenv("NUM_THRS_ATUAL", str.c_str(), 1);
-        setenv("OMP_NUM_THREADS", str.c_str(), 1);
-    }
-    else if (op == SET_PIPE)
-        setenv("FD_PIPE", str.c_str(), 1);
-    else
-        throw RED "[Sperf]" RESET " Invalid option in set_perfcfg";
-}
-
-// get program path
-string Sperf::get_path(string argmnt, int location)
-{
-    string path;
-    path=argmnt.substr(0,argmnt.find_last_of("/"));
-
-    if (location == ETC_PATH)
-        path+="/../etc/"+string(config_file)+".conf";
-    // add the result path
-    if (location == RESULT_PATH)
-        path+="/../results/";
-
-    return path;
 }
 
 // read the config file
@@ -272,11 +281,11 @@ void Sperf::read_config_file(string exec_path)
     bool flag_list= 0, flag_max_threads = 0, flag_step_type = 0, flag_step_value = 0, flag_num_tests = 0;
 
     // get the confige file path
-    config_path = get_path(exec_path, ETC_PATH);
+    config_path = get_perfpath(exec_path, ETC_PATH);
 
     conf_file.open(config_path);
     if(!conf_file)
-        throw RED "[Sperf]" RESET " Failed to open configuration file "+config_path+"\n";
+        throw  " Failed to open configuration file "+config_path+"\n";
 
     while(!conf_file.eof())
     {
@@ -294,7 +303,7 @@ void Sperf::read_config_file(string exec_path)
             {
                 printf(BLUE "[Sperf]" RESET " Retrieving number of testes...\n");
                 if (str.size() == 16)
-                    throw RED "[Sperf]" RESET " You must specify a number of tests\n";
+                    throw  " You must specify a number of tests\n";
                 else
                 {
                     str= str.substr(16,str.size());
@@ -311,7 +320,7 @@ void Sperf::read_config_file(string exec_path)
                     printf(BLUE "[Sperf]" RESET " Retrieving the list of threads values...\n");
                     str= str.substr(20,str.size());
                     if(str[str.size()-1] != '}' || str[0] != '{')
-                        throw RED "[Sperf]" RESET " Format error on list_threads_values\n";
+                        throw  " Format error on list_threads_values\n";
                     stringstream ss(str.substr(1,str.size()-2));
                     while(getline(ss, str, ','))
                         list_of_threads_value.push_back(stringToInt(str));
@@ -323,7 +332,7 @@ void Sperf::read_config_file(string exec_path)
                 if (flag_list != 1)
                 {
                     if (str.size() == 19)
-                        throw RED "[Sperf]" RESET " You must specify a maximum number of threads\n";
+                        throw  " You must specify a maximum number of threads\n";
                     else
                     {
                         str= str.substr(19,str.size());
@@ -337,14 +346,14 @@ void Sperf::read_config_file(string exec_path)
                 if (flag_list != 1)
                 {
                     if(str.size() == 13)
-                        throw RED "[Sperf]" RESET " You must specify a step method to increment the number of threads\n";
+                        throw  " You must specify a step method to increment the number of threads\n";
                     else
                     {
                         str= str.substr(13,str.size());
                         step_type= str;
                         if((step_type != "constant" && step_type != "power") || (step_type.size()!=8 && step_type.size()!=5))
                         {
-                            fputs(RED "[Sperf]" RESET " Invalid step method\n", stderr);
+                            fputs( " Invalid step method\n", stderr);
                             exit(1);
                         }
                         flag_step_type = 1;
@@ -356,7 +365,7 @@ void Sperf::read_config_file(string exec_path)
                 if (flag_list != 1)
                 {
                     if (str.size() == 14)
-                        throw RED "[Sperf]" RESET " You must specify a step value to increment the number of threads\n";
+                        throw  " You must specify a step value to increment the number of threads\n";
                     else
                     {
                         str= str.substr(14,str.size());
@@ -382,7 +391,7 @@ void Sperf::read_config_file(string exec_path)
                 }
                 if(str.size() == 13 || str == "list_of_args={}"
                 || str[str.size()-1] != '}' || str[0] != '{')
-                    throw RED "[Sperf]" RESET " Format error on list_of_args\n";
+                    throw  " Format error on list_of_args\n";
                 else
                 {
                     stringstream ss1(str.substr(1, str.size()-2));
@@ -408,16 +417,16 @@ void Sperf::read_config_file(string exec_path)
             }
             else
             {
-                throw RED "[Sperf]" RESET " Invalid configuration variable\n";
+                throw  " Invalid configuration variable\n";
             }
         }
     }
     // verify correctly config file
     if (flag_num_tests == 0)
-        throw RED "[Sperf]" RESET " 'number_of_tests' variable missing\n";
+        throw  " 'number_of_tests' variable missing\n";
     if (flag_list == 0 && (flag_max_threads == 0 || flag_step_value == 0 || flag_step_type== 0))
-        throw RED "[Sperf]" RESET " The number of threads to be executed must be set properly.\n" \
-        RED "[Sperf]" RESET " Define 'list_values_threads' variable or the set of three variables 'max_number_threads', 'type_of_step' and 'value_of_step'\n";
+        throw  " The number of threads to be executed must be set properly.\n" \
+         " Define 'list_values_threads' variable or the set of three variables 'max_number_threads', 'type_of_step' and 'value_of_step'\n";
     if (flag_list == 0)
     {
         printf(BLUE "[Sperf]" RESET " Retrieving the list of threads values...\n");
@@ -466,10 +475,10 @@ void Sperf::run()
                 set_perfcfg(list_of_threads_value[current_thr], SET_THREADS);
 
                 if (pipe(pipes) == -1)
-                    throw RED "[Sperf]" RESET " IPC initialization error: %s\n";
+                    throw  " IPC initialization error: %s\n";
                 set_perfcfg(pipes[1], SET_PIPE);
                 if ((pid_child = fork()) < 0)
-                    throw RED "[Sperf]" RESET " Failed to fork(): %s\n";
+                    throw  " Failed to fork(): %s\n";
 
                 procInfo.info.clear();
                 GET_TIME(procInfo.start);
@@ -478,23 +487,23 @@ void Sperf::run()
                 if (pid_child == 0)
                 {
                     if (close(pipes[0]) == -1)
-                        throw RED "[Sperf]" RESET " Failed to close() IPC: %s\n";
+                        throw  " Failed to close() IPC: %s\n";
                     if (optset != 0)
                         sprintf(args[optset], "%d", list_of_threads_value[current_thr]);
                     if (execv(args[1], list_of_args.empty()?args+1:list_of_args[current_arg]) == -1)
-                        throw RED "[Sperf]" RESET " Failed to start the target application: %s\n";
+                        throw  " Failed to start the target application: %s\n";
                 }
                 else
                 {
                     if (close(pipes[1]) == -1)
-                        throw RED "[Sperf]" RESET " Failed to close IPC: %s\n";
+                        throw  " Failed to close IPC: %s\n";
 
                     int last_mark= -1;
                     while (!waitpid(pid_child, 0, WNOHANG))
                     {
                         s_info info;
                         if ((int) read(pipes[0], &info, sizeof(s_info)) == -1)
-                            throw RED "[Sperf]" RESET " Reading from the pipe has failed: %s\n";
+                            throw  " Reading from the pipe has failed: %s\n";
                         if(last_mark != info.s_mark)
                         {
                             procInfo.info.push_back(info);
@@ -506,7 +515,7 @@ void Sperf::run()
                     info_thr_proc[list_of_threads_value[current_thr]]= procInfo;
 
                     if (close(pipes[0]) == -1)
-                        throw RED "[Sperf]" RESET " Failed to close IPC: %s\n";
+                        throw  " Failed to close IPC: %s\n";
                 }
             }
             if(out_csv)
@@ -538,16 +547,13 @@ void Sperf::store_time_information()
 
         out << "\n\t--> Result for "<< cur_thrs << " threads, application " << info_thr_proc[1].args[1] << ", arguments: ";
 
-        cout << "HEY " << info_thr_proc[1].num_args << endl;
         for(uint i = 2; i < info_thr_proc[1].num_args; i++)
         {
             if (i != optset)
                 out <<  info_thr_proc[1].args[i] << " ";
         }
         for(uint i=0; i<list_of_args_num[info_thr_proc[1].current_arg]; i++)
-        {
             out << list_of_args[info_thr_proc[1].current_arg][i] << " ";
-        }
         out << "\n";
 
         for (uint i=0; i<info_thr_proc[cur_thrs].info.size(); i++)

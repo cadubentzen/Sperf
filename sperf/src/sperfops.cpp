@@ -15,6 +15,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "sperfops.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -25,7 +27,6 @@
 #include <mutex>
 #include <thread>
 
-#include "../include/sperfops.h"
 #include <sys/time.h>
 //#ifndef _OPENMP
 #include <pthread.h>
