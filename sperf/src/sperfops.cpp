@@ -47,6 +47,11 @@ static void setconfig()
 	char *str_pipe;
 
 	str_pipe = getenv("FD_PIPE");
+	if(!str_pipe)
+	{
+        fprintf(stderr, RED "[Sperf]" RESET " Sperf not running\n");
+            exit(1);
+	}
 	fd_pipe = atoi(str_pipe);
 
 	flag_conf= true;
@@ -173,6 +178,10 @@ void _sperf_pthstop(pthread_t thr_stop, int stop_line, const char * filename)
 	fname(only_filename, filename);
 	strcpy(info.s_filename, only_filename);
 
-	write(fd_pipe, &info, sizeof(s_info));
+	if ((int) write(fd_pipe, &info, sizeof(s_info)) == -1)
+    {
+        fprintf(stderr, RED "[Sperf]" RESET " Writing to the pipe has failed: %s\n", strerror(errno));
+        exit(1);
+    }
 }
 //#endif
