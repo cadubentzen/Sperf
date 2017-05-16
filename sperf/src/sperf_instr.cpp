@@ -87,7 +87,6 @@ void Instrumentation::instrument()
         cout << "file " << file << endl;
         abre.open( (dpath+file).c_str() );
         string txt;
-        txt= "#include \"sperf_instr.h\"\n";
         while(!abre.eof())
         {
             getline(abre, buffer);
@@ -113,7 +112,7 @@ void Instrumentation::instrument()
             commentRegions.push_back(cR);
             p= txt.find("/*", cR.lf);
         }
-
+        bool haveOMP= false;
         int id_region= 0;
         p= txt.find("#pragma omp parallel");
         while(p != string::npos)
@@ -129,6 +128,7 @@ void Instrumentation::instrument()
             }
             if(!insidComment)
             {
+                haveOMP= true;
                 string id= intToString(id_region);
                 txt= txt.substr(0, p)+"sperf_start("+id+");\n"+txt.substr(p, txt.size());
                 int stp= txt.find("\n", p+id.size()+16)+1;
@@ -152,6 +152,8 @@ void Instrumentation::instrument()
             p= txt.find("#pragma omp parallel", p+16+intToString(id_region).size());
             id_region++;
         }
+        if(haveOMP)
+            txt= "#include \"sperf_instr.h\"\n"+txt;
         abre.close();
         ofstream salva((dpath+"/instr/"+file).c_str());
         salva << txt;
