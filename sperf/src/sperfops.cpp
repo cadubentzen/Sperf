@@ -15,6 +15,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "sperfops.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -24,8 +26,8 @@
 #include <map>
 #include <mutex>
 #include <thread>
+#include <omp.h>
 
-#include "../include/sperfops.h"
 #include <sys/time.h>
 //#ifndef _OPENMP
 #include <pthread.h>
@@ -35,18 +37,23 @@
 #define RESET   			"\x1b[0m"
 
 using std::stack;
-//static double time_begin[MAX_ANNOTATIONS], time_final[MAX_ANNOTATIONS], time_total[MAX_ANNOTATIONS];
-static stack<double> time_begin;
-//static map<int, double> time_begin; // <start_line, time_begin>
-static int fd_pipe, mark = 0;
+
+static int fd_pipe;
 static bool flag_conf = false;
-static stack<int> start_line, stack_call;
+
+static double id_time[MAX_ANNOTATIONS][MAX_THREADS];
+static double id_start_line[MAX_ANNOTATIONS][MAX_THREADS];
 
 static void setconfig()
 {
 	char *str_pipe;
 
 	str_pipe = getenv("FD_PIPE");
+	if(!str_pipe)
+	{
+        fprintf(stderr, RED "[Sperf]" RESET " Sperf not running\n");
+            exit(1);
+	}
 	fd_pipe = atoi(str_pipe);
 
 	flag_conf= true;
@@ -79,76 +86,55 @@ void sperf_thrnum(int *valor)
 		setenv("OMP_NUM_THREADS", str_thr, 1);
 }
 
-static std::mutex mtx;
-
-void _sperf_start(int line, const char * filename)
+void _sperf_start(int id, int start_line, const char * filename)
 {
-    mtx.lock();
 	if (!flag_conf)
 		setconfig();
-    if(start_line.empty() || start_line.top() != line)
-    {
-        double now;
-        stack_call.push(1);
-        GET_TIME(now);
-        time_begin.push(now);
-        start_line.push(line);
-    }
-    else
-    {
-        stack_call.top()= stack_call.top()+1;
-    }
-    mtx.unlock();
+    double now;
+    GET_TIME(now);
+    id_time[id][omp_get_thread_num()]= now;
+    id_start_line[id][omp_get_thread_num()]= start_line;
 }
 
 static std::mutex mtx2;
 
-void _sperf_stop(int stop_line, const char * filename)
+void _sperf_stop(int id, int stop_line, const char * filename)
 {
-    mtx2.lock();
-    stack_call.top()= stack_call.top()-1;
-    if(stack_call.top() == 0)
+    static double time_final;
+    GET_TIME(time_final);
+    time_final-=id_time[id][omp_get_thread_num()];
+
+    s_info info;
+
+    info.s_mark = id;
+    info.s_time = time_final;
+    info.s_start_line = id_start_line[id][omp_get_thread_num()];
+    info.s_stop_line = stop_line;
+
+    char only_filename[64];
+    fname(only_filename, filename);
+    strcpy(info.s_filename, only_filename);
+
+    if ((int) write(fd_pipe, &info, sizeof(s_info)) == -1)
     {
-        stack_call.pop();
-        static double time_final;
-        GET_TIME(time_final);
-        time_final-=time_begin.top();
-        time_begin.pop();
-
-        s_info info;
-
-        info.s_mark = mark++;
-        info.s_time = time_final;
-        info.s_start_line = start_line.top();
-        info.s_stop_line = stop_line;
-        start_line.pop();
-
-        char only_filename[64];
-        fname(only_filename, filename);
-        strcpy(info.s_filename, only_filename);
-
-        if ((int) write(fd_pipe, &info, sizeof(s_info)) == -1)
-        {
-            fprintf(stderr, RED "[Sperf]" RESET " Writing to the pipe has failed: %s\n", strerror(errno));
-            exit(1);
-        }
+        fprintf(stderr, RED "[Sperf]" RESET " Writing to the pipe has failed: %s\n", strerror(errno));
+        exit(1);
     }
-    mtx2.unlock();
 }
 //#ifndef _OPENMP
 //static std::vector<pthread_t> thr_start;
 static std::map<pthread_t, int> thr_line;
 static std::map<int, double> line_time;
 
-void _sperf_pthstart(pthread_t thr, int line, const char * filename)
+void _sperf_pthstart(pthread_t thr, int start_line, const char * filename)
 {
 	if (!flag_conf)
         setconfig();
 
     double now;
     GET_TIME(now);
-    thr_line[thr]= line;
-    line_time[line]= now;
+    thr_line[thr]= start_line;
+    line_time[start_line]= now;
 }
 
 void _sperf_pthstop(pthread_t thr_stop, int stop_line, const char * filename)
@@ -173,6 +159,10 @@ void _sperf_pthstop(pthread_t thr_stop, int stop_line, const char * filename)
 	fname(only_filename, filename);
 	strcpy(info.s_filename, only_filename);
 
-	write(fd_pipe, &info, sizeof(s_info));
+	if ((int) write(fd_pipe, &info, sizeof(s_info)) == -1)
+    {
+        fprintf(stderr, RED "[Sperf]" RESET " Writing to the pipe has failed: %s\n", strerror(errno));
+        exit(1);
+    }
 }
 //#endif
