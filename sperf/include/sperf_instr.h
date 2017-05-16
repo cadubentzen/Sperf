@@ -7,6 +7,9 @@
 #include <vector>
 #include <dirent.h>
 
+std::string intToString(int x);
+int stringToInt(std::string x);
+
 class Instrumentation
 {
 public:

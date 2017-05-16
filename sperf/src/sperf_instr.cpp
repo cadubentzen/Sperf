@@ -14,6 +14,21 @@
 
 using namespace std;
 
+std::string intToString(int x)
+{
+    std::stringstream ss;
+    ss << x;
+    return ss.str();
+}
+int stringToInt(std::string x)
+{
+    int n;
+    std::stringstream ss(x);
+    ss >> n;
+    return n;
+}
+
+
 void Instrumentation::read_config_file(string file_name)
 {
     abre.open(file_name+".conf");
@@ -40,7 +55,11 @@ void Instrumentation::read_config_file(string file_name)
                 buffer=buffer.substr(11,buffer.size());
                 stringstream ss(buffer);
                 while(getline(ss, buffer, ','))
+                {
                     extensions.push_back(buffer);
+                    cout << buffer << " ";
+                }
+                cout << endl;
             }
         }
     }
@@ -65,8 +84,10 @@ void Instrumentation::instrument()
     cout << BLUE "[Sperf]" RESET " Parsing the files..." << endl;
     for(auto file: files)
     {
+        cout << "file " << file << endl;
         abre.open( (dpath+file).c_str() );
         string txt;
+        txt= "#include \"sperf_instr.h\"\n";
         while(!abre.eof())
         {
             getline(abre, buffer);
@@ -93,6 +114,7 @@ void Instrumentation::instrument()
             p= txt.find("/*", cR.lf);
         }
 
+        int id_region= 0;
         p= txt.find("#pragma omp parallel");
         while(p != string::npos)
         {
@@ -107,8 +129,9 @@ void Instrumentation::instrument()
             }
             if(!insidComment)
             {
-                txt= txt.substr(0, p)+"sperf_start();\n"+txt.substr(p, txt.size());
-                int stp= txt.find("\n", p+16)+1;
+                string id= intToString(id_region);
+                txt= txt.substr(0, p)+"sperf_start("+id+");\n"+txt.substr(p, txt.size());
+                int stp= txt.find("\n", p+id.size()+16)+1;
                 bool first= false;
                 int cont= 0;
                 while(cont != 0 || !first)
@@ -122,13 +145,15 @@ void Instrumentation::instrument()
                         cont--;
                     stp++;
                 }
-                txt= txt.substr(0, stp)+"\nsperf_stop();\n"+txt.substr(stp, txt.size());
+                txt= txt.substr(0, stp)+"\nsperf_stop("+id+");\n"+txt.substr(stp, txt.size());
+                cout << txt << endl;
                 //cout << BLUE "[Sperf]" RESET "  marks on lines " << p << " " << stp << endl;
             }
-            p= txt.find("#pragma omp parallel", p+16);
+            p= txt.find("#pragma omp parallel", p+16+intToString(id_region).size());
+            id_region++;
         }
         abre.close();
-        ofstream salva((dpath+file+"_").c_str());
+        ofstream salva((dpath+"/instr/"+file).c_str());
         salva << txt;
         salva.close();
     }

@@ -18,6 +18,8 @@
 #ifndef _SPERFOPS_H_
 #define _SPERFOPS_H_
 
+#include <pthread.h>
+
 #define GET_TIME(now) { \
    struct timeval t; \
    gettimeofday(&t, NULL); \
@@ -34,19 +36,20 @@ struct s_info {
     char s_filename[64];
 };
 
-#define sperf_start() _sperf_start(__LINE__, __FILE__);
-#define sperf_stop() _sperf_stop(__LINE__, __FILE__);
-void _sperf_start(int line, const char * filename);
-void _sperf_stop(int stop_line, const char * filename);
+#define sperf_start(id) _sperf_start(id, __LINE__, __FILE__);
+#define sperf_stop(id) _sperf_stop(id, __LINE__, __FILE__);
+void _sperf_start(int id, int start_line, const char * filename);
+void _sperf_stop(int id, int stop_line, const char * filename);
 
 #ifndef _OPENMP
 
 #define sperf_pthstart(thr_id) _sperf_pthstart(thr_id, __LINE__, __FILE__);
 #define sperf_pthstop(thr_id) _sperf_pthstop(thr_id, __LINE__, __FILE__);
-void _sperf_pthstart(pthread_t thr, int line, const char * filename);
+void _sperf_pthstart(pthread_t thr, int start_line, const char * filename);
 void _sperf_pthstop(pthread_t thr, int stop_line, const char * filename);
 
 #endif
 
 void sperf_thrnum(int *valor);
+
 #endif

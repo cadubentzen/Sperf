@@ -48,19 +48,6 @@ using namespace std;
 #define CYAN   			"\x1b[36m"
 #define RESET   			"\x1b[0m"
 
-string intToString(int x)
-{
-    stringstream ss;
-    ss << x;
-    return ss.str();
-}
-int stringToInt(string x)
-{
-    int n;
-    stringstream ss(x);
-    ss >> n;
-    return n;
-}
 
 class Sperf
 {
@@ -90,7 +77,7 @@ private:
         uint cur_exec, num_args;
         char** args;
 
-        vector<s_info> info;
+        map<int, s_info> info;
     };
     map<uint, proc_info> info_thr_proc;
     int pipes[2];/* pipes[0] = leitura; pipes[1] = escrita */
@@ -506,8 +493,12 @@ void Sperf::run()
                             throw  " Reading from the pipe has failed: %s\n";
                         if(last_mark != info.s_mark)
                         {
-                            procInfo.info.push_back(info);
+                            procInfo.info[info.s_mark]= info;
                             last_mark= info.s_mark;
+                        }
+                        else if(info.s_time > procInfo.info[info.s_mark].s_time)
+                        {
+                            procInfo.info[info.s_mark]= info;
                         }
                     }
                     //time_singleThrPrl.resize(time_info.size());
@@ -541,17 +532,18 @@ void Sperf::store_time_information()
     out.open(result_file, ios::app);
     out << "\n-----> Execution number " << info_thr_proc[1].cur_exec + 1 << " for " << info_thr_proc[1].args[1]
     << " and " << info_thr_proc[1].current_arg << " argument" << ":\n";
+
     for(auto cur_thrs : list_of_threads_value)
     {
         float time_singleThr_total= info_thr_proc[1].end-info_thr_proc[1].start;
 
         out << "\n\t--> Result for "<< cur_thrs << " threads, application " << info_thr_proc[1].args[1] << ", arguments: ";
-
         for(uint i = 2; i < info_thr_proc[1].num_args; i++)
         {
             if (i != optset)
                 out <<  info_thr_proc[1].args[i] << " ";
         }
+        if(!list_of_args_num.empty())
         for(uint i=0; i<list_of_args_num[info_thr_proc[1].current_arg]; i++)
             out << list_of_args[info_thr_proc[1].current_arg][i] << " ";
         out << "\n";
