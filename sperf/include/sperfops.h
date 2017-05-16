@@ -27,6 +27,7 @@
 }
 
 #define	 MAX_ANNOTATIONS	64
+#define  MAX_THREADS        64
 
 struct s_info {
     int s_mark;

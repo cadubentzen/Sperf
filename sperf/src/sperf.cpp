@@ -529,6 +529,7 @@ void Sperf::run()
 
 void Sperf::store_time_information()
 {
+    ///TODO can broke, use interator
     out.open(result_file, ios::app);
     out << "\n-----> Execution number " << info_thr_proc[1].cur_exec + 1 << " for " << info_thr_proc[1].args[1]
     << " and " << info_thr_proc[1].current_arg << " argument" << ":\n";
@@ -547,7 +548,6 @@ void Sperf::store_time_information()
         for(uint i=0; i<list_of_args_num[info_thr_proc[1].current_arg]; i++)
             out << list_of_args[info_thr_proc[1].current_arg][i] << " ";
         out << "\n";
-
         for (uint i=0; i<info_thr_proc[cur_thrs].info.size(); i++)
         {
             out << "\n\t\t Parallel execution time of the region " << i+1
@@ -565,6 +565,7 @@ void Sperf::store_time_information()
 }
 void Sperf::store_time_information_csv()
 {
+    ///TODO can broke, use interator
     out.open(result_file+".csv", ios::app);
     out << "\n" << info_thr_proc[1].current_arg+1 << ",";
     out.close();

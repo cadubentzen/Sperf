@@ -41,8 +41,8 @@ using std::stack;
 static int fd_pipe;
 static bool flag_conf = false;
 
-static double id_time[64][64];
-static double id_start_line[64][64];
+static double id_time[MAX_ANNOTATIONS][MAX_THREADS];
+static double id_start_line[MAX_ANNOTATIONS][MAX_THREADS];
 
 static void setconfig()
 {
