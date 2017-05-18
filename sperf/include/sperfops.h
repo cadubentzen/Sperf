@@ -18,7 +18,9 @@
 #ifndef _SPERFOPS_H_
 #define _SPERFOPS_H_
 
+#pragma once
 #include <pthread.h>
+#include <sys/time.h>
 
 #define GET_TIME(now) { \
    struct timeval t; \

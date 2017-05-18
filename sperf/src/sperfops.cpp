@@ -17,18 +17,12 @@
 
 #include "sperfops.h"
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <unistd.h>
-#include <errno.h>
 #include <string.h>
-#include <stack>
-#include <map>
-#include <mutex>
 #include <thread>
 #include <omp.h>
+#include <map>
 
-#include <sys/time.h>
 //#ifndef _OPENMP
 #include <pthread.h>
 //#endif
@@ -36,13 +30,15 @@
 #define RED     			"\x1b[31m"
 #define RESET   			"\x1b[0m"
 
-using std::stack;
 
 static int fd_pipe;
 static bool flag_conf = false;
 
 static double id_time[MAX_ANNOTATIONS][MAX_THREADS];
 static double id_start_line[MAX_ANNOTATIONS][MAX_THREADS];
+
+static std::map<pthread_t, int> thr_line;
+static std::map<int, double> line_time;
 
 static void setconfig()
 {
@@ -59,6 +55,7 @@ static void setconfig()
 	flag_conf= true;
 }
 
+/// portar para c++
 static void fname(char * last, const char * f)
 {
 	const char * delim = "/";
@@ -96,8 +93,6 @@ void _sperf_start(int id, int start_line, const char * filename)
     id_start_line[id][omp_get_thread_num()]= start_line;
 }
 
-static std::mutex mtx2;
-
 void _sperf_stop(int id, int stop_line, const char * filename)
 {
     static double time_final;
@@ -122,8 +117,6 @@ void _sperf_stop(int id, int stop_line, const char * filename)
     }
 }
 //#ifndef _OPENMP
-static std::map<pthread_t, int> thr_line;
-static std::map<int, double> line_time;
 
 void _sperf_pthstart(pthread_t thr, int start_line, const char * filename)
 {
