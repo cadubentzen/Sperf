@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2017 Márcio Jales
+    Copyright (C) 2017 Márcio Jales, Vitor Ramos
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -15,19 +15,12 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <stdio.h>
 #include <string.h>
-#include <stdlib.h>
 #include <unistd.h>
-#include <errno.h>
+
 #include <sys/wait.h>
 #include <sys/time.h>
-#include <time.h>
-#include <fcntl.h>
-#include <assert.h>
-
 #include <sys/stat.h>
-#include <dirent.h>
 
 #include <iostream>
 #include <fstream>
@@ -39,15 +32,6 @@ using namespace std;
 
 #include "sperfops.h"
 #include "sperf_instr.h"
-
-#define RED     			"\x1b[31m"
-#define GREEN   			"\x1b[32m"
-#define YELLOW  		"\x1b[33m"
-#define BLUE    			"\x1b[34m"
-#define MAGENTA 		"\x1b[35m"
-#define CYAN   			"\x1b[36m"
-#define RESET   			"\x1b[0m"
-
 
 class Sperf
 {
@@ -126,9 +110,9 @@ Sperf::Sperf(char* argv[], int argc)
 {
     config_menu(argv, argc);
 
-    config_output(argv[0]);
-
     read_config_file(argv[0]);
+
+    config_output(argv[0]);
 }
 
 // set environment variables to control number of threads
@@ -199,7 +183,6 @@ void Sperf::config_menu(char* argv[], int argc)
         i++;
     } while (i < argc);
 
-
     args[num_args] = (char *) NULL;
 
     if(thrnum_req)
@@ -213,9 +196,6 @@ void Sperf::config_menu(char* argv[], int argc)
 
 void Sperf::config_output(string path)
 {
-    program_name= args[1];
-    if(config_file == "")
-        config_file= program_name;
     result_file = get_perfpath(path, RESULT_PATH);
 
     if(opendir("/result") == NULL)
@@ -232,16 +212,6 @@ void Sperf::config_output(string path)
         for(uint i=0; i<list_of_threads_value.size(); i++)
             out << list_of_threads_value[i] << ",";
         out.close();
-
-        for (uint i = 0; i < info_thr_proc[1].info.size(); i++)
-        {
-            out.open(result_file+"_parallel_region_"+intToString(i+1)+".csv");
-            out.precision(5);
-            out << "\n,";
-            for(uint i=0; i<list_of_threads_value.size(); i++)
-                out << list_of_threads_value[i] << ",";
-            out.close();
-        }
     }
     else
     {
@@ -257,7 +227,7 @@ void Sperf::config_output(string path)
 // read the config file
 void Sperf::read_config_file(string exec_path)
 {
-    printf(BLUE "[Sperf]" RESET " Reading sperf_exec.conf\n");
+    cout << BLUE "[Sperf]" RESET " Reading sperf_exec.conf" << endl;
 
     ifstream conf_file;
     string step_type;
@@ -268,6 +238,9 @@ void Sperf::read_config_file(string exec_path)
     bool flag_list= 0, flag_max_threads = 0, flag_step_type = 0, flag_step_value = 0, flag_num_tests = 0;
 
     // get the confige file path
+    program_name= args[1];
+    if(config_file == "")
+        config_file= program_name;
     config_path = get_perfpath(exec_path, ETC_PATH);
 
     conf_file.open(config_path);
@@ -288,7 +261,7 @@ void Sperf::read_config_file(string exec_path)
         {
             if(str.substr(0,16) == "number_of_tests=")
             {
-                printf(BLUE "[Sperf]" RESET " Retrieving number of testes...\n");
+                cout << BLUE "[Sperf]" RESET " Retrieving number of testes..." << endl;
                 if (str.size() == 16)
                     throw  " You must specify a number of tests\n";
                 else
@@ -304,7 +277,7 @@ void Sperf::read_config_file(string exec_path)
                     flag_list = 0;
                 else
                 {
-                    printf(BLUE "[Sperf]" RESET " Retrieving the list of threads values...\n");
+                    cout << BLUE "[Sperf]" RESET " Retrieving the list of threads values..." << endl;
                     str= str.substr(20,str.size());
                     if(str[str.size()-1] != '}' || str[0] != '{')
                         throw  " Format error on list_threads_values\n";
@@ -363,7 +336,7 @@ void Sperf::read_config_file(string exec_path)
             }
             else if(str.substr(0,13) == "list_of_args=")
             {
-                printf(BLUE "[Sperf]" RESET " Retrieving the list of arguments...\n");
+                cout << BLUE "[Sperf]" RESET " Retrieving the list of arguments..." << endl;
                 char c;
                 str= str.substr(13,str.size());
                 conf_file.seekg(-str.size(), conf_file.cur);
@@ -416,7 +389,7 @@ void Sperf::read_config_file(string exec_path)
          " Define 'list_values_threads' variable or the set of three variables 'max_number_threads', 'type_of_step' and 'value_of_step'\n";
     if (flag_list == 0)
     {
-        printf(BLUE "[Sperf]" RESET " Retrieving the list of threads values...\n");
+        cout << BLUE "[Sperf]" RESET " Retrieving the list of threads values..." << endl;
         // calculate the steps
         if(step_type == "constant")
         {
@@ -436,9 +409,10 @@ void Sperf::read_config_file(string exec_path)
 
 void Sperf::run()
 {
+    cout << BLUE "[Sperf]" RESET " Copyright (C) 2017" << endl;
     for(uint current_exec = 0; current_exec < num_exec; current_exec++)
     {
-        printf(BLUE "[Sperf]" RESET " Current execution %d of %d\n", current_exec + 1, num_exec);
+        cout << BLUE "[Sperf]" RESET " Current execution " << current_exec+1 << " of " << num_exec << endl;
         for(uint current_arg=0; current_arg<list_of_args.size() || current_arg==0; current_arg++)
         {
             proc_info procInfo;
@@ -449,15 +423,15 @@ void Sperf::run()
 
             if(list_of_args.size()!=0)
             {
-                printf(BLUE "[Sperf]" RESET " Current argument %d of %ld ", current_arg + 1, list_of_args.size());
+                cout << BLUE "[Sperf]" RESET " Current argument " << current_arg + 1 << " of " << list_of_args.size() << endl;
                 for(uint i=0; i<list_of_args_num[current_arg]; i++)
-                    printf("%s ", list_of_args[current_arg][i]);
-                printf("\n");
+                    cout << list_of_args[current_arg][i] << " ";
+                cout << endl;
             }
 
             for(uint current_thr=0;  current_thr<list_of_threads_value.size(); current_thr++)
             {
-                printf(BLUE "[Sperf]" RESET " Executing for %d threads\n", list_of_threads_value[current_thr]);
+                cout << BLUE "[Sperf]" RESET " Executing for " <<  list_of_threads_value[current_thr] << " threads" << endl;
                 pid_t pid_child;
                 set_perfcfg(list_of_threads_value[current_thr], SET_THREADS);
 
@@ -529,7 +503,6 @@ void Sperf::run()
 
 void Sperf::store_time_information()
 {
-    ///TODO can broke, use interator
     out.open(result_file, ios::app);
     out << "\n-----> Execution number " << info_thr_proc[1].cur_exec + 1 << " for " << info_thr_proc[1].args[1]
     << " and " << info_thr_proc[1].current_arg << " argument" << ":\n";
@@ -548,14 +521,16 @@ void Sperf::store_time_information()
         for(uint i=0; i<list_of_args_num[info_thr_proc[1].current_arg]; i++)
             out << list_of_args[info_thr_proc[1].current_arg][i] << " ";
         out << "\n";
-        for (uint i=0; i<info_thr_proc[cur_thrs].info.size(); i++)
+
+        for(auto it: info_thr_proc[cur_thrs].info)
         {
-            out << "\n\t\t Parallel execution time of the region " << i+1
-                << ", lines " << info_thr_proc[cur_thrs].info[i].s_start_line << " to " << info_thr_proc[cur_thrs].info[i].s_stop_line
-                << " on file " << info_thr_proc[cur_thrs].info[i].s_filename << " : " << info_thr_proc[cur_thrs].info[i].s_time << "seconds\n";
-            out << "\t\t Speedup for the parallel region " << i+1 << " : "
-                << info_thr_proc[1].info[i].s_time/info_thr_proc[cur_thrs].info[i].s_time << "\n";
+            out << "\n\t\t Parallel execution time of the region " << it.first+1
+                << ", lines " << it.second.s_start_line << " to " << it.second.s_stop_line
+                << " on file " << it.second.s_filename << " : " << it.second.s_time << "seconds\n";
+            out << "\t\t Speedup for the parallel region " << it.first+1 << " : "
+                << info_thr_proc[1].info[it.first].s_time/it.second.s_time << "\n";
         }
+
         out << "\n\t\t Total time of execution: "
             << info_thr_proc[cur_thrs].end-info_thr_proc[cur_thrs].start << " seconds\n";
         out << "\t\t Speedup for the entire application: "
@@ -563,18 +538,36 @@ void Sperf::store_time_information()
     }
     out.close();
 }
+
+/// MELHORAR
 void Sperf::store_time_information_csv()
 {
-    ///TODO can broke, use interator
+    static bool ft= false;
+    if(!ft)
+    {
+        for(auto it: info_thr_proc[1].info)
+        {
+            out.open(result_file+"_parallel_region_"+intToString(it.first+1)+".csv");
+            out.precision(5);
+            out << "\n,";
+            for(uint i=0; i<list_of_threads_value.size(); i++)
+                out << list_of_threads_value[i] << ",";
+            out.close();
+        }
+        ft= true;
+    }
+
     out.open(result_file+".csv", ios::app);
     out << "\n" << info_thr_proc[1].current_arg+1 << ",";
     out.close();
-    for(uint i=0; i<info_thr_proc[1].info.size(); i++)
+
+    for(auto it: info_thr_proc[1].info)
     {
-        out.open(result_file+"_parallel_region_"+intToString(i+1)+".csv", ios::app);
+        out.open(result_file+"_parallel_region_"+intToString(it.first+1)+".csv", ios::app);
         out << "\n" << info_thr_proc[1].current_arg+1 << ",";
         out.close();
     }
+
     for(auto cur_thrs : list_of_threads_value)
     {
         float time_singleThr_total= info_thr_proc[1].end-info_thr_proc[1].start;
@@ -582,23 +575,24 @@ void Sperf::store_time_information_csv()
         out << fixed << time_singleThr_total/(float)(info_thr_proc[cur_thrs].end-info_thr_proc[cur_thrs].start) << ",";
         out.close();
 
-        for(uint i=0; i<info_thr_proc[cur_thrs].info.size(); i++)
+        for(auto it: info_thr_proc[cur_thrs].info)
         {
-            out.open(result_file+"_parallel_region_"+intToString(i+1)+".csv", ios::app);
-            out << info_thr_proc[1].info[i].s_time/info_thr_proc[cur_thrs].info[i].s_time << ",";
+            out.open(result_file+"_parallel_region_"+intToString(it.first+1)+".csv", ios::app);
+            out << info_thr_proc[1].info[it.first].s_time/it.second.s_time << ",";
             out.close();
         }
     }
-    static uint last_exec=0;
+    static uint last_exec=-1;
     if(last_exec!=info_thr_proc[1].cur_exec)
     {
         out.open(result_file+".csv", ios::app);
         last_exec= info_thr_proc[1].cur_exec;
         out << "\n,";
         out.close();
-        for (uint i = 0; i < info_thr_proc[1].info.size(); i++)
+
+        for(auto it: info_thr_proc[1].info)
         {
-            out.open(result_file+"_parallel_region_"+intToString(i+1)+".csv", ios::app);
+            out.open(result_file+"_parallel_region_"+intToString(it.first+1)+".csv", ios::app);
             out << "\n,";
             out.close();
         }

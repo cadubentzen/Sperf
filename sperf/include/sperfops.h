@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2017 Márcio Jales
+    Copyright (C) 2017 Márcio Jales, Vitor Ramos
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,7 +18,9 @@
 #ifndef _SPERFOPS_H_
 #define _SPERFOPS_H_
 
+#pragma once
 #include <pthread.h>
+#include <sys/time.h>
 
 #define GET_TIME(now) { \
    struct timeval t; \
