@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2017 Márcio Jales
+    Copyright (C) 2017 Márcio Jales, Vitor Ramos
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -122,7 +122,6 @@ void _sperf_stop(int id, int stop_line, const char * filename)
     }
 }
 //#ifndef _OPENMP
-//static std::vector<pthread_t> thr_start;
 static std::map<pthread_t, int> thr_line;
 static std::map<int, double> line_time;
 

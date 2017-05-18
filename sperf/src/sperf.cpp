@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2017 Márcio Jales
+    Copyright (C) 2017 Márcio Jales, Vitor Ramos
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -257,7 +257,7 @@ void Sperf::config_output(string path)
 // read the config file
 void Sperf::read_config_file(string exec_path)
 {
-    printf(BLUE "[Sperf]" RESET " Reading sperf_exec.conf\n");
+    cout << BLUE "[Sperf]" RESET " Reading sperf_exec.conf" << endl;
 
     ifstream conf_file;
     string step_type;
@@ -288,7 +288,7 @@ void Sperf::read_config_file(string exec_path)
         {
             if(str.substr(0,16) == "number_of_tests=")
             {
-                printf(BLUE "[Sperf]" RESET " Retrieving number of testes...\n");
+                cout << BLUE "[Sperf]" RESET " Retrieving number of testes..." << endl;
                 if (str.size() == 16)
                     throw  " You must specify a number of tests\n";
                 else
@@ -304,7 +304,7 @@ void Sperf::read_config_file(string exec_path)
                     flag_list = 0;
                 else
                 {
-                    printf(BLUE "[Sperf]" RESET " Retrieving the list of threads values...\n");
+                    cout << BLUE "[Sperf]" RESET " Retrieving the list of threads values..." << endl;
                     str= str.substr(20,str.size());
                     if(str[str.size()-1] != '}' || str[0] != '{')
                         throw  " Format error on list_threads_values\n";
@@ -363,7 +363,7 @@ void Sperf::read_config_file(string exec_path)
             }
             else if(str.substr(0,13) == "list_of_args=")
             {
-                printf(BLUE "[Sperf]" RESET " Retrieving the list of arguments...\n");
+                cout << BLUE "[Sperf]" RESET " Retrieving the list of arguments..." << endl;
                 char c;
                 str= str.substr(13,str.size());
                 conf_file.seekg(-str.size(), conf_file.cur);
@@ -416,7 +416,7 @@ void Sperf::read_config_file(string exec_path)
          " Define 'list_values_threads' variable or the set of three variables 'max_number_threads', 'type_of_step' and 'value_of_step'\n";
     if (flag_list == 0)
     {
-        printf(BLUE "[Sperf]" RESET " Retrieving the list of threads values...\n");
+        cout << BLUE "[Sperf]" RESET " Retrieving the list of threads values..." << endl;
         // calculate the steps
         if(step_type == "constant")
         {
@@ -436,9 +436,10 @@ void Sperf::read_config_file(string exec_path)
 
 void Sperf::run()
 {
+    cout << BLUE "[Sperf] Copyright (C) 2017" << endl;
     for(uint current_exec = 0; current_exec < num_exec; current_exec++)
     {
-        printf(BLUE "[Sperf]" RESET " Current execution %d of %d\n", current_exec + 1, num_exec);
+        cout << BLUE "[Sperf]" RESET " Current execution " << current_exec+1 << " of " << num_exec << endl;
         for(uint current_arg=0; current_arg<list_of_args.size() || current_arg==0; current_arg++)
         {
             proc_info procInfo;
@@ -449,15 +450,15 @@ void Sperf::run()
 
             if(list_of_args.size()!=0)
             {
-                printf(BLUE "[Sperf]" RESET " Current argument %d of %ld ", current_arg + 1, list_of_args.size());
+                cout << BLUE "[Sperf]" RESET " Current argument " << current_arg + 1 << " of " << list_of_args.size() << endl;
                 for(uint i=0; i<list_of_args_num[current_arg]; i++)
-                    printf("%s ", list_of_args[current_arg][i]);
-                printf("\n");
+                    cout << list_of_args[current_arg][i] << " ";
+                cout << endl;
             }
 
             for(uint current_thr=0;  current_thr<list_of_threads_value.size(); current_thr++)
             {
-                printf(BLUE "[Sperf]" RESET " Executing for %d threads\n", list_of_threads_value[current_thr]);
+                cout << BLUE "[Sperf]" RESET " Executing for " <<  list_of_threads_value[current_thr] << " threads" << endl;
                 pid_t pid_child;
                 set_perfcfg(list_of_threads_value[current_thr], SET_THREADS);
 
