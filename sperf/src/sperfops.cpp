@@ -42,17 +42,20 @@ static std::map<int, double> line_time;
 
 static void setconfig()
 {
-	char *str_pipe;
+    if(!flag_conf)
+    {
+        char *str_pipe;
 
-	str_pipe = getenv("FD_PIPE");
-	if(!str_pipe)
-	{
-        fprintf(stderr, RED "[Sperf]" RESET " Sperf not running\n");
+        str_pipe = getenv("FD_PIPE");
+        if(!str_pipe)
+        {
+            fprintf(stderr, RED "[Sperf]" RESET " Sperf not running\n");
             exit(1);
-	}
-	fd_pipe = atoi(str_pipe);
+        }
+        fd_pipe = atoi(str_pipe);
 
-	flag_conf= true;
+        flag_conf= true;
+    }
 }
 
 /// portar para c++
@@ -85,9 +88,7 @@ void sperf_thrnum(int *valor)
 
 void _sperf_start(int id, int start_line, const char * filename)
 {
-	if (!flag_conf)
-		setconfig();
-    double now;
+    static double now;
     GET_TIME(now);
     id_time[id][omp_get_thread_num()]= now;
     id_start_line[id][omp_get_thread_num()]= start_line;
@@ -110,7 +111,7 @@ void _sperf_stop(int id, int stop_line, const char * filename)
     fname(only_filename, filename);
     strcpy(info.s_filename, only_filename);
 
-    if ((int) write(fd_pipe, &info, sizeof(s_info)) == -1)
+    if (!flag_conf || (int) write(fd_pipe, &info, sizeof(s_info)) == -1)
     {
         fprintf(stderr, RED "[Sperf]" RESET " Writing to the pipe has failed: %s\n", strerror(errno));
         exit(1);
