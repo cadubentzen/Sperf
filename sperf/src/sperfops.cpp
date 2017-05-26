@@ -111,7 +111,7 @@ void _sperf_stop(int id, int stop_line, const char * filename)
     fname(only_filename, filename);
     strcpy(info.s_filename, only_filename);
 
-    if (!flag_conf || (int) write(fd_pipe, &info, sizeof(s_info)) == -1)
+    if (flag_conf && (int) write(fd_pipe, &info, sizeof(s_info)) != -1)
     {
         fprintf(stderr, RED "[Sperf]" RESET " Writing to the pipe has failed: %s\n", strerror(errno));
         exit(1);

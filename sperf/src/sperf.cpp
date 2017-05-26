@@ -51,7 +51,6 @@ private:
 
     void store_time_information();
     void store_time_information_csv();
-
 private:
     struct proc_info
     {
@@ -557,6 +556,22 @@ void Sperf::store_time_information_csv()
         ft= true;
     }
 
+    static uint last_exec=-1;
+    if(last_exec!=info_thr_proc[1].cur_exec)
+    {
+        out.open(result_file+".csv", ios::app);
+        last_exec= info_thr_proc[1].cur_exec;
+        out << "\n,";
+        out.close();
+
+        for(auto it: info_thr_proc[1].info)
+        {
+            out.open(result_file+"_parallel_region_"+intToString(it.first+1)+".csv", ios::app);
+            out << "\n,";
+            out.close();
+        }
+    }
+
     out.open(result_file+".csv", ios::app);
     out << "\n" << info_thr_proc[1].current_arg+1 << ",";
     out.close();
@@ -572,28 +587,13 @@ void Sperf::store_time_information_csv()
     {
         float time_singleThr_total= info_thr_proc[1].end-info_thr_proc[1].start;
         out.open(result_file+".csv", ios::app);
-        out << fixed << time_singleThr_total/(float)(info_thr_proc[cur_thrs].end-info_thr_proc[cur_thrs].start) << ",";
+        out << fixed << time_singleThr_total/(float)(info_thr_proc[cur_thrs].end-info_thr_proc[cur_thrs].start)/cur_thrs << ",";
         out.close();
 
         for(auto it: info_thr_proc[cur_thrs].info)
         {
             out.open(result_file+"_parallel_region_"+intToString(it.first+1)+".csv", ios::app);
-            out << info_thr_proc[1].info[it.first].s_time/it.second.s_time << ",";
-            out.close();
-        }
-    }
-    static uint last_exec=-1;
-    if(last_exec!=info_thr_proc[1].cur_exec)
-    {
-        out.open(result_file+".csv", ios::app);
-        last_exec= info_thr_proc[1].cur_exec;
-        out << "\n,";
-        out.close();
-
-        for(auto it: info_thr_proc[1].info)
-        {
-            out.open(result_file+"_parallel_region_"+intToString(it.first+1)+".csv", ios::app);
-            out << "\n,";
+            out << info_thr_proc[1].info[it.first].s_time/it.second.s_time/cur_thrs << ",";
             out.close();
         }
     }

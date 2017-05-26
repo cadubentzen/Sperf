@@ -79,7 +79,7 @@ void Instrumentation::getFileNames()
     {
         string dir= dptr->d_name;
         for(auto ext: extensions)
-            if(dir.find(ext)!=string::npos) // ajeitar
+            if(dir.find(ext)!=string::npos) /// AJEITAR
                 files.push_back(dir);
     }
 }
@@ -154,7 +154,7 @@ void Instrumentation::instrument()
                 FindEnclosures(txt, "//", "\n", commentRegions);
                 FindEnclosures(txt, "/*", "*/", commentRegions);
 
-                int stp= txt.find("\n", p+id.size()+16)+1;
+                unsigned long long int stp= txt.find("\n", p+id.size()+16)+1;
                 int cont= 0;
                 bool first= false;
                 while(cont != 0 || !first)
