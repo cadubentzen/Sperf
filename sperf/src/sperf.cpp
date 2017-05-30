@@ -79,12 +79,15 @@ int main(int argc, char *argv[])
 {
     try
     {
-        if(string(argv[1]) == "-i")
+        if(argc > 1 && string(argv[1]) == "-i")
         {
             Instrumentation inst;
             if(argc == 2)
                 throw  "missing arguments to instrumentation";
-            inst.read_config_file(argv[2]);
+            else if(argc == 3)
+                inst.read_config_file(argv[2]);
+            else
+                inst.read_argments(argv, argc);
             inst.getFileNames();
             inst.instrument();
         }
@@ -137,7 +140,7 @@ string Sperf::get_perfpath(string argmnt, Sperf::PathConfig op)
     path=argmnt.substr(0,argmnt.find_last_of("/"));
 
     if (op == ETC_PATH)
-        path+="/../etc/"+string(config_file)+".conf";
+        path+="/../etc/"+string(config_file.substr(config_file.find_last_of("/")+1,config_file.size()))+".conf";
     // add the result path
     if (op == RESULT_PATH)
         path+="/../results/";
@@ -196,12 +199,12 @@ void Sperf::config_menu(char* argv[], int argc)
 void Sperf::config_output(string path)
 {
     result_file = get_perfpath(path, RESULT_PATH);
-
-    if(opendir("/result") == NULL)
+    if(opendir("../results/") == NULL)
+    {
         mkdir("../results/", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-    else
-        throw  " Failed to create the result folder: %s\n";
-
+        if(opendir("../results/") == NULL)
+            throw  " Failed to create the result folder: \n";
+    }
     if(out_csv)
     {
         result_file+=csv_file;
@@ -244,7 +247,21 @@ void Sperf::read_config_file(string exec_path)
 
     conf_file.open(config_path);
     if(!conf_file)
-        throw  " Failed to open configuration file "+config_path+"\n";
+    {
+        //throw  " Failed to open configuration file "+config_path+"\n";
+        cout << BLUE "[Sperf]" RESET " Creating cofiguration file..." << endl;
+        string path_to_conf= exec_path.substr(0,exec_path.find_last_of("/"))+"/../etc/sperf_exec.conf";
+        ifstream default_file(path_to_conf);
+        ofstream new_file(config_path);
+        string buffer;
+        while(getline(default_file, buffer))
+        {
+            new_file << buffer << endl;
+        }
+        default_file.close();
+        new_file.close();
+        conf_file.open(config_path);
+    }
 
     while(!conf_file.eof())
     {
@@ -376,7 +393,7 @@ void Sperf::read_config_file(string exec_path)
             }
             else
             {
-                throw  " Invalid configuration variable\n";
+                throw  "Invalid configuration variable\n";
             }
         }
     }
