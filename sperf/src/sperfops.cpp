@@ -21,11 +21,11 @@
 #include <string.h>
 #include <thread>
 #include <omp.h>
-#include <map>
 
-//#ifndef _OPENMP
+#ifdef __pthread__
+#include <map>
 #include <pthread.h>
-//#endif
+#endif
 
 #define RED     			"\x1b[31m"
 #define RESET   			"\x1b[0m"
@@ -37,8 +37,6 @@ static bool flag_conf = false;
 static double id_time[MAX_ANNOTATIONS][MAX_THREADS];
 static double id_start_line[MAX_ANNOTATIONS][MAX_THREADS];
 
-static std::map<pthread_t, int> thr_line;
-static std::map<int, double> line_time;
 
 void setconfig()
 {
@@ -117,8 +115,10 @@ void _sperf_stop(int id, int stop_line, const char * filename)
         exit(1);
     }
 }
-//#ifndef _OPENMP
 
+#ifdef __pthread__
+static std::map<pthread_t, int> thr_line;
+static std::map<int, double> line_time;
 void _sperf_pthstart(pthread_t thr, int start_line, const char * filename)
 {
 	if (!flag_conf)
@@ -158,4 +158,4 @@ void _sperf_pthstop(pthread_t thr_stop, int stop_line, const char * filename)
         exit(1);
     }
 }
-//#endif
+#endif

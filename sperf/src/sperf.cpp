@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
 {
     try
     {
-        if(string(argv[1]) == "-i")
+        if(argc > 1 && string(argv[1]) == "-i")
         {
             Instrumentation inst;
             if(argc == 2)
@@ -87,7 +87,7 @@ int main(int argc, char *argv[])
             else if(argc == 3)
                 inst.read_config_file(argv[2]);
             else
-                inst.read_argments(argv+2, argc-2);
+                inst.read_argments(argv, argc);
             inst.getFileNames();
             inst.instrument();
         }
@@ -247,7 +247,21 @@ void Sperf::read_config_file(string exec_path)
 
     conf_file.open(config_path);
     if(!conf_file)
-        throw  " Failed to open configuration file "+config_path+"\n";
+    {
+        //throw  " Failed to open configuration file "+config_path+"\n";
+        cout << BLUE "[Sperf]" RESET " Creating cofiguration file..." << endl;
+        string path_to_conf= exec_path.substr(0,exec_path.find_last_of("/"))+"/../etc/sperf_exec.conf";
+        ifstream default_file(path_to_conf);
+        ofstream new_file(config_path);
+        string buffer;
+        while(getline(default_file, buffer))
+        {
+            new_file << buffer << endl;
+        }
+        default_file.close();
+        new_file.close();
+        conf_file.open(config_path);
+    }
 
     while(!conf_file.eof())
     {
@@ -379,7 +393,7 @@ void Sperf::read_config_file(string exec_path)
             }
             else
             {
-                throw  " Invalid configuration variable\n";
+                throw  "Invalid configuration variable\n";
             }
         }
     }

@@ -35,7 +35,7 @@ int stringToInt(std::string x)
 
 void Instrumentation::read_argments(char* argv[], int argc)
 {
-    for(int i=0; i<argc; i++)
+    for(int i=2; i<argc; i++)
     {
         string argm= argv[i];
         if(argm == "-p")
@@ -68,7 +68,13 @@ void Instrumentation::read_argments(char* argv[], int argc)
     {
         cout << BLUE "[Sperf]" RESET " Using default extensions .cpp .h" << endl;
         extensions.push_back(".cpp");
+        extensions.push_back(".c");
         extensions.push_back(".h");
+    }
+    if(dpath == "/")
+    {
+        dpath= string(argv[0]);
+        dpath= dpath.substr(0,dpath.find_last_of("/")+1);
     }
 }
 
@@ -122,6 +128,7 @@ void Instrumentation::getFileNames()
             {
                 cout  << dir << endl;
                 files.push_back(dir);
+                break;
             }
     }
 }
@@ -152,10 +159,10 @@ void Instrumentation::instrument()
 {
     if(opendir(string(dpath+"instr/").c_str()) == NULL)
     {
-        cout << BLUE "[Sperf] Creating folder /inst" << endl;
+        cout << BLUE "[Sperf]" RESET " Creating folder /inst" << endl;
         mkdir(string(dpath+"instr/").c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
         if(opendir(string(dpath+"instr/").c_str()) == NULL)
-            throw  " Failed to create the result folder: %s\n";
+            throw  "Failed to create the result folder: \n";
     }
     cout << BLUE "[Sperf]" RESET " Parsing the files..." << endl;
     for(auto file: files)
