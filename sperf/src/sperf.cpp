@@ -84,7 +84,10 @@ int main(int argc, char *argv[])
             Instrumentation inst;
             if(argc == 2)
                 throw  "missing arguments to instrumentation";
-            inst.read_config_file(argv[2]);
+            else if(argc == 3)
+                inst.read_config_file(argv[2]);
+            else
+                inst.read_argments(argv+2, argc-2);
             inst.getFileNames();
             inst.instrument();
         }
@@ -137,7 +140,7 @@ string Sperf::get_perfpath(string argmnt, Sperf::PathConfig op)
     path=argmnt.substr(0,argmnt.find_last_of("/"));
 
     if (op == ETC_PATH)
-        path+="/../etc/"+string(config_file)+".conf";
+        path+="/../etc/"+string(config_file.substr(config_file.find_last_of("/")+1,config_file.size()))+".conf";
     // add the result path
     if (op == RESULT_PATH)
         path+="/../results/";
@@ -196,12 +199,12 @@ void Sperf::config_menu(char* argv[], int argc)
 void Sperf::config_output(string path)
 {
     result_file = get_perfpath(path, RESULT_PATH);
-
-    if(opendir("/result") == NULL)
+    if(opendir("../results/") == NULL)
+    {
         mkdir("../results/", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-    else
-        throw  " Failed to create the result folder: %s\n";
-
+        if(opendir("../results/") == NULL)
+            throw  " Failed to create the result folder: \n";
+    }
     if(out_csv)
     {
         result_file+=csv_file;
