@@ -79,10 +79,33 @@ void Instrumentation::getFileNames()
     {
         string dir= dptr->d_name;
         for(auto ext: extensions)
-            if(dir.find(ext)!=string::npos)
+            if(dir.find(ext)!=string::npos) /// AJEITAR
                 files.push_back(dir);
     }
 }
+
+void Instrumentation::FindEnclosures(string& txt, string e1, string e2, vector<commentRegion> &commentRegions)
+{
+    commentRegion cR;
+    unsigned long long int p= txt.find(e1);
+    while(p!=string::npos)
+    {
+        //txt.erase(txt.begin()+p, txt.begin()+txt.find("\n",p+1));
+        cR.li= p;
+        cR.lf= txt.find(e2,p+e2.size());
+        commentRegions.push_back(cR);
+        p= txt.find(e1, cR.lf);
+    }
+}
+
+bool Instrumentation::isInsidComment(unsigned long long int p, std::vector<commentRegion> &commentRegions)
+{
+    for(auto crs: commentRegions)
+        if(p>crs.li && p<crs.lf)
+            return true;
+    return false;
+}
+
 void Instrumentation::instrument()
 {
     cout << BLUE "[Sperf]" RESET " Parsing the files..." << endl;
@@ -96,71 +119,75 @@ void Instrumentation::instrument()
             getline(abre, buffer);
             txt=txt+buffer+"\n";
         }
-        commentRegion cR;
         vector<commentRegion> commentRegions;
-        unsigned long long int p= txt.find("//");
-        while(p!=string::npos)
-        {
-            //txt.erase(txt.begin()+p, txt.begin()+txt.find("\n",p+1));
-            cR.li= p;
-            cR.lf= txt.find("\n",p+1);
-            commentRegions.push_back(cR);
-            p= txt.find("//", cR.lf);
-        }
-        p= txt.find("/*");
-        while(p!=string::npos)
-        {
-            //txt.erase(txt.begin()+p, txt.begin()+txt.find("*/",p+1)+2);
-            cR.li= p;
-            cR.lf= txt.find("*/",p+1)+2;
-            commentRegions.push_back(cR);
-            p= txt.find("/*", cR.lf);
-        }
+        unsigned long long int p;
         bool haveOMP= false;
         int id_region= 0;
+
+        FindEnclosures(txt, "//", "\n", commentRegions);
+        FindEnclosures(txt, "/*", "*/", commentRegions);
+        p= txt.find("main");
+        while(p != string::npos)
+        {
+            if(!isInsidComment(p, commentRegions))
+            {
+                while(txt[p] != '{')
+                    p++;
+                txt= txt.substr(0, p+1)+"\nsetconfig();\n"+txt.substr(p+1, txt.size());
+                break;
+            }
+            p= txt.find("main", p+4);
+        }
         p= txt.find("#pragma omp parallel");
         while(p != string::npos)
         {
-            bool insidComment= false;
-            for(auto crs: commentRegions)
-            {
-                if(p>crs.li && p<crs.lf)
-                {
-                    insidComment= true;
-                    break;
-                }
-            }
-            if(!insidComment)
+            commentRegions.clear();
+            FindEnclosures(txt, "//", "\n", commentRegions);
+            FindEnclosures(txt, "/*", "*/", commentRegions);
+            if(!isInsidComment(p, commentRegions))
             {
                 haveOMP= true;
                 string id= intToString(id_region);
                 txt= txt.substr(0, p)+"sperf_start("+id+");\n"+txt.substr(p, txt.size());
-                int stp= txt.find("\n", p+id.size()+16)+1;
-                bool first= false;
+
+                commentRegions.clear();
+                FindEnclosures(txt, "//", "\n", commentRegions);
+                FindEnclosures(txt, "/*", "*/", commentRegions);
+
+                unsigned long long int stp= txt.find("\n", p+id.size()+16)+1;
                 int cont= 0;
+                bool first= false;
                 while(cont != 0 || !first)
                 {
-                    if(txt[stp] == '{')
+                    if(txt[stp] == '{' && !isInsidComment(stp, commentRegions))
                     {
                         first= true;
                         cont++;
                     }
-                    if(txt[stp] == '}')
+                    if(txt[stp] == '}' && !isInsidComment(stp, commentRegions))
                         cont--;
                     stp++;
+                    if(stp >= txt.size())
+                    {
+                        throw  "ERRO\n";
+                    }
                 }
                 txt= txt.substr(0, stp)+"\nsperf_stop("+id+");\n"+txt.substr(stp, txt.size());
-                cout << txt << endl;
+                //cout << txt << endl;
                 //cout << BLUE "[Sperf]" RESET "  marks on lines " << p << " " << stp << endl;
+                p= txt.find("#pragma omp parallel", p+16+id.size());
+                id_region++;
             }
-            p= txt.find("#pragma omp parallel", p+16+intToString(id_region).size());
-            id_region++;
+            else
+                p= txt.find("#pragma omp parallel", p+1);
         }
         if(haveOMP)
+        {
             txt= "#include \"sperf_instr.h\"\n"+txt;
+            ofstream salva((dpath+"/instr/"+file).c_str());
+            salva << txt;
+            salva.close();
+        }
         abre.close();
-        ofstream salva((dpath+"/instr/"+file).c_str());
-        salva << txt;
-        salva.close();
     }
 }
