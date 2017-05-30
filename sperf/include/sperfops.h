@@ -44,6 +44,8 @@ struct s_info {
 void _sperf_start(int id, int start_line, const char * filename);
 void _sperf_stop(int id, int stop_line, const char * filename);
 
+void setconfig();
+
 #ifndef _OPENMP
 
 #define sperf_pthstart(thr_id) _sperf_pthstart(thr_id, __LINE__, __FILE__);

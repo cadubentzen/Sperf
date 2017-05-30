@@ -33,6 +33,45 @@ int stringToInt(std::string x)
     return n;
 }
 
+void Instrumentation::read_argments(char* argv[], int argc)
+{
+    for(int i=0; i<argc; i++)
+    {
+        string argm= argv[i];
+        if(argm == "-p")
+        {
+            if(i+1<argc)
+                dpath= string(argv[i+1]);
+            else
+                throw "Erro argumentos";
+        }
+        else if(argm == "-e")
+        {
+            if(i+1<argc)
+            {
+                argm= argv[i+1];
+                stringstream ss(argm);
+                while(getline(ss, argm, ','))
+                {
+                    extensions.push_back(argm);
+                    cout << argm << " ";
+                }
+                cout << endl;
+            }
+            else
+                throw "Erro argumentos";
+        }
+    }
+    if(dpath.empty())
+        throw "Erro precisa especificar os argumentos";
+    else if(extensions.empty())
+    {
+        cout << BLUE "[Sperf]" RESET " Using default extensions .cpp .h" << endl;
+        extensions.push_back(".cpp");
+        extensions.push_back(".h");
+    }
+}
+
 void Instrumentation::read_config_file(string file_name)
 {
     abre.open(file_name+".conf");
@@ -80,7 +119,10 @@ void Instrumentation::getFileNames()
         string dir= dptr->d_name;
         for(auto ext: extensions)
             if(dir.find(ext)!=string::npos) /// AJEITAR
+            {
+                cout  << dir << endl;
                 files.push_back(dir);
+            }
     }
 }
 
@@ -108,10 +150,17 @@ bool Instrumentation::isInsidComment(unsigned long long int p, std::vector<comme
 
 void Instrumentation::instrument()
 {
+    if(opendir(string(dpath+"instr/").c_str()) == NULL)
+    {
+        cout << BLUE "[Sperf] Creating folder /inst" << endl;
+        mkdir(string(dpath+"instr/").c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+        if(opendir(string(dpath+"instr/").c_str()) == NULL)
+            throw  " Failed to create the result folder: %s\n";
+    }
     cout << BLUE "[Sperf]" RESET " Parsing the files..." << endl;
     for(auto file: files)
     {
-        cout << "file " << file << endl;
+        cout << file << endl;
         abre.open( (dpath+file).c_str() );
         string txt;
         while(!abre.eof())
@@ -183,7 +232,8 @@ void Instrumentation::instrument()
         }
         if(haveOMP)
         {
-            txt= "#include \"sperf_instr.h\"\n"+txt;
+            cout <<  BLUE "[Sperf]" RESET " File instrumented" << endl;
+            txt= "#include \"sperfops.h\"\n"+txt;
             ofstream salva((dpath+"/instr/"+file).c_str());
             salva << txt;
             salva.close();

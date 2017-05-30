@@ -23,6 +23,7 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
+#include <sys/stat.h>
 #include <dirent.h>
 
 #define RED     			"\x1b[31m"
@@ -44,6 +45,7 @@ public:
         unsigned li, lf;
     };
     void read_config_file(std::string file_name);
+    void read_argments(char* argv[], int argc);
     void getFileNames();
     void instrument();
 private:

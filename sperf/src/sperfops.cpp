@@ -40,7 +40,7 @@ static double id_start_line[MAX_ANNOTATIONS][MAX_THREADS];
 static std::map<pthread_t, int> thr_line;
 static std::map<int, double> line_time;
 
-static void setconfig()
+extern void setconfig()
 {
     if(!flag_conf)
     {
