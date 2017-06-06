@@ -163,7 +163,7 @@ void Sperf::config_menu(char* argv[], int argc)
             if(i<argc) // cheking if the user pass the argument
                 optset = stringToInt(argv[i]);
         }
-        else if (string(argv[i]) == "-c") // passing the config file path
+        else if(string(argv[i]) == "-c") // passing the config file path
         {
             i++;
             if(i<argc) // cheking if the user pass the argument
