@@ -188,7 +188,7 @@ void Sperf::config_menu(char* argv[], int argc)
     args[num_args] = (char *) NULL;
 
     if(thrnum_req)
-        cout << BLUE "[Sperf]" RESET " sperf_thrnum function required";
+        cout << BLUE "[Sperf]" RESET " sperf_thrnum function required" << endl;
     else
         cout << BLUE "[Sperf]" RESET " Thread value passed by command line argument to the target application. sperf_thrnum function not required\n";
 
@@ -466,7 +466,12 @@ void Sperf::run()
                     if (close(pipes[0]) == -1)
                         throw  " Failed to close() IPC: %s\n";
                     if (optset != 0)
-                        sprintf(args[optset], "%d", list_of_threads_value[current_thr]);
+					{
+						if(list_of_args.empty())
+	                        sprintf(args[optset], "%d", list_of_threads_value[current_thr]);
+						else
+							sprintf(list_of_args[current_arg][optset], "%d", list_of_threads_value[current_thr]);
+					}
                     if (execv(args[1], list_of_args.empty()?args+1:list_of_args[current_arg]) == -1)
                         throw  " Failed to start the target application: %s\n";
                 }
