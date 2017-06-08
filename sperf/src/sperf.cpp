@@ -518,9 +518,9 @@ void Sperf::run()
     }
     info_thr_proc= media;
     if(out_csv)
-        store_time_information_csv(list_of_args.size(), num_exec+1);
+        store_time_information_csv(list_of_args.size(), num_exec);
     else
-        store_time_information(list_of_args.size(), num_exec+1);
+        store_time_information(list_of_args.size(), num_exec);
 
     for(uint i=0; i<num_args; i++)
         free(args[i]);
