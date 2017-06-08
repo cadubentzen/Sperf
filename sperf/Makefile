@@ -8,12 +8,11 @@ VPATH= src/:include/
 all: sperf libs
 	mv sperf bin/
 	mv libsperf.a lib/
-	mv libsperf.so lib/
 	rm sperfops.o sperf_instr.o sperf.o
 
 sperf: sperfops.o sperf_instr.o sperf.o
 
-libs: libsperf.a libsperf.so
+libs: libsperf.a
 
 libsperf.a: sperfops.o
 	ar r  $@ $?

@@ -473,19 +473,19 @@ void Sperf::run()
 							sprintf(list_of_args[current_arg][optset], "%d", list_of_threads_value[current_thr]);
 					}
                     if (execv(args[1], list_of_args.empty()?args+1:list_of_args[current_arg]) == -1)
-                        throw  " Failed to start the target application: %s\n";
+                        throw  "Failed to start the target application\n";
                 }
                 else
                 {
                     if (close(pipes[1]) == -1)
-                        throw  " Failed to close IPC: %s\n";
+                        throw  "Failed to close IPC: %s\n";
 
                     int last_mark= -1;
                     while (!waitpid(pid_child, 0, WNOHANG))
                     {
                         s_info info;
                         if ((int) read(pipes[0], &info, sizeof(s_info)) == -1)
-                            throw  " Reading from the pipe has failed: %s\n";
+                            throw  "Reading from the pipe has failed: %s\n";
                         if(last_mark != info.s_mark)
                         {
                             procInfo.info[info.s_mark]= info;
@@ -501,7 +501,7 @@ void Sperf::run()
                     info_thr_proc[list_of_threads_value[current_thr]]= procInfo;
 
                     if (close(pipes[0]) == -1)
-                        throw  " Failed to close IPC: %s\n";
+                        throw  "Failed to close IPC: %s\n";
                 }
             }
             if(out_csv)
@@ -577,7 +577,6 @@ void Sperf::store_time_information_csv()
         }
         ft= true;
     }
-
     static uint last_exec=-1;
     if(last_exec!=info_thr_proc[1].cur_exec)
     {
