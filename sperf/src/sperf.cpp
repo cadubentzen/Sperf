@@ -62,6 +62,7 @@ private:
         map<int, s_info> info;
     };
     map<uint, proc_info> info_thr_proc;
+    map<uint, proc_info> media;
     int pipes[2];/* pipes[0] = leitura; pipes[1] = escrita */
     uint optset, num_exec, num_args;
     bool out_csv;
@@ -497,6 +498,14 @@ void Sperf::run()
                     GET_TIME(procInfo.end);
                     info_thr_proc[list_of_threads_value[current_thr]]= procInfo;
 
+                    media[list_of_threads_value[current_thr]].end= media[list_of_threads_value[current_thr]].end
+                                +(procInfo.end-media[list_of_threads_value[current_thr]].end)/(current_exec+1.0);
+                    media[list_of_threads_value[current_thr]].start= media[list_of_threads_value[current_thr]].start
+                                +(procInfo.start-media[list_of_threads_value[current_thr]].start)/(current_exec+1.0);
+                    for(map<int, s_info>::iterator it= media[list_of_threads_value[current_thr]].info.begin();
+                    it!=media[list_of_threads_value[current_thr]].info.end(); it++)
+                        it->second.s_time= it->second.s_time+(procInfo.info[it->first].s_time-it->second.s_time)/(current_exec+1.0);
+
                     if (close(pipes[0]) == -1)
                         throw  "Failed to close IPC: %s\n";
                 }
@@ -507,6 +516,12 @@ void Sperf::run()
                 store_time_information(current_arg, current_exec);
         }
     }
+    info_thr_proc= media;
+    if(out_csv)
+        store_time_information_csv(list_of_args.size(), num_exec+1);
+    else
+        store_time_information(list_of_args.size(), num_exec+1);
+
     for(uint i=0; i<num_args; i++)
         free(args[i]);
     free(args);
