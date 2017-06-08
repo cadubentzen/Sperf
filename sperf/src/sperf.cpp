@@ -498,6 +498,7 @@ void Sperf::run()
                     GET_TIME(procInfo.end);
                     info_thr_proc[list_of_threads_value[current_thr]]= procInfo;
 
+                    // on the fly average curAvg = curAvg + (newNum - curAvg)/n;
                     media[list_of_threads_value[current_thr]].end= media[list_of_threads_value[current_thr]].end
                                 +(procInfo.end-media[list_of_threads_value[current_thr]].end)/(current_exec+1.0);
                     media[list_of_threads_value[current_thr]].start= media[list_of_threads_value[current_thr]].start
