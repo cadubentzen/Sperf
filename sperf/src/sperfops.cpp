@@ -17,9 +17,11 @@
 
 #include "sperfops.h"
 
+#include <errno.h>
+#include <stdlib.h>
+#include <stdio.h>
 #include <unistd.h>
 #include <string.h>
-#include <thread>
 #include <omp.h>
 
 #ifdef __pthread__

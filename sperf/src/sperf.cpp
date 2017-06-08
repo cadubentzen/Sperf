@@ -2,6 +2,7 @@
     Copyright (C) 2017 Márcio Jales, Vitor Ramos
 
     This program is free software: you can redistribute it and/or modify
+    This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
@@ -15,6 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
@@ -32,6 +34,8 @@ using namespace std;
 
 #include "sperfops.h"
 #include "sperf_instr.h"
+
+typedef unsigned int uint;
 
 class Sperf
 {
@@ -64,14 +68,14 @@ private:
     };
     map<uint, proc_info> info_thr_proc;
     int pipes[2];/* pipes[0] = leitura; pipes[1] = escrita */
-    uint optset = 0;
-    uint num_exec= 0, num_args= 0;
+    uint optset;
+    uint num_exec, num_args;
     char** args;
     string config_file, csv_file, program_name, result_file;
     vector<uint> list_of_threads_value;
     vector<char**> list_of_args;
     vector<uint> list_of_args_num;
-    bool out_csv= false;
+    bool out_csv;
     ofstream out;
 };
 
@@ -110,6 +114,9 @@ int main(int argc, char *argv[])
 
 Sperf::Sperf(char* argv[], int argc)
 {
+    optset=num_exec=num_args= 0;
+    out_csv= false;
+
     config_menu(argv, argc);
 
     read_config_file(argv[0]);
@@ -208,7 +215,7 @@ void Sperf::config_output(string path)
     if(out_csv)
     {
         result_file+=csv_file;
-        out.open(result_file+".csv");
+        out.open(string(result_file+".csv").c_str());
         out.precision(5);
         out << "\n,";
         for(uint i=0; i<list_of_threads_value.size(); i++)
@@ -245,14 +252,14 @@ void Sperf::read_config_file(string exec_path)
         config_file= program_name;
     config_path = get_perfpath(exec_path, ETC_PATH);
 
-    conf_file.open(config_path);
+    conf_file.open(config_path.c_str());
     if(!conf_file)
     {
         //throw  " Failed to open configuration file "+config_path+"\n";
         cout << BLUE "[Sperf]" RESET " Creating cofiguration file..." << endl;
         string path_to_conf= exec_path.substr(0,exec_path.find_last_of("/"))+"/../etc/sperf_exec.conf";
-        ifstream default_file(path_to_conf);
-        ofstream new_file(config_path);
+        ifstream default_file(path_to_conf.c_str());
+        ofstream new_file(config_path.c_str());
         string buffer;
         while(getline(default_file, buffer))
         {
@@ -260,7 +267,7 @@ void Sperf::read_config_file(string exec_path)
         }
         default_file.close();
         new_file.close();
-        conf_file.open(config_path);
+        conf_file.open(config_path.c_str());
     }
 
     while(!conf_file.eof())
@@ -524,14 +531,15 @@ void Sperf::run()
 
 void Sperf::store_time_information()
 {
-    out.open(result_file, ios::app);
+    out.open(result_file.c_str(), ios::app);
     out << "\n-----> Execution number " << info_thr_proc[1].cur_exec + 1 << " for " << info_thr_proc[1].args[1]
     << " and " << info_thr_proc[1].current_arg << " argument" << ":\n";
 
-    for(auto cur_thrs : list_of_threads_value)
+    for(uint j=0; j<list_of_threads_value.size(); j++)
+    //for(auto cur_thrs : list_of_threads_value)
     {
+        uint cur_thrs= list_of_threads_value[j];
         float time_singleThr_total= info_thr_proc[1].end-info_thr_proc[1].start;
-
         out << "\n\t--> Result for "<< cur_thrs << " threads, application " << info_thr_proc[1].args[1] << ", arguments: ";
         for(uint i = 2; i < info_thr_proc[1].num_args; i++)
         {
@@ -543,13 +551,14 @@ void Sperf::store_time_information()
             out << list_of_args[info_thr_proc[1].current_arg][i] << " ";
         out << "\n";
 
-        for(auto it: info_thr_proc[cur_thrs].info)
+        for(map<int, s_info>::iterator it= info_thr_proc[cur_thrs].info.begin(); it!=info_thr_proc[cur_thrs].info.end(); it++)
+        //for(auto it: info_thr_proc[cur_thrs].info)
         {
-            out << "\n\t\t Parallel execution time of the region " << it.first+1
-                << ", lines " << it.second.s_start_line << " to " << it.second.s_stop_line
-                << " on file " << it.second.s_filename << " : " << it.second.s_time << "seconds\n";
-            out << "\t\t Speedup for the parallel region " << it.first+1 << " : "
-                << info_thr_proc[1].info[it.first].s_time/it.second.s_time << "\n";
+            out << "\n\t\t Parallel execution time of the region " << it->first+1
+                << ", lines " << it->second.s_start_line << " to " << it->second.s_stop_line
+                << " on file " << it->second.s_filename << " : " << it->second.s_time << "seconds\n";
+            out << "\t\t Speedup for the parallel region " << it->first+1 << " : "
+                << info_thr_proc[1].info[it->first].s_time/it->second.s_time << "\n";
         }
 
         out << "\n\t\t Total time of execution: "
@@ -566,9 +575,10 @@ void Sperf::store_time_information_csv()
     static bool ft= false;
     if(!ft)
     {
-        for(auto it: info_thr_proc[1].info)
+        for(map<int, s_info>::iterator it= info_thr_proc[1].info.begin(); it!=info_thr_proc[1].info.end(); it++)
+        //for(auto it: info_thr_proc[1].info)
         {
-            out.open(result_file+"_parallel_region_"+intToString(it.first+1)+".csv");
+            out.open(string(result_file+"_parallel_region_"+intToString(it->first+1)+".csv").c_str(), ios::app);
             out.precision(5);
             out << "\n,";
             for(uint i=0; i<list_of_threads_value.size(); i++)
@@ -580,41 +590,46 @@ void Sperf::store_time_information_csv()
     static uint last_exec=-1;
     if(last_exec!=info_thr_proc[1].cur_exec)
     {
-        out.open(result_file+".csv", ios::app);
+        out.open(string(result_file+".csv").c_str(), ios::app);
         last_exec= info_thr_proc[1].cur_exec;
         out << "\n,";
         out.close();
 
-        for(auto it: info_thr_proc[1].info)
+        for(map<int, s_info>::iterator it= info_thr_proc[1].info.begin(); it!=info_thr_proc[1].info.end(); it++)
+        //for(auto it: info_thr_proc[1].info)
         {
-            out.open(result_file+"_parallel_region_"+intToString(it.first+1)+".csv", ios::app);
+            out.open(string(result_file+"_parallel_region_"+intToString(it->first+1)+".csv").c_str(), ios::app);
             out << "\n,";
             out.close();
         }
     }
 
-    out.open(result_file+".csv", ios::app);
+    out.open(string(result_file+".csv").c_str(), ios::app);
     out << "\n" << info_thr_proc[1].current_arg+1 << ",";
     out.close();
 
-    for(auto it: info_thr_proc[1].info)
+    for(map<int, s_info>::iterator it= info_thr_proc[1].info.begin(); it!=info_thr_proc[1].info.end(); it++)
+    //for(auto it: info_thr_proc[1].info)
     {
-        out.open(result_file+"_parallel_region_"+intToString(it.first+1)+".csv", ios::app);
+        out.open(string(result_file+"_parallel_region_"+intToString(it->first+1)+".csv").c_str(),ios::app);
         out << "\n" << info_thr_proc[1].current_arg+1 << ",";
         out.close();
     }
 
-    for(auto cur_thrs : list_of_threads_value)
+    for(uint j=0; j<list_of_threads_value.size(); j++)
+    //for(auto cur_thrs : list_of_threads_value)
     {
+        uint cur_thrs= list_of_threads_value[j];
         float time_singleThr_total= info_thr_proc[1].end-info_thr_proc[1].start;
-        out.open(result_file+".csv", ios::app);
+        out.open(string(result_file+".csv").c_str(), ios::app);
         out << fixed << time_singleThr_total/(float)(info_thr_proc[cur_thrs].end-info_thr_proc[cur_thrs].start)/cur_thrs << ",";
         out.close();
 
-        for(auto it: info_thr_proc[cur_thrs].info)
+        for(map<int, s_info>::iterator it= info_thr_proc[cur_thrs].info.begin(); it!=info_thr_proc[cur_thrs].info.end(); it++)
+        //for(auto it: info_thr_proc[cur_thrs].info)
         {
-            out.open(result_file+"_parallel_region_"+intToString(it.first+1)+".csv", ios::app);
-            out << info_thr_proc[1].info[it.first].s_time/it.second.s_time/cur_thrs << ",";
+            out.open(string(result_file+"_parallel_region_"+intToString(it->first+1)+".csv").c_str(), ios::app);
+            out << info_thr_proc[1].info[it->first].s_time/it->second.s_time/cur_thrs << ",";
             out.close();
         }
     }
