@@ -53,29 +53,22 @@ private:
     void config_output(string path);
     void read_config_file(string exec_path);
 
-    void store_time_information();
-    void store_time_information_csv();
+    void store_time_information(uint current_arg, uint cur_exec);
+    void store_time_information_csv(uint current_arg, uint cur_exec);
 private:
     struct proc_info
     {
         double start, end;
-
-        uint current_arg;
-        uint cur_exec, num_args;
-        char** args;
-
         map<int, s_info> info;
     };
     map<uint, proc_info> info_thr_proc;
     int pipes[2];/* pipes[0] = leitura; pipes[1] = escrita */
-    uint optset;
-    uint num_exec, num_args;
+    uint optset, num_exec, num_args;
+    bool out_csv;
     char** args;
     string config_file, csv_file, program_name, result_file;
-    vector<uint> list_of_threads_value;
+    vector<uint> list_of_threads_value, list_of_args_num;
     vector<char**> list_of_args;
-    vector<uint> list_of_args_num;
-    bool out_csv;
     ofstream out;
 };
 
@@ -137,7 +130,7 @@ void Sperf::set_perfcfg(int val, Sperf::PerfConfig op)
     else if (op == SET_PIPE)
         setenv("FD_PIPE", str.c_str(), 1);
     else
-        throw  " Invalid option in set_perfcfg";
+        throw  "Invalid option in set_perfcfg";
 }
 
 // get program path
@@ -147,7 +140,7 @@ string Sperf::get_perfpath(string argmnt, Sperf::PathConfig op)
     path=argmnt.substr(0,argmnt.find_last_of("/"));
 
     if (op == ETC_PATH)
-        path+="/../etc/"+string(config_file.substr(config_file.find_last_of("/")+1,config_file.size()))+".conf";
+        path+="/../etc/";
     // add the result path
     if (op == RESULT_PATH)
         path+="/../results/";
@@ -200,38 +193,9 @@ void Sperf::config_menu(char* argv[], int argc)
         cout << BLUE "[Sperf]" RESET " Thread value passed by command line argument to the target application. sperf_thrnum function not required\n";
 
     if(num_args == 1)
-            throw  " Target application missing\n";
+            throw  "Target application missing\n";
 }
 
-void Sperf::config_output(string path)
-{
-    result_file = get_perfpath(path, RESULT_PATH);
-    if(opendir("../results/") == NULL)
-    {
-        mkdir("../results/", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-        if(opendir("../results/") == NULL)
-            throw  " Failed to create the result folder: \n";
-    }
-    if(out_csv)
-    {
-        result_file+=csv_file;
-        out.open(string(result_file+".csv").c_str());
-        out.precision(5);
-        out << "\n,";
-        for(uint i=0; i<list_of_threads_value.size(); i++)
-            out << list_of_threads_value[i] << ",";
-        out.close();
-    }
-    else
-    {
-        time_t rawtime = time(NULL);
-        struct tm *local = localtime(&rawtime);
-        stringstream ss;
-        ss << local->tm_mday << "-" << local->tm_mon + 1 << "-" << local->tm_year + 1900
-           << "-" << local->tm_hour << "h-" << local->tm_min << "m-" << local->tm_sec << "s.txt";
-        result_file+=ss.str();
-    }
-}
 
 // read the config file
 void Sperf::read_config_file(string exec_path)
@@ -249,8 +213,8 @@ void Sperf::read_config_file(string exec_path)
     // get the confige file path
     program_name= args[1];
     if(config_file == "")
-        config_file= program_name;
-    config_path = get_perfpath(exec_path, ETC_PATH);
+        config_file= program_name.substr(program_name.find_last_of("/")+1,program_name.size());
+    config_path= get_perfpath(exec_path, ETC_PATH)+config_file+".conf";
 
     conf_file.open(config_path.c_str());
     if(!conf_file)
@@ -286,7 +250,7 @@ void Sperf::read_config_file(string exec_path)
             {
                 cout << BLUE "[Sperf]" RESET " Retrieving number of testes..." << endl;
                 if (str.size() == 16)
-                    throw  " You must specify a number of tests\n";
+                    throw  "You must specify a number of tests\n";
                 else
                 {
                     str= str.substr(16,str.size());
@@ -303,7 +267,7 @@ void Sperf::read_config_file(string exec_path)
                     cout << BLUE "[Sperf]" RESET " Retrieving the list of threads values..." << endl;
                     str= str.substr(20,str.size());
                     if(str[str.size()-1] != '}' || str[0] != '{')
-                        throw  " Format error on list_threads_values\n";
+                        throw  "Format error on list_threads_values\n";
                     stringstream ss(str.substr(1,str.size()-2));
                     while(getline(ss, str, ','))
                         list_of_threads_value.push_back(stringToInt(str));
@@ -315,7 +279,7 @@ void Sperf::read_config_file(string exec_path)
                 if (flag_list != 1)
                 {
                     if (str.size() == 19)
-                        throw  " You must specify a maximum number of threads\n";
+                        throw "You must specify a maximum number of threads\n";
                     else
                     {
                         str= str.substr(19,str.size());
@@ -336,7 +300,7 @@ void Sperf::read_config_file(string exec_path)
                         step_type= str;
                         if((step_type != "constant" && step_type != "power") || (step_type.size()!=8 && step_type.size()!=5))
                         {
-                            fputs( " Invalid step method\n", stderr);
+                            fputs("Invalid step method\n", stderr);
                             exit(1);
                         }
                         flag_step_type = 1;
@@ -348,7 +312,7 @@ void Sperf::read_config_file(string exec_path)
                 if (flag_list != 1)
                 {
                     if (str.size() == 14)
-                        throw  " You must specify a step value to increment the number of threads\n";
+                        throw  "You must specify a step value to increment the number of threads\n";
                     else
                     {
                         str= str.substr(14,str.size());
@@ -374,7 +338,7 @@ void Sperf::read_config_file(string exec_path)
                 }
                 if(str.size() == 13 || str == "list_of_args={}"
                 || str[str.size()-1] != '}' || str[0] != '{')
-                    throw  " Format error on list_of_args\n";
+                    throw  "Format error on list_of_args\n";
                 else
                 {
                     stringstream ss1(str.substr(1, str.size()-2));
@@ -406,9 +370,9 @@ void Sperf::read_config_file(string exec_path)
     }
     // verify correctly config file
     if (flag_num_tests == 0)
-        throw  " 'number_of_tests' variable missing\n";
+        throw  "'number_of_tests' variable missing\n";
     if (flag_list == 0 && (flag_max_threads == 0 || flag_step_value == 0 || flag_step_type== 0))
-        throw  " The number of threads to be executed must be set properly.\n" \
+        throw  "The number of threads to be executed must be set properly.\n" \
          " Define 'list_values_threads' variable or the set of three variables 'max_number_threads', 'type_of_step' and 'value_of_step'\n";
     if (flag_list == 0)
     {
@@ -430,6 +394,37 @@ void Sperf::read_config_file(string exec_path)
     conf_file.close();
 }
 
+void Sperf::config_output(string path)
+{
+    result_file= get_perfpath(path, RESULT_PATH);
+    if(opendir("../results/") == NULL)
+    {
+        mkdir("../results/", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+        if(opendir("../results/") == NULL)
+            throw  " Failed to create the result folder: \n";
+    }
+    if(out_csv)
+    {
+        result_file+=csv_file;
+        out.open(string(result_file+".csv").c_str());
+        out.precision(5);
+        out << "\n,";
+        for(uint i=0; i<list_of_threads_value.size(); i++)
+            out << list_of_threads_value[i] << ",";
+        out.close();
+    }
+    else
+    {
+        time_t rawtime = time(NULL);
+        struct tm *local = localtime(&rawtime);
+        stringstream ss;
+        ss << local->tm_mday << "-" << local->tm_mon + 1 << "-" << local->tm_year + 1900
+           << "-" << local->tm_hour << "h-" << local->tm_min << "m-" << local->tm_sec << "s.txt";
+        result_file+=ss.str();
+    }
+}
+
+
 void Sperf::run()
 {
     cout << BLUE "[Sperf]" RESET " Copyright (C) 2017" << endl;
@@ -439,11 +434,6 @@ void Sperf::run()
         for(uint current_arg=0; current_arg<list_of_args.size() || current_arg==0; current_arg++)
         {
             proc_info procInfo;
-            procInfo.args= args;
-            procInfo.cur_exec= current_exec;
-            procInfo.num_args= num_args;
-            procInfo.current_arg= current_arg;
-
             if(list_of_args.size()!=0)
             {
                 cout << BLUE "[Sperf]" RESET " Current argument " << current_arg + 1 << " of " << list_of_args.size() << endl;
@@ -512,9 +502,9 @@ void Sperf::run()
                 }
             }
             if(out_csv)
-                store_time_information_csv();
+                store_time_information_csv(current_arg, current_exec);
             else
-                store_time_information();
+                store_time_information(current_arg, current_exec);
         }
     }
     for(uint i=0; i<num_args; i++)
@@ -529,26 +519,26 @@ void Sperf::run()
     }
 }
 
-void Sperf::store_time_information()
+void Sperf::store_time_information(uint current_arg, uint cur_exec)
 {
     out.open(result_file.c_str(), ios::app);
-    out << "\n-----> Execution number " << info_thr_proc[1].cur_exec + 1 << " for " << info_thr_proc[1].args[1]
-    << " and " << info_thr_proc[1].current_arg << " argument" << ":\n";
+    out << "\n-----> Execution number " << cur_exec + 1 << " for " << program_name
+    << " and " << current_arg << " argument" << ":\n";
 
     for(uint j=0; j<list_of_threads_value.size(); j++)
     //for(auto cur_thrs : list_of_threads_value)
     {
         uint cur_thrs= list_of_threads_value[j];
         float time_singleThr_total= info_thr_proc[1].end-info_thr_proc[1].start;
-        out << "\n\t--> Result for "<< cur_thrs << " threads, application " << info_thr_proc[1].args[1] << ", arguments: ";
-        for(uint i = 2; i < info_thr_proc[1].num_args; i++)
+        out << "\n\t--> Result for "<< cur_thrs << " threads, application " << program_name << ", arguments: ";
+        for(uint i = 2; i<num_args; i++)
         {
             if (i != optset)
-                out <<  info_thr_proc[1].args[i] << " ";
+                out << args[i] << " ";
         }
         if(!list_of_args_num.empty())
-        for(uint i=0; i<list_of_args_num[info_thr_proc[1].current_arg]; i++)
-            out << list_of_args[info_thr_proc[1].current_arg][i] << " ";
+        for(uint i=0; i<list_of_args_num[current_arg]; i++)
+            out << list_of_args[current_arg][i] << " ";
         out << "\n";
 
         for(map<int, s_info>::iterator it= info_thr_proc[cur_thrs].info.begin(); it!=info_thr_proc[cur_thrs].info.end(); it++)
@@ -570,7 +560,7 @@ void Sperf::store_time_information()
 }
 
 /// MELHORAR
-void Sperf::store_time_information_csv()
+void Sperf::store_time_information_csv(uint current_arg, uint cur_exec)
 {
     static bool ft= false;
     if(!ft)
@@ -588,10 +578,10 @@ void Sperf::store_time_information_csv()
         ft= true;
     }
     static uint last_exec=-1;
-    if(last_exec!=info_thr_proc[1].cur_exec)
+    if(last_exec != cur_exec)
     {
         out.open(string(result_file+".csv").c_str(), ios::app);
-        last_exec= info_thr_proc[1].cur_exec;
+        last_exec= cur_exec;
         out << "\n,";
         out.close();
 
@@ -605,14 +595,14 @@ void Sperf::store_time_information_csv()
     }
 
     out.open(string(result_file+".csv").c_str(), ios::app);
-    out << "\n" << info_thr_proc[1].current_arg+1 << ",";
+    out << "\n" << current_arg+1 << ",";
     out.close();
 
     for(map<int, s_info>::iterator it= info_thr_proc[1].info.begin(); it!=info_thr_proc[1].info.end(); it++)
     //for(auto it: info_thr_proc[1].info)
     {
         out.open(string(result_file+"_parallel_region_"+intToString(it->first+1)+".csv").c_str(),ios::app);
-        out << "\n" << info_thr_proc[1].current_arg+1 << ",";
+        out << "\n" << current_arg+1 << ",";
         out.close();
     }
 
