@@ -17,9 +17,11 @@
 
 #include "sperfops.h"
 
+#include <errno.h>
+#include <stdlib.h>
+#include <stdio.h>
 #include <unistd.h>
 #include <string.h>
-#include <thread>
 #include <omp.h>
 
 #ifdef __pthread__
@@ -88,8 +90,8 @@ void _sperf_start(int id, int start_line, const char * filename)
 {
     static double now;
     GET_TIME(now);
-    id_time[id][omp_get_thread_num()]= now;
-    id_start_line[id][omp_get_thread_num()]= start_line;
+    id_time[id<0?(MAX_ANNOTATIONS+id):id][omp_get_thread_num()]= now;
+    id_start_line[id<0?(MAX_ANNOTATIONS+id):id][omp_get_thread_num()]= start_line;
 }
 
 void _sperf_stop(int id, int stop_line, const char * filename)

@@ -16,19 +16,22 @@
 */
 
 #include "sperf_instr.h"
+#include <stdlib.h>
+
+typedef unsigned int uint;
 
 using namespace std;
 
-std::string intToString(int x)
+string intToString(int x)
 {
-    std::stringstream ss;
+    stringstream ss;
     ss << x;
     return ss.str();
 }
-int stringToInt(std::string x)
+int stringToInt(string x)
 {
     int n;
-    std::stringstream ss(x);
+    stringstream ss(x);
     ss >> n;
     return n;
 }
@@ -80,7 +83,7 @@ void Instrumentation::read_argments(char* argv[], int argc)
 
 void Instrumentation::read_config_file(string file_name)
 {
-    abre.open(file_name+".conf");
+    abre.open(string(file_name+".conf").c_str());
     if(!abre)
         throw "cant open the file "+file_name+".conf";
     while(!abre.eof())
@@ -123,8 +126,9 @@ void Instrumentation::getFileNames()
     while((dptr= readdir(dp)) != NULL)
     {
         string dir= dptr->d_name;
-        for(auto ext: extensions)
-            if(dir.find(ext)!=string::npos) /// AJEITAR
+        for(uint i=0; i<extensions.size(); i++)
+        //for(auto ext: extensions)
+            if(dir.find(extensions[i])!=string::npos) /// AJEITAR
             {
                 cout  << dir << endl;
                 files.push_back(dir);
@@ -149,8 +153,9 @@ void Instrumentation::FindEnclosures(string& txt, string e1, string e2, vector<c
 
 bool Instrumentation::isInsidComment(unsigned long long int p, std::vector<commentRegion> &commentRegions)
 {
-    for(auto crs: commentRegions)
-        if(p>crs.li && p<crs.lf)
+    for(uint i=0; i<commentRegions.size(); i++)
+    //for(auto crs: commentRegions)
+        if(p>commentRegions[i].li && p<commentRegions[i].lf)
             return true;
     return false;
 }
@@ -165,8 +170,10 @@ void Instrumentation::instrument()
             throw  "Failed to create the result folder: \n";
     }
     cout << BLUE "[Sperf]" RESET " Parsing the files..." << endl;
-    for(auto file: files)
+    for(uint i=0; i<files.size(); i++)
+    //for(auto file: files)
     {
+        string file= files[i];
         cout << file << endl;
         abre.open( (dpath+file).c_str() );
         string txt;
