@@ -208,7 +208,7 @@ void Sperf::read_config_file(string exec_path)
     string str;
     string config_path;
 
-    int step=1, max_threads;
+    int step=1, max_threads= 0;
     bool flag_list= 0, flag_max_threads = 0, flag_step_type = 0, flag_step_value = 0, flag_num_tests = 0;
 
     // get the confige file path
@@ -435,6 +435,7 @@ void Sperf::run()
         for(uint current_arg=0; current_arg<list_of_args.size() || current_arg==0; current_arg++)
         {
             proc_info procInfo;
+            sprintf(list_of_args[current_arg][optset], "%d", list_of_threads_value[0]);
             if(list_of_args.size()!=0)
             {
                 cout << BLUE "[Sperf]" RESET " Current argument " << current_arg + 1 << " of " << list_of_args.size() << endl;

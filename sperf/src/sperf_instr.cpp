@@ -176,6 +176,11 @@ void Instrumentation::instrument()
         string file= files[i];
         cout << file << endl;
         abre.open( (dpath+file).c_str() );
+        if(!abre)
+        {
+            string err= "Cant opent the file"+dpath+file;
+            throw err.c_str();
+        }
         string txt;
         while(!abre.eof())
         {
