@@ -55,6 +55,7 @@ private:
 
     void store_time_information(uint current_arg, uint cur_exec);
     void store_time_information_csv(uint current_arg, uint cur_exec);
+    void store_time_information_xml(uint current_arg, uint cur_exec);
 private:
     struct proc_info
     {
@@ -409,9 +410,10 @@ void Sperf::config_output(string path)
         result_file+=csv_file;
         out.open(string(result_file+".csv").c_str());
         out.precision(5);
-        out << "\n,";
+        out << "<nucleos>";
         for(uint i=0; i<list_of_threads_value.size(); i++)
-            out << list_of_threads_value[i] << ",";
+            out << "\n<n>" << list_of_threads_value[i] << "</n>";
+        out << "\n</nucleos>\n";
         out.close();
     }
     else
@@ -512,17 +514,18 @@ void Sperf::run()
                         throw  "Failed to close IPC: %s\n";
                 }
             }
-            if(out_csv)
-                store_time_information_csv(current_arg, current_exec);
-            else
-                store_time_information(current_arg, current_exec);
+            //if(out_csv)
+                //store_time_information_csv(current_arg, current_exec);
+                store_time_information_xml(current_arg, current_exec);
+            //else
+                //store_time_information(current_arg, current_exec);
         }
     }
     info_thr_proc= media;
-    if(out_csv)
-        store_time_information_csv(list_of_args.size(), num_exec);
-    else
-        store_time_information(list_of_args.size(), num_exec);
+//    if(out_csv)
+//        store_time_information_csv(list_of_args.size(), num_exec);
+//    else
+//        store_time_information(list_of_args.size(), num_exec);
 
     for(uint i=0; i<num_args; i++)
         free(args[i]);
@@ -639,5 +642,98 @@ void Sperf::store_time_information_csv(uint current_arg, uint cur_exec)
             out << info_thr_proc[1].info[it->first].s_time/it->second.s_time/cur_thrs << ",";
             out.close();
         }
+    }
+}
+
+void Sperf::store_time_information_xml(uint current_arg, uint cur_exec)
+{
+    static bool ft= false;
+    if(!ft)
+    {
+        out.open(string(result_file+".csv").c_str(), ios::app);
+        out << "<regiao> <l>" << info_thr_proc[1].info.begin()->second.s_start_line << "</l>"
+                            << "<l>" << info_thr_proc[1].info.begin()->second.s_stop_line << "</l>" << "\n</regiao>" << endl;
+        out.close();
+
+        for(map<int, s_info>::iterator it= info_thr_proc[1].info.begin(); it!=info_thr_proc[1].info.end(); it++)
+        //for(auto it: info_thr_proc[1].info)
+        {
+            out.open(string(result_file+"_parallel_region_"+intToString(it->first+1)+".csv").c_str(), ios::app);
+            out.precision(5);
+            out << "<nucleos>";
+            for(uint i=0; i<list_of_threads_value.size(); i++)
+                out << "\n<n>" << list_of_threads_value[i] << "</n>";
+            out << "\n</nucleos>\n";
+
+            out << "<regiao> <l>" << it->second.s_start_line << "</l>"
+                            << "<l>" << it->second.s_stop_line << "</l>" << "\n</regiao>" << endl;
+            out.close();
+        }
+        ft= true;
+    }
+    static uint last_exec=-1;
+    if(last_exec != cur_exec)
+    {
+        out.open(string(result_file+".csv").c_str(), ios::app);
+        last_exec= cur_exec;
+        //out << "</\argumento>" << endl;
+        if(cur_exec != 0)
+            out << endl << "</argumento>" << endl;
+        out << endl << "<argumento>" << endl;
+        out.close();
+
+        for(map<int, s_info>::iterator it= info_thr_proc[1].info.begin(); it!=info_thr_proc[1].info.end(); it++)
+        //for(auto it: info_thr_proc[1].info)
+        {
+            out.open(string(result_file+"_parallel_region_"+intToString(it->first+1)+".csv").c_str(), ios::app);
+            //out << "</\argumento>" << endl;
+            if(cur_exec != 0)
+                out << endl << "</argumento>" << endl;
+            out << endl << "<argumento>" << endl;
+            out.close();
+        }
+    }
+
+    out.open(string(result_file+".csv").c_str(), ios::app);
+    out << "<item>" << endl;
+    out.close();
+
+    for(map<int, s_info>::iterator it= info_thr_proc[1].info.begin(); it!=info_thr_proc[1].info.end(); it++)
+    //for(auto it: info_thr_proc[1].info)
+    {
+        out.open(string(result_file+"_parallel_region_"+intToString(it->first+1)+".csv").c_str(),ios::app);
+        out << "<item>" << endl;
+        out.close();
+    }
+
+    for(uint j=0; j<list_of_threads_value.size(); j++)
+    //for(auto cur_thrs : list_of_threads_value)
+    {
+        uint cur_thrs= list_of_threads_value[j];
+        float time_singleThr_total= info_thr_proc[1].end-info_thr_proc[1].start;
+        out.open(string(result_file+".csv").c_str(), ios::app);
+        out << fixed << "<i>" << time_singleThr_total/(float)(info_thr_proc[cur_thrs].end-info_thr_proc[cur_thrs].start)/cur_thrs << "</i>";
+        out.close();
+
+        for(map<int, s_info>::iterator it= info_thr_proc[cur_thrs].info.begin(); it!=info_thr_proc[cur_thrs].info.end(); it++)
+        //for(auto it: info_thr_proc[cur_thrs].info)
+        {
+            out.open(string(result_file+"_parallel_region_"+intToString(it->first+1)+".csv").c_str(), ios::app);
+            out << "<i>" << info_thr_proc[1].info[it->first].s_time/it->second.s_time/cur_thrs << "</i>";
+            out.close();
+        }
+    }
+
+
+    out.open(string(result_file+".csv").c_str(), ios::app);
+    out << endl << "</item>" << endl;
+    out.close();
+
+    for(map<int, s_info>::iterator it= info_thr_proc[1].info.begin(); it!=info_thr_proc[1].info.end(); it++)
+    //for(auto it: info_thr_proc[1].info)
+    {
+        out.open(string(result_file+"_parallel_region_"+intToString(it->first+1)+".csv").c_str(),ios::app);
+        out << endl << "</item>" << endl;
+        out.close();
     }
 }
