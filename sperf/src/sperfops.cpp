@@ -40,7 +40,7 @@ static double id_time[MAX_ANNOTATIONS][MAX_THREADS];
 static double id_start_line[MAX_ANNOTATIONS][MAX_THREADS];
 
 
-void setconfig()
+inline void setconfig()
 {
     if(!flag_conf)
     {
@@ -88,6 +88,7 @@ void sperf_thrnum(int *valor)
 
 void _sperf_start(int id, int start_line, const char * filename)
 {
+    setconfig();
     static double now;
     GET_TIME(now);
     id_time[id<0?(MAX_ANNOTATIONS+id):id][omp_get_thread_num()]= now;
