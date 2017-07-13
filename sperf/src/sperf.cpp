@@ -202,7 +202,6 @@ void Sperf::config_menu(char* argv[], int argc)
 // read the config file
 void Sperf::read_config_file(string exec_path)
 {
-    cout << BLUE "[Sperf]" RESET " Reading sperf_exec.conf" << endl;
 
     ifstream conf_file;
     string step_type;
@@ -218,12 +217,13 @@ void Sperf::read_config_file(string exec_path)
         config_file= program_name.substr(program_name.find_last_of("/")+1,program_name.size());
     config_path= get_perfpath(exec_path, ETC_PATH)+config_file+".conf";
 
+    cout << BLUE "[Sperf]" RESET " Reading " << config_path << endl;
     conf_file.open(config_path.c_str());
     if(!conf_file)
     {
         //throw  " Failed to open configuration file "+config_path+"\n";
         cout << BLUE "[Sperf]" RESET " Creating cofiguration file..." << endl;
-        string path_to_conf= exec_path.substr(0,exec_path.find_last_of("/"))+"/../etc/sperf_exec.conf";
+        string path_to_conf= exec_path.substr(0,exec_path.find_last_of("/"))+"/../etc/sperf_default_exec.conf";
         ifstream default_file(path_to_conf.c_str());
         ofstream new_file(config_path.c_str());
         string buffer;
