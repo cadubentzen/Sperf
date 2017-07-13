@@ -228,9 +228,7 @@ void Sperf::read_config_file(string exec_path)
         ofstream new_file(config_path.c_str());
         string buffer;
         while(getline(default_file, buffer))
-        {
             new_file << buffer << endl;
-        }
         default_file.close();
         new_file.close();
         conf_file.open(config_path.c_str());
@@ -660,8 +658,8 @@ void Sperf::store_time_information_xml(uint current_arg, uint cur_exec)
         out.open(string(result_file+".xml").c_str(), ios::app);
         out << "<regiao>" << endl
                     << "\t<l>" << map_thr_info[1].info.begin()->second.s_start_line << "</l>" << endl
-                    << "\t<l>" << map_thr_info[1].info.begin()->second.s_stop_line  << "</l>" << endl
-                    << "</regiao>" << endl;
+                    << "\t<l>" << map_thr_info[1].info.begin()->second.s_stop_line  << "</l>" << endl;
+                    //<< "</regiao>" << endl;
         out.close();
         for(map<int, s_info>::iterator it= map_thr_info[1].info.begin(); it!=map_thr_info[1].info.end(); it++)
         //for(auto it: map_thr_info[1].info)
@@ -670,8 +668,8 @@ void Sperf::store_time_information_xml(uint current_arg, uint cur_exec)
             out.precision(5);
             out << "<regiao>" << endl
                     << "\t<l>" << it->second.s_start_line << "</l>" << endl
-                    << "\t<l>" << it->second.s_stop_line  << "</l>" << endl
-                    << "</regiao>" << endl;
+                    << "\t<l>" << it->second.s_stop_line  << "</l>" << endl;
+                    //<< "</regiao>" << endl;
             out.close();
         }
         ft= true;
@@ -701,9 +699,10 @@ void Sperf::store_time_information_xml(uint current_arg, uint cur_exec)
     out.open(string(result_file+".xml").c_str(), ios::app);
     out << "\t<item>" << endl;
     out << "\t\t<arg>" << " ";
+    if(!list_of_args.empty())
     for(uint i=0; i<list_of_args_num[current_arg]; i++)
                 out << list_of_args[current_arg][i] << " ";
-    out << "</agr>" << endl;
+    out << "</arg>" << endl;
     out.close();
 
     for(map<int, s_info>::iterator it= map_thr_info[1].info.begin(); it!=map_thr_info[1].info.end(); it++)
@@ -712,9 +711,10 @@ void Sperf::store_time_information_xml(uint current_arg, uint cur_exec)
         out.open(string(result_file+"_parallel_region_"+intToString(it->first+1)+".xml").c_str(),ios::app);
         out << "\t<item>" << endl;
         out << "\t\t<arg>" << " ";
+        if(!list_of_args.empty())
         for(uint i=0; i<list_of_args_num[current_arg]; i++)
                     out << list_of_args[current_arg][i] << " ";
-        out << "</agr>" << endl;
+        out << "</arg>" << endl;
         out.close();
     }
 
@@ -760,5 +760,23 @@ void Sperf::store_time_information_xml(uint current_arg, uint cur_exec)
         out.open(string(result_file+"_parallel_region_"+intToString(it->first+1)+".xml").c_str(),ios::app);
         out << endl << "\t</item>" << endl;
         out.close();
+    }
+
+    if(cur_exec == num_exec-1 && (current_arg == list_of_args.size()-1 || list_of_args.size() == 0) )
+    {
+        out.open(string(result_file+".xml").c_str(), ios::app);
+        out << "</execucoes>" << endl;
+        out << "</regiao>" << endl;
+        out.close();
+        for(map<int, s_info>::iterator it= map_thr_info[1].info.begin(); it!=map_thr_info[1].info.end(); it++)
+        //for(auto it: map_thr_info[1].info)
+        {
+            out.open(string(result_file+"_parallel_region_"+intToString(it->first+1)+".xml").c_str(), ios::app);
+            out.precision(5);
+            out << "</execucoes>" << endl;
+            out << "</regiao>";
+                    //<< "</regiao>" << endl;
+            out.close();
+        }
     }
 }
