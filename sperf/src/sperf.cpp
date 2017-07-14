@@ -442,10 +442,10 @@ void Sperf::run()
         for(uint current_arg=0; current_arg<list_of_args.size() || current_arg==0; current_arg++)
         {
             proc_info procInfo;
-            if(optset != 0)
-                sprintf(list_of_args[current_arg][optset], "%d", list_of_threads_value[0]);
             if(list_of_args.size()!=0)
             {
+                if(optset != 0)
+                    sprintf(list_of_args[current_arg][optset], "%d", list_of_threads_value[0]);
                 cout << BLUE "[Sperf]" RESET " Current argument " << current_arg + 1 << " of " << list_of_args.size() << endl;
                 for(uint i=0; i<list_of_args_num[current_arg]; i++)
                     cout << list_of_args[current_arg][i] << " ";
@@ -471,13 +471,21 @@ void Sperf::run()
                 if (pid_child == 0)
                 {
                     if (close(pipes[0]) == -1)
-                        throw  " Failed to close() IPC: %s\n";
+                        throw  "Failed to close() IPC: %s\n";
                     if (optset != 0)
 					{
 						if(list_of_args.empty())
-	                        sprintf(args[optset], "%d", list_of_threads_value[current_thr]);
+						{
+                            if(args[optset+1] == NULL)
+                                throw "Argument not exist\n";
+	                        sprintf(args[optset+1], "%d", list_of_threads_value[current_thr]);
+						}
 						else
+						{
+                            if(list_of_args[current_arg][optset] == NULL)
+                                throw "Argument not exist\n";
 							sprintf(list_of_args[current_arg][optset], "%d", list_of_threads_value[current_thr]);
+						}
 					}
                     if (execv(args[1], list_of_args.empty()?args+1:list_of_args[current_arg]) == -1)
                         throw  "Failed to start the target application\n";
@@ -739,9 +747,9 @@ void Sperf::store_time_information_xml(uint current_arg, uint cur_exec)
 
             out << fixed << "\t\t<execucao>" << endl;
             out << fixed << "\t\t\t<n>" << cur_thrs << "</n>" << endl;
-            out << "<t>" << it->second.s_time<< "</t>" << endl;
-            out << "<s>" << map_thr_info[1].info[it->first].s_time/it->second.s_time<< "</s>" << endl;
-            out << "<e>" << map_thr_info[1].info[it->first].s_time/it->second.s_time/cur_thrs << "</e>" << endl;
+            out << "\t\t\t<t>" << it->second.s_time<< "</t>" << endl;
+            out << "\t\t\t<s>" << map_thr_info[1].info[it->first].s_time/it->second.s_time<< "</s>" << endl;
+            out << "\t\t\t<e>" << map_thr_info[1].info[it->first].s_time/it->second.s_time/cur_thrs << "</e>" << endl;
             out << fixed << "\t\t</execucao>" << endl;
 
 
