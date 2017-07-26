@@ -661,15 +661,16 @@ void Sperf::store_time_information_csv(uint current_arg, uint cur_exec)
 void Sperf::store_time_information_xml(uint current_arg, uint cur_exec)
 {
     static bool ft= false;
+    int ini_th= list_of_threads_value.empty()?1:list_of_threads_value[0];
     if(!ft)
     {
         out.open(string(result_file+".xml").c_str(), ios::app);
         out << "<regiao>" << endl
-                    << "\t<l>" << map_thr_info[1].info.begin()->second.s_start_line << "</l>" << endl
-                    << "\t<l>" << map_thr_info[1].info.begin()->second.s_stop_line  << "</l>" << endl;
+                    << "\t<l>" << map_thr_info[ini_th].info.begin()->second.s_start_line << "</l>" << endl
+                    << "\t<l>" << map_thr_info[ini_th].info.begin()->second.s_stop_line  << "</l>" << endl;
                     //<< "</regiao>" << endl;
         out.close();
-        for(map<int, s_info>::iterator it= map_thr_info[1].info.begin(); it!=map_thr_info[1].info.end(); it++)
+        for(map<int, s_info>::iterator it= map_thr_info[ini_th].info.begin(); it!=map_thr_info[ini_th].info.end(); it++)
         //for(auto it: map_thr_info[1].info)
         {
             out.open(string(result_file+"_parallel_region_"+intToString(it->first+1)+".xml").c_str(), ios::app);
@@ -688,18 +689,19 @@ void Sperf::store_time_information_xml(uint current_arg, uint cur_exec)
         out.open(string(result_file+".xml").c_str(), ios::app);
         last_exec= cur_exec;
 
-        out << endl << "<execucoes>" << endl;
         if(cur_exec != 0)
             out << "</execucoes>" << endl;
+        out << endl << "<execucoes>" << endl;
+
         out.close();
 
-        for(map<int, s_info>::iterator it= map_thr_info[1].info.begin(); it!=map_thr_info[1].info.end(); it++)
+        for(map<int, s_info>::iterator it= map_thr_info[ini_th].info.begin(); it!=map_thr_info[ini_th].info.end(); it++)
         //for(auto it: map_thr_info[1].info)
         {
             out.open(string(result_file+"_parallel_region_"+intToString(it->first+1)+".xml").c_str(), ios::app);
-            out << endl << "<execucoes>" << endl;
             if(cur_exec != 0)
-                out << "</execusoes>" << endl;
+                out << "</execucoes>" << endl;
+            out << endl << "<execucoes>" << endl;
             out.close();
         }
     }
@@ -713,7 +715,7 @@ void Sperf::store_time_information_xml(uint current_arg, uint cur_exec)
     out << "</arg>" << endl;
     out.close();
 
-    for(map<int, s_info>::iterator it= map_thr_info[1].info.begin(); it!=map_thr_info[1].info.end(); it++)
+    for(map<int, s_info>::iterator it= map_thr_info[ini_th].info.begin(); it!=map_thr_info[ini_th].info.end(); it++)
     //for(auto it: map_thr_info[1].info)
     {
         out.open(string(result_file+"_parallel_region_"+intToString(it->first+1)+".xml").c_str(),ios::app);
@@ -730,7 +732,7 @@ void Sperf::store_time_information_xml(uint current_arg, uint cur_exec)
     //for(auto cur_thrs : list_of_threads_value)
     {
         uint cur_thrs= list_of_threads_value[j];
-        float time_singleThr_total= map_thr_info[1].end-map_thr_info[1].start;
+        float time_singleThr_total= map_thr_info[ini_th].end-map_thr_info[ini_th].start;
         out.open(string(result_file+".xml").c_str(), ios::app);
         out << fixed << "\t\t<execucao>" << endl;
         out << fixed << "\t\t\t<n>" << cur_thrs << "</n>" << endl;
@@ -748,8 +750,8 @@ void Sperf::store_time_information_xml(uint current_arg, uint cur_exec)
             out << fixed << "\t\t<execucao>" << endl;
             out << fixed << "\t\t\t<n>" << cur_thrs << "</n>" << endl;
             out << "\t\t\t<t>" << it->second.s_time<< "</t>" << endl;
-            out << "\t\t\t<s>" << map_thr_info[1].info[it->first].s_time/it->second.s_time<< "</s>" << endl;
-            out << "\t\t\t<e>" << map_thr_info[1].info[it->first].s_time/it->second.s_time/cur_thrs << "</e>" << endl;
+            out << "\t\t\t<s>" << map_thr_info[ini_th].info[it->first].s_time/it->second.s_time<< "</s>" << endl;
+            out << "\t\t\t<e>" << map_thr_info[ini_th].info[it->first].s_time/it->second.s_time/cur_thrs << "</e>" << endl;
             out << fixed << "\t\t</execucao>" << endl;
 
 
@@ -762,7 +764,7 @@ void Sperf::store_time_information_xml(uint current_arg, uint cur_exec)
     out << endl << "\t</item>" << endl;
     out.close();
 
-    for(map<int, s_info>::iterator it= map_thr_info[1].info.begin(); it!=map_thr_info[1].info.end(); it++)
+    for(map<int, s_info>::iterator it= map_thr_info[ini_th].info.begin(); it!=map_thr_info[ini_th].info.end(); it++)
     //for(auto it: map_thr_info[1].info)
     {
         out.open(string(result_file+"_parallel_region_"+intToString(it->first+1)+".xml").c_str(),ios::app);
@@ -776,7 +778,7 @@ void Sperf::store_time_information_xml(uint current_arg, uint cur_exec)
         out << "</execucoes>" << endl;
         out << "</regiao>" << endl;
         out.close();
-        for(map<int, s_info>::iterator it= map_thr_info[1].info.begin(); it!=map_thr_info[1].info.end(); it++)
+        for(map<int, s_info>::iterator it= map_thr_info[ini_th].info.begin(); it!=map_thr_info[ini_th].info.end(); it++)
         //for(auto it: map_thr_info[1].info)
         {
             out.open(string(result_file+"_parallel_region_"+intToString(it->first+1)+".xml").c_str(), ios::app);
