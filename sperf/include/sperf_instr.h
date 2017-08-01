@@ -49,6 +49,7 @@ public:
     void getFileNames();
     void instrument();
 private:
+    uint64_t findOMPdirectives(std::string& txt, uint64_t p);
     void FindEnclosures(std::string& txt, std::string e1, std::string e2, std::vector<commentRegion> &commentRegions);
     bool isInsidComment(unsigned long long int p, std::vector<commentRegion> &commentRegions);
 private:

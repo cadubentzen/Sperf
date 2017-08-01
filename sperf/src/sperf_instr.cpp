@@ -74,6 +74,8 @@ void Instrumentation::read_argments(char* argv[], int argc)
         extensions.push_back(".c");
         extensions.push_back(".h");
     }
+    if(dpath.back() != '/')
+        dpath+="/";
     if(dpath == "/")
     {
         dpath= string(argv[0]);
@@ -130,11 +132,33 @@ void Instrumentation::getFileNames()
         //for(auto ext: extensions)
             if(dir.find(extensions[i])!=string::npos) /// AJEITAR
             {
-                cout  << dir << endl;
+                cout << "\t" << dir << endl;
                 files.push_back(dir);
                 break;
             }
     }
+}
+
+uint64_t Instrumentation::findOMPdirectives(string& txt, uint64_t s)
+{
+    string tofind= "#pragmaompparallel";
+    uint64_t p= string::npos;
+    for(uint64_t l=s; l<txt.size(); l++)
+    {
+        uint64_t r=l, cont_= 0;
+        while(r<txt.size() && cont_ < tofind.size() && txt[r] == tofind[cont_++])
+        {
+            r++;
+            while(r<txt.size() && txt[r] == ' ')
+                r++;
+        }
+        if(cont_ == tofind.size())
+        {
+            p= l;
+            break;
+        }
+    }
+    return p;
 }
 
 void Instrumentation::FindEnclosures(string& txt, string e1, string e2, vector<commentRegion> &commentRegions)
@@ -176,6 +200,11 @@ void Instrumentation::instrument()
         string file= files[i];
         cout << file << endl;
         abre.open( (dpath+file).c_str() );
+        if(!abre)
+        {
+            string err= "Cant opent the file"+dpath+file;
+            throw err.c_str();
+        }
         string txt;
         while(!abre.eof())
         {
@@ -189,19 +218,20 @@ void Instrumentation::instrument()
 
         FindEnclosures(txt, "//", "\n", commentRegions);
         FindEnclosures(txt, "/*", "*/", commentRegions);
-        p= txt.find("main");
-        while(p != string::npos)
-        {
-            if(!isInsidComment(p, commentRegions))
-            {
-                while(txt[p] != '{')
-                    p++;
-                txt= txt.substr(0, p+1)+"\nsetconfig();\n"+txt.substr(p+1, txt.size());
-                break;
-            }
-            p= txt.find("main", p+4);
-        }
-        p= txt.find("#pragma omp parallel");
+//        p= txt.find("main");
+//        while(p != string::npos)
+//        {
+//            if(!isInsidComment(p, commentRegions))
+//            {
+//                while(txt[p] != '{')
+//                    p++;
+//                txt= txt.substr(0, p+1)+"\nsetconfig();\n"+txt.substr(p+1, txt.size());
+//                break;
+//            }
+//            p= txt.find("main", p+4);
+//        }
+        //p= txt.find("#pragma omp parallel");
+        p= findOMPdirectives(txt, 0);
         while(p != string::npos)
         {
             commentRegions.clear();
@@ -238,16 +268,24 @@ void Instrumentation::instrument()
                 txt= txt.substr(0, stp)+"\nsperf_stop("+id+");\n"+txt.substr(stp, txt.size());
                 //cout << txt << endl;
                 //cout << BLUE "[Sperf]" RESET "  marks on lines " << p << " " << stp << endl;
-                p= txt.find("#pragma omp parallel", p+16+id.size());
+                //p= txt.find("#pragma omp parallel", p+16+id.size());
+                p= findOMPdirectives(txt, p+16+id.size());
                 id_region++;
             }
             else
-                p= txt.find("#pragma omp parallel", p+1);
+                p= findOMPdirectives(txt, p+1);
+                //p= txt.find("#pragma omp parallel", p+1);
         }
         if(haveOMP)
         {
             cout <<  BLUE "[Sperf]" RESET " File instrumented" << endl;
-            txt= "#include \"sperfops.h\"\n"+txt;
+            ifstream sperfops("../include/sperfops.h");
+            if(!sperfops)
+                throw "Cant open sperfops.h";
+            string buff, sperfops_h;
+            while(getline(sperfops, buff))
+                sperfops_h+=buff+"\n";
+            txt= sperfops_h+txt;
             ofstream salva((dpath+"/instr/"+file).c_str());
             salva << txt;
             salva.close();
