@@ -1,4 +1,5 @@
 Testando solução de instrumentação binário para Sperf
+
 ./main GOMP_parallel test [args]
 
 
