@@ -476,8 +476,9 @@ void Sperf::run()
 					{
 						if(list_of_args.empty())
 						{
-                            if(args[optset+1] == NULL)
+                            if(args[optset+1] == NULL){
                                 throw "Argument not exist\n";
+							}
 	                        sprintf(args[optset+1], "%d", list_of_threads_value[current_thr]);
 						}
 						else
@@ -667,7 +668,8 @@ void Sperf::store_time_information_xml(uint current_arg, uint cur_exec)
         out.open(string(result_file+".xml").c_str(), ios::app);
         out << "<regiao>" << endl
                     << "\t<l>" << map_thr_info[ini_th].info.begin()->second.s_start_line << "</l>" << endl
-                    << "\t<l>" << map_thr_info[ini_th].info.begin()->second.s_stop_line  << "</l>" << endl;
+                    << "\t<l>" << map_thr_info[ini_th].info.begin()->second.s_stop_line  << "</l>" << endl
+					<< "\t<p>" << program_name << "</p>" << endl;
                     //<< "</regiao>" << endl;
         out.close();
         for(map<int, s_info>::iterator it= map_thr_info[ini_th].info.begin(); it!=map_thr_info[ini_th].info.end(); it++)
@@ -677,7 +679,8 @@ void Sperf::store_time_information_xml(uint current_arg, uint cur_exec)
             out.precision(5);
             out << "<regiao>" << endl
                     << "\t<l>" << it->second.s_start_line << "</l>" << endl
-                    << "\t<l>" << it->second.s_stop_line  << "</l>" << endl;
+                    << "\t<l>" << it->second.s_stop_line  << "</l>" << endl
+					<< "\t<l>" << it->second.s_filename  << "</l>" << endl;
                     //<< "</regiao>" << endl;
             out.close();
         }
