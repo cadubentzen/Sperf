@@ -6,7 +6,7 @@ Date: 04/05/2017.
 This document describes the essentials about the sperf toolsuite. It consists of:
 - `sperf` binary executable (writter in C);
 - `sperf_instr.sh` shell script;
-- and the "libsperf.so" shared library.
+- and the `libsperf.so` shared library.
 
 The document is organized as shown below:
 
