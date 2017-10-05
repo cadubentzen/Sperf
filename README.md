@@ -8,11 +8,13 @@ This document describes the essentials about the sperf toolsuite. It consists of
 - "sperf_instr.sh" shell script;
 - and the "libsperf.so" shared library.
 
-t is organized as shown below:
+The document is organized as shown below:
+
 > SECTION 1 - What is sperf.
 >
 > SECTION 2 - How sperf works.
->> SECTION 3 - INSTRUMENTING THE CODE
+>
+> SECTION 3 - INSTRUMENTING THE CODE
 >
 > SECTION 4 - AUTOMATIC INSTRUMENTATION
 >
@@ -39,17 +41,14 @@ The user must instrument its target application that he/she wishes to be measure
 
 Next, the user executes sperf, passing, as arguments, the binary executable of the target application and all its necessary arguments. To configure how sperf will perform the tests, he/she must configure the file `<name_of_the_program>.conf`, where the file "name_of_the_program" is the name of the program that will run. There, it will be informed how many tests will be made and the number of threads that will be used and the arguments to execute.
 
-------------------------------------------------------------------------------------
-
 ## SECTION 3 - Instrumenting the code
 
 In order to execute correctly, the functions provides by sperf library must be placed accordingly by the user (or using `sperf_instr.sh`. This will be explained on the next section). 
 
 There are 5 functions available for this purpose:
 
-	1 - sperf_start: does not return and receive 1 arguments, the identification of the region. It marks the beginning of the parallel area to be measured.
-
-	2 - sperf_stop: does not return and receive 1 arguments, the identification of the region. It marks the end of the parallel area to be measured.
+1. sperf_start: does not return and receive 1 arguments, the identification of the region. It marks the beginning of the parallel area to be measured.
+2. sperf_stop: does not return and receive 1 arguments, the identification of the region. It marks the end of the parallel area to be measured.
 
 It is important to highlight that all the intrumentation works only OUTSIDE the parallel areas. sperf does not handle race conditions and other problems that arises inside parallel implementations.
 
