@@ -56,6 +56,7 @@ private:
     void store_time_information(uint current_arg, uint cur_exec);
     void store_time_information_csv(uint current_arg, uint cur_exec);
     void store_time_information_xml(uint current_arg, uint cur_exec);
+    void store_time_information_json(uint current_arg, uint cur_exec);
 private:
     struct proc_info
     {
@@ -476,8 +477,9 @@ void Sperf::run()
 					{
 						if(list_of_args.empty())
 						{
-                            if(args[optset+1] == NULL)
+                            if(args[optset+1] == NULL){
                                 throw "Argument not exist\n";
+							}
 	                        sprintf(args[optset+1], "%d", list_of_threads_value[current_thr]);
 						}
 						else
@@ -531,7 +533,7 @@ void Sperf::run()
             if(out_filename)
                 store_time_information_csv(current_arg, current_exec);
             else
-                store_time_information_xml(current_arg, current_exec);
+                store_time_information_json(current_arg, current_exec);
         }
     }
 //    map_thr_info= media;
@@ -667,7 +669,8 @@ void Sperf::store_time_information_xml(uint current_arg, uint cur_exec)
         out.open(string(result_file+".xml").c_str(), ios::app);
         out << "<regiao>" << endl
                     << "\t<l>" << map_thr_info[ini_th].info.begin()->second.s_start_line << "</l>" << endl
-                    << "\t<l>" << map_thr_info[ini_th].info.begin()->second.s_stop_line  << "</l>" << endl;
+                    << "\t<l>" << map_thr_info[ini_th].info.begin()->second.s_stop_line  << "</l>" << endl
+					<< "\t<p>" << program_name << "</p>" << endl;
                     //<< "</regiao>" << endl;
         out.close();
         for(map<int, s_info>::iterator it= map_thr_info[ini_th].info.begin(); it!=map_thr_info[ini_th].info.end(); it++)
@@ -677,7 +680,8 @@ void Sperf::store_time_information_xml(uint current_arg, uint cur_exec)
             out.precision(5);
             out << "<regiao>" << endl
                     << "\t<l>" << it->second.s_start_line << "</l>" << endl
-                    << "\t<l>" << it->second.s_stop_line  << "</l>" << endl;
+                    << "\t<l>" << it->second.s_stop_line  << "</l>" << endl
+					<< "\t<p>" << it->second.s_filename  << "</p>" << endl;
                     //<< "</regiao>" << endl;
             out.close();
         }
@@ -785,6 +789,153 @@ void Sperf::store_time_information_xml(uint current_arg, uint cur_exec)
             out.precision(5);
             out << "</execucoes>" << endl;
             out << "</regiao>";
+                    //<< "</regiao>" << endl;
+            out.close();
+        }
+    }
+}
+
+void Sperf::store_time_information_json(uint current_arg, uint cur_exec)
+{
+    static bool ft= false;
+    int ini_th= list_of_threads_value.empty()?1:list_of_threads_value[0];
+    if(!ft)
+    {
+        out.open(string(result_file+".json").c_str(), ios::app);
+        out << "{" << endl
+                    << "\t\"Region\":\"" << map_thr_info[ini_th].info.begin()->second.s_start_line << ", "
+                    << map_thr_info[ini_th].info.begin()->second.s_stop_line  << "\"," << endl
+					<< "\t\"Filename\":\"" << program_name << "\"," << endl;
+                    //<< "</regiao>" << endl;
+        out.close();
+        for(map<int, s_info>::iterator it= map_thr_info[ini_th].info.begin(); it!=map_thr_info[ini_th].info.end(); it++)
+        //for(auto it: map_thr_info[1].info)
+        {
+            out.open(string(result_file+"_parallel_region_"+intToString(it->first+1)+".json").c_str(), ios::app);
+            out.precision(5);
+            out << "{" << endl
+                    << "\t\"Region\":\"" << it->second.s_start_line << ", "
+                    << it->second.s_stop_line  << "\"," << endl
+					<< "\t\"Filename\":\"" << it->second.s_filename  << "\"," << endl;
+                    //<< "</regiao>" << endl;
+            out.close();
+        }
+        ft= true;
+    }
+    static uint last_exec=-1;
+    if(last_exec != cur_exec)
+    {
+        out.open(string(result_file+".json").c_str(), ios::app);
+        last_exec= cur_exec;
+
+        if(cur_exec != 0)
+            out << "\t}," << endl;
+        out << "\t\"Execution " <<  cur_exec+1 << "\":{" << endl;
+
+        out.close();
+
+        for(map<int, s_info>::iterator it= map_thr_info[ini_th].info.begin(); it!=map_thr_info[ini_th].info.end(); it++)
+        //for(auto it: map_thr_info[1].info)
+        {
+            out.open(string(result_file+"_parallel_region_"+intToString(it->first+1)+".json").c_str(), ios::app);
+            if(cur_exec != 0)
+                out << "\t}," << endl;
+            out << "\t\"Execution " << cur_exec+1 << "\":{" << endl;
+            out.close();
+        }
+    }
+
+    out.open(string(result_file+".json").c_str(), ios::app);
+    out << "\t\t\"InputData " << current_arg+1 <<  "\":{" << endl;
+    out << "\t\t\t\"arguments\":\"" << " ";
+    if(!list_of_args.empty())
+    for(uint i=0; i<list_of_args_num[current_arg]; i++)
+                out << list_of_args[current_arg][i] << " ";
+    out << "\"," << endl;
+    out.close();
+
+    for(map<int, s_info>::iterator it= map_thr_info[ini_th].info.begin(); it!=map_thr_info[ini_th].info.end(); it++)
+    //for(auto it: map_thr_info[1].info)
+    {
+        out.open(string(result_file+"_parallel_region_"+intToString(it->first+1)+".json").c_str(),ios::app);
+        out << "\t\t\"InputData " << current_arg+1 << "\":{" << endl;
+        out << "\t\t\t\"arguments\":\"" << " ";
+        if(!list_of_args.empty())
+        for(uint i=0; i<list_of_args_num[current_arg]; i++)
+                    out << list_of_args[current_arg][i] << " ";
+        out << "\"," << endl;
+        out.close();
+    }
+
+    for(uint j=0; j<list_of_threads_value.size(); j++)
+    //for(auto cur_thrs : list_of_threads_value)
+    {
+        uint cur_thrs= list_of_threads_value[j];
+        float time_singleThr_total= map_thr_info[ini_th].end-map_thr_info[ini_th].start;
+        out.open(string(result_file+".json").c_str(), ios::app);
+        out << fixed << "\t\t\t\"Run " << j+1 << "\":{" << endl;
+        out << fixed << "\t\t\t\t\"Num threads\":\"" << cur_thrs << "\"," << endl;
+        out << fixed << "\t\t\t\t\"Time\":\"" << (map_thr_info[cur_thrs].end-map_thr_info[cur_thrs].start)<< "\"," << endl;
+        out << fixed << "\t\t\t\t\"Speedup\":\"" << time_singleThr_total/(float)(map_thr_info[cur_thrs].end-map_thr_info[cur_thrs].start) << "\"," << endl;
+        out << fixed << "\t\t\t\t\"Efficiency\":\"" << time_singleThr_total/(float)(map_thr_info[cur_thrs].end-map_thr_info[cur_thrs].start)/cur_thrs << "\"" << endl;
+        if(j+1 != list_of_threads_value.size())
+            out << fixed << "\t\t\t}," << endl;
+        else
+            out << fixed << "\t\t\t}" << endl;
+        out.close();
+
+        for(map<int, s_info>::iterator it= map_thr_info[cur_thrs].info.begin(); it!=map_thr_info[cur_thrs].info.end(); it++)
+        //for(auto it: map_thr_info[cur_thrs].info)
+        {
+            out.open(string(result_file+"_parallel_region_"+intToString(it->first+1)+".json").c_str(), ios::app);
+
+            out << fixed << "\t\t\t\"Run " << j+1 << "\":{" << endl;
+            out << fixed << "\t\t\t\t\"Num threads\":\"" << cur_thrs << "\"," << endl;
+            out << fixed << "\t\t\t\t\"Time\":\"" << it->second.s_time<< "\","  << endl;
+            out << fixed << "\t\t\t\t\"Speedup\":\"" << map_thr_info[ini_th].info[it->first].s_time/it->second.s_time<< "\","  << endl;
+            out << fixed << "\t\t\t\t\"Efficiency\":\"" << map_thr_info[ini_th].info[it->first].s_time/it->second.s_time/cur_thrs << "\""  << endl;
+            if(j+1 != list_of_threads_value.size())
+                out << fixed << "\t\t\t}," << endl;
+            else
+                out << fixed << "\t\t\t}" << endl;
+
+            out.close();
+        }
+    }
+
+
+    out.open(string(result_file+".json").c_str(), ios::app);
+    if(current_arg+1 != list_of_args_num.size())
+        out << endl << "\t\t}," << endl;
+    else
+        out << endl << "\t\t}" << endl;
+
+    out.close();
+
+    for(map<int, s_info>::iterator it= map_thr_info[ini_th].info.begin(); it!=map_thr_info[ini_th].info.end(); it++)
+    //for(auto it: map_thr_info[1].info)
+    {
+        out.open(string(result_file+"_parallel_region_"+intToString(it->first+1)+".json").c_str(),ios::app);
+        if(current_arg+1 != list_of_args_num.size())
+            out << endl << "\t\t}," << endl;
+        else
+            out << endl << "\t\t}" << endl;
+        out.close();
+    }
+
+    if(cur_exec == num_exec-1 && (current_arg == list_of_args.size()-1 || list_of_args.size() == 0) )
+    {
+        out.open(string(result_file+".json").c_str(), ios::app);
+        out << "\t}" << endl;
+        out << "}" << endl;
+        out.close();
+        for(map<int, s_info>::iterator it= map_thr_info[ini_th].info.begin(); it!=map_thr_info[ini_th].info.end(); it++)
+        //for(auto it: map_thr_info[1].info)
+        {
+            out.open(string(result_file+"_parallel_region_"+intToString(it->first+1)+".json").c_str(), ios::app);
+            out.precision(5);
+            out << "\t}" << endl;
+            out << "}";
                     //<< "</regiao>" << endl;
             out.close();
         }
