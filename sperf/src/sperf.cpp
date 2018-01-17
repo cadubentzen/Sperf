@@ -357,7 +357,7 @@ void Sperf::read_config_file(string exec_path)
                             cont++;
                             narg= (char**)realloc(narg, (cont+1)*sizeof(char*));
                         }
-                        narg[cont]= (char)0;
+                        narg[cont]= (char*)0;
                         list_of_args.push_back(narg);
                         list_of_args_num.push_back(cont);
                     }
