@@ -15,26 +15,13 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "sperf_instr.h"
+#include "../include/sperf_instr.h"
 #include <stdlib.h>
 
 typedef unsigned int uint;
 
 using namespace std;
 
-string intToString(int x)
-{
-    stringstream ss;
-    ss << x;
-    return ss.str();
-}
-int stringToInt(string x)
-{
-    int n;
-    stringstream ss(x);
-    ss >> n;
-    return n;
-}
 
 void Instrumentation::read_argments(char* argv[], int argc)
 {
@@ -240,7 +227,7 @@ void Instrumentation::instrument()
             if(!isInsidComment(p, commentRegions))
             {
                 haveOMP= true;
-                string id= intToString(id_region);
+                string id= to_string(id_region);
                 txt= txt.substr(0, p)+"sperf_start("+id+");\n"+txt.substr(p, txt.size());
 
                 commentRegions.clear();
