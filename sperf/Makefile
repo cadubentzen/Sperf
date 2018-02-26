@@ -1,6 +1,6 @@
 CC = g++
 CXX = g++
-CPPFLAGS = -c -fpic -std=c++0x -Wall -Werror -O2 -I include/
+CPPFLAGS = -c -fpic -std=c++11 -Wall -Werror -O2 -I include/
 LDFLAGS =
 LDLIBS = -fopenmp -pthread
 VPATH= src/:include/

@@ -53,10 +53,10 @@ private:
     void config_output(const string& path);
     void read_config_file(const string& exec_path);
 
-    void store_time_information(int current_arg, int cur_exec);
-    void store_time_information_csv(int current_arg, int cur_exec);
-    void store_time_information_xml(int current_arg, int cur_exec);
-    void store_time_information_json(int current_arg, int cur_exec);
+    void store_time_information(unsigned int current_arg, int cur_exec);
+    void store_time_information_csv(unsigned int current_arg, int cur_exec);
+    void store_time_information_xml(unsigned int current_arg, int cur_exec);
+    void store_time_information_json(unsigned int current_arg, int cur_exec);
 private:
     struct proc_info
     {
@@ -434,7 +434,7 @@ void Sperf::run()
     for(int current_exec = 0; current_exec < num_exec; current_exec++)
     {
         cout << BLUE "[Sperf]" RESET " Current execution " << current_exec+1 << " of " << num_exec << endl;
-        for(int current_arg=0; current_arg<list_of_args.size() || current_arg==0; current_arg++)
+        for(unsigned int current_arg=0; current_arg<list_of_args.size() || current_arg==0; current_arg++)
         {
             proc_info procInfo;
             if(!list_of_args.empty())
@@ -444,7 +444,7 @@ void Sperf::run()
                         optset= i;
             }
 
-            for(int current_thr=0;  current_thr<list_of_threads_value.size(); current_thr++)
+            for(unsigned int current_thr=0;  current_thr<list_of_threads_value.size(); current_thr++)
             {
                 cout << BLUE "[Sperf]" RESET " Executing for " <<  list_of_threads_value[current_thr] << " threads" << endl;
                 pid_t pid_child;
@@ -532,7 +532,7 @@ void Sperf::run()
         free(args[i]);
     free(args);
 
-    for(int i=0; i<list_of_args.size(); i++)
+    for(unsigned int i=0; i<list_of_args.size(); i++)
     {
         for(int j=0; j<list_of_args_num[i]; j++)
             free(list_of_args[i][j]);
@@ -540,13 +540,13 @@ void Sperf::run()
     }
 }
 
-void Sperf::store_time_information(int current_arg, int cur_exec)
+void Sperf::store_time_information(unsigned int current_arg, int cur_exec)
 {
     out.open(result_file.c_str(), ios::app);
     out << "\n-----> Execution number " << cur_exec + 1 << " for " << program_name
     << " and " << current_arg << " argument" << ":\n";
 
-    for(int j=0; j<list_of_threads_value.size(); j++)
+    for(unsigned int j=0; j<list_of_threads_value.size(); j++)
     {
         int cur_thrs= list_of_threads_value[j];
         double time_singleThr_total= map_thr_info[1].end-map_thr_info[1].start;
@@ -579,7 +579,7 @@ void Sperf::store_time_information(int current_arg, int cur_exec)
 }
 
 /// MELHORAR
-void Sperf::store_time_information_csv(int current_arg, int cur_exec)
+void Sperf::store_time_information_csv(unsigned int current_arg, int cur_exec)
 {
     static bool ft= false;
     if(!ft)
@@ -587,7 +587,7 @@ void Sperf::store_time_information_csv(int current_arg, int cur_exec)
         out.open(string(result_file+".csv").c_str());
         out.precision(5);
         out << "\n,";
-        for(int i=0; i<list_of_threads_value.size(); i++)
+        for(unsigned int i=0; i<list_of_threads_value.size(); i++)
             out << list_of_threads_value[i] << ",";
         out.close();
         for(auto it : map_thr_info[1].info)
@@ -595,7 +595,7 @@ void Sperf::store_time_information_csv(int current_arg, int cur_exec)
             out.open(string(result_file+"_parallel_region_"+to_string(it.first+1)+".csv").c_str(), ios::app);
             out.precision(5);
             out << "\n,";
-            for(int i=0; i<list_of_threads_value.size(); i++)
+            for(unsigned int i=0; i<list_of_threads_value.size(); i++)
                 out << list_of_threads_value[i] << ",";
             out.close();
         }
@@ -628,7 +628,7 @@ void Sperf::store_time_information_csv(int current_arg, int cur_exec)
         out.close();
     }
 
-    for(int j=0; j<list_of_threads_value.size(); j++)
+    for(unsigned int j=0; j<list_of_threads_value.size(); j++)
     {
         int cur_thrs= list_of_threads_value[j];
         double time_singleThr_total= map_thr_info[1].end-map_thr_info[1].start;
@@ -646,7 +646,7 @@ void Sperf::store_time_information_csv(int current_arg, int cur_exec)
     }
 }
 
-void Sperf::store_time_information_xml(int current_arg, int cur_exec)
+void Sperf::store_time_information_xml(unsigned int current_arg, int cur_exec)
 {
     static bool ft= false;
     int ini_th= list_of_threads_value.empty()?1:list_of_threads_value[0];
@@ -713,7 +713,7 @@ void Sperf::store_time_information_xml(int current_arg, int cur_exec)
         out.close();
     }
 
-    for(int j=0; j<list_of_threads_value.size(); j++)
+    for(unsigned int j=0; j<list_of_threads_value.size(); j++)
     {
         int cur_thrs= list_of_threads_value[j];
         double time_singleThr_total= map_thr_info[ini_th].end-map_thr_info[ini_th].start;
@@ -769,7 +769,7 @@ void Sperf::store_time_information_xml(int current_arg, int cur_exec)
     }
 }
 
-void Sperf::store_time_information_json(int current_arg, int cur_exec)
+void Sperf::store_time_information_json(unsigned int current_arg, int cur_exec)
 {
     static bool ft= false;
     int ini_th= list_of_threads_value.empty()?1:list_of_threads_value[0];
@@ -839,7 +839,7 @@ void Sperf::store_time_information_json(int current_arg, int cur_exec)
         out.close();
     }
 
-    for(int j=0; j<list_of_threads_value.size(); j++)
+    for(unsigned int j=0; j<list_of_threads_value.size(); j++)
     {
         int cur_thrs= list_of_threads_value[j];
         double time_singleThr_total= map_thr_info[ini_th].end-map_thr_info[ini_th].start;
