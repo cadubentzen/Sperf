@@ -235,8 +235,9 @@ void Instrumentation::instrument()
                 FindEnclosures(txt, "/*", "*/", commentRegions);
 
                 unsigned long long int stp= txt.find("\n", p+id.size()+16)+1;
-                int cont= 0;
-                bool first= false;
+//                int cont= 0;
+//                bool first= false;
+/*
                 while(cont != 0 || !first)
                 {
                     if(txt[stp] == '{' && !isInsidComment(stp, commentRegions))
@@ -252,6 +253,47 @@ void Instrumentation::instrument()
                         throw  "ERRO\n";
                     }
                 }
+*/
+				do
+                {
+                    while(isInsidComment(stp, commentRegions))
+                        stp++;
+                    if(txt[stp]=='(')
+                    {
+                        stp++;
+                        int contp= 1;
+                        do
+                        {
+                            if(txt[stp]=='(')
+                                contp++;
+                            if(txt[stp]==')')
+                                contp--;
+                            stp++;
+                        }while(stp<txt.size() && contp>0);
+                        continue;
+                    }
+                    if(txt[stp] == '{')
+                    {
+                        stp++;
+                        int contp= 1;
+                        do
+                        {
+                            if(txt[stp]=='{')
+                                contp++;
+                            if(txt[stp]=='}')
+                                contp--;
+                            stp++;
+                        }while(stp<txt.size() && contp>0);
+                        break;
+                    }
+                    if(txt[stp]==';')
+                    {
+                        stp++;
+                        break;
+                    }
+                    stp++;
+                }while(stp<txt.size());
+
                 txt= txt.substr(0, stp)+"\nsperf_stop("+id+");\n"+txt.substr(stp, txt.size());
                 //cout << txt << endl;
                 //cout << BLUE "[Sperf]" RESET "  marks on lines " << p << " " << stp << endl;
