@@ -8,23 +8,23 @@ This document describes the essentials about the sperf toolsuite. It consists of
 - `sperf_instr.sh` shell script;
 - and the `libsperf.so` shared library.
 
-The document is organized as shown below:
-
-> SECTION 1 - What is sperf.
->
-> SECTION 2 - How sperf works.
->
-> SECTION 3 - Instrumenting the code
->
-> SECTION 4 - Automatic instrumentation
->
-> SECTION 5 - Configuring sperf execution
->
-> SECTION 6 - Executing sperf
+### License
 
 The entire suite is licensed under the GPL v3.0.
 
-## SECTION 1 - What is sperf
+## Table of Contents
+
+- [What is sperf](#what)
+- [How sperf works](#how)
+- [Instrumenting the code](#instrumenting)
+- [Automatic instrumentation](#automatic)
+- [Configuring sperf execution](#configuring)
+- [Executing sperf](#executing)
+
+
+<a name="what">
+	
+## What is sperf
 
 The main tool (the `sperf` binary executable, written in C) executes an user application (called "target") repeatedly, for the same size of problem, but different number of threads, so that it is able to calculate the speedup of the target. The user must, first of all, instrument its application using specific functions provided by the sperf library `libsperf.so`. If he/she wants it to be made automatically, there is an executable shell script called `sperf_instr.sh`  that may perform such task in certain conditions.  
 
@@ -35,13 +35,17 @@ That said, the tool suite aims two things, basically:
 
 The tool was tested for OpenMP and Pthreads application.
 
-## SECTION 2 - How sperf works
+<a name="how">
+
+## How sperf works
 
 The user must instrument its target application that he/she wishes to be measured. In order to do so, he/she must use the library provided, named `libsperf.so`.
 
 Next, the user executes sperf, passing, as arguments, the binary executable of the target application and all its necessary arguments. To configure how sperf will perform the tests, he/she must configure the file `<name_of_the_program>.conf`, where the file "name_of_the_program" is the name of the program that will run. There, it will be informed how many tests will be made and the number of threads that will be used and the arguments to execute.
 
-## SECTION 3 - Instrumenting the code
+<a name="instrumenting">
+
+## Instrumenting the code
 
 In order to execute correctly, the functions provides by sperf library must be placed accordingly by the user (or using `sperf_instr.sh`. This will be explained on the next section). 
 
@@ -52,7 +56,9 @@ There are 5 functions available for this purpose:
 
 It is important to highlight that all the intrumentation works only OUTSIDE the parallel areas. sperf does not handle race conditions and other problems that arises inside parallel implementations.
 
-## SECTION 4 - Automatic instrumentation
+<a name="automatic">
+
+## Automatic instrumentation
 
 Sometimes, looking into a code and placing instrumentation can be tricky. With that in mind, the shell script `sperf_instr.sh` was created as a first trial to automatically instrument code using the sperf library. Currently, it inserts only `sperf_start` and `sperf_stop` functions in OpenMP directives that start with `pragma omp parallel`.
 
@@ -60,7 +66,9 @@ To use this functionality, the command line consists of: `./sperf -i -p folder/`
 
 There is still one more option that can configure what extentions sperf will look for `-e`: `./sperf -i -p folder/ -e .cpp,.h,.c`
 
-## SECTION 5 - Configuring sperf execution
+<a name="configuring">
+
+## Configuring sperf execution
 
 The configuration of the profiler's execution is controlled by the `sperf_exec.conf` configuration file. There are six variables that may be used in two distinct ways to configure sperf. For both, the use of `number_of_tests` is mandatory. It determines how many times the tests will run on the target application.	
 
@@ -83,7 +91,9 @@ arg1 arg2 ...
 ```
 Will execute the program with each argument. 
 
-## SECTION 6 - Executing sperf
+<a name="executing">
+
+## Executing sperf
 
 The profiler is invoked by command line, as shown below:
 
