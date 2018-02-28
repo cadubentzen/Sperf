@@ -1,32 +1,35 @@
 # Sperf
 
-The document is organized as shown below:
-
-> SECTION 1 - What is sperf.
->
-> SECTION 2 - How to use
->
-> SECTION 3 - Instrumenting the code
->
-> SECTION 4 - Configuring execution
->
-> SECTION 5 - Options available
+### License
 
 The entire suite is licensed under the GPL v3.0.
 
-## SECTION 1 - What is sperf
+## Table of contents
+
+- [What is sperf](#whatis)
+- [How to use](#howto)
+- [Instrumenting the code](#instrumenting)
+- [Configuring execution](#configuring)
+- [Options available](#options)
+
+<a name="whatis"/>
+
+## What is sperf
 
 **sperf** was developed by Márcio Jales (marcio.dojcosta@gmail.com) and continued by Vitor Ramos (ramos.vitor89@gmail.com), at UFRN (Universidade Federal do Rio Grande do Norte), as part of the undergraduate thesis in computer engineering.
 Date: 04/05/2017. This document describes the essentials about the sperf toolsuite.
 
 Sperf profiles an application by marking multiples regions on the source code and executes the application repeatedly, varying the input argument and number of threads according to the user configuration and from this is able to calculate the efficiency of the target.
 
+<a name="howto"/>
 
-## SECTION 2 - HOW TO USE
+## How to use
 
 The user must instrument its target application before run with sperf, this is detailed in SECTION 3. Then configure the execution file informing how many tests will be made and the number of threads and the arguments to execute, more information on SECTION 4. Finally run `bin/./sperf app`.
 
-## SECTION 3 - Instrumenting
+<a name="instrumenting"/>
+
+## Instrumenting the code
 
 To instrumenting manually including sperfops.h available on `include/sperfops.h` and use the function sperf_start(id) and 
 sperf_stop(id) on the region of interest.
@@ -53,7 +56,9 @@ int main()
 
 Also this can be done automatically for openmp code using the command line : `./sperf -i -p teste/`, this will mark all `pragma omp parallel` regions on the cpp and c files on the folder teste. Also its possible to pass the extensions with the option `-e`. Example: `./sperf -i -p folder/ -e .hpp,.cpp,.c`
 
-## SECTION 4 - Configuring
+<a name="configuring"/>
+
+## Configuring execution
 
 When the user call `./sperf app`, sperf will look for the file `etc/app.conf` to configure the execution, if this file doesn't exists it will be created with the same name as the application with the default configuration.
 
@@ -81,7 +86,9 @@ arg1 arg2 ...
 
 Will execute the program with each combination of threads and this arguments.
 
-## SECTION 5 - Options available
+<a name="options"/>
+
+## Options available
 
 The profiler is invoked by command line, as shown below:
 
